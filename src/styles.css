@@ -15,10 +15,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   
 
 
-
-
-
-
   
   /* Global Layout CSS - ให้ทุกอย่างอยู่ใน layer เดียวกัน */
 /* เพิ่มใน styles.css หรือ global stylesheet */
@@ -187,3 +183,47 @@ html {
   width: 100% !important;
 }
   
+
+
+
+/* ===== FIX: remove white space when sidebar collapsed ===== */
+
+/* desktop collapse */
+body.sidebar-collapse .content-wrapper,
+body.sidebar-mini.sidebar-collapse .content-wrapper,
+body.sidebar-closed .content-wrapper {
+  margin-left: 0 !important;
+}
+
+/* navbar should follow too (if you use left offset navbar) */
+body.sidebar-collapse .plating-navbar,
+body.sidebar-mini.sidebar-collapse .plating-navbar,
+body.sidebar-closed .plating-navbar {
+  left: 0 !important;
+}
+
+/* sidebar move out (your style already has this, but force it) */
+body.sidebar-collapse .main-sidebar,
+body.sidebar-mini.sidebar-collapse .main-sidebar,
+body.sidebar-closed .main-sidebar {
+  margin-left: -250px !important;
+}
+
+
+
+:root{
+  --nav-h: 70px;          /* ความสูง navbar แถวบน */
+  --mobile-menu-h: 70px;  /* ความสูงแถวเมนู mobile (ปรับได้) */
+}
+
+/* ใช้ค่าเดียวกันทั้งระบบ */
+.content-wrapper{
+  margin-top: var(--nav-h) !important;
+}
+
+/* ตอน mobile มีเมนูเพิ่ม 1 แถว -> ต้องเผื่อเพิ่ม */
+@media (max-width: 991.98px){
+  .content-wrapper{
+    margin-top: calc(var(--nav-h) + var(--mobile-menu-h)) !important;
+  }
+}

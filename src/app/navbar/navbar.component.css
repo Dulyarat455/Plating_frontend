@@ -375,6 +375,7 @@ body.sidebar-mini.sidebar-collapse .plating-navbar {
 
 /* Override Mobile Menu Colors */
 @media (max-width: 991.98px) {
+
   .mobile-nav-item {
     background: #2c3e50 !important; /* เทาน้ำเงิน */
     /* หรือ */

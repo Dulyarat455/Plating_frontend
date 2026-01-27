@@ -47,7 +47,7 @@ export class SidebarComponent {
         });
       });
     }
-    this.getLevelFromToken();
+   
   }
 
   async signout() {
@@ -72,18 +72,7 @@ export class SidebarComponent {
       // window.location.href = '/ScrapPress';
     }
   }
-  // getLevelFromToken() {
-  //   const token = localStorage.getItem('angular_token');
-  //   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-  //   this.http
-  //     .get(config.apiServer + '/api/user/getLevelFromToken', {
-  //       headers: headers,
-  //     })
-  //     .subscribe((res: any) => {
-  //       this.level = res.level;
-  //     });
-  // }
   getLevelFromToken() {
     this.authService.getUserLevel().subscribe((res: any) => {
       this.level = res.level;

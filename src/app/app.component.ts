@@ -19,9 +19,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
-  token: string | undefined = '';
+  token: string | undefined = 'sssssss';
 
   ngOnInit() {
-    this.token = localStorage.getItem('angular_token')!;
+    // this.token = localStorage.getItem('plating_token')!;
   }
 }

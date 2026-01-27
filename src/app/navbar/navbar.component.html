@@ -2,6 +2,7 @@
 <nav class="plating-navbar">
   <div class="navbar-container">
     <!-- Left Section: Logo & Title -->
+    @if (token && token.trim().length > 0) {
     <div class="navbar-left">
       <a class="nav-link sidebar-toggle" data-widget="pushmenu" href="#" role="button">
         <i class="fas fa-bars"></i>
@@ -11,7 +12,7 @@
         
       </div>
     </div>
-
+  }
     <!-- Center Section: Navigation Tabs -->
     <div class="navbar-center d-none d-lg-flex">
       

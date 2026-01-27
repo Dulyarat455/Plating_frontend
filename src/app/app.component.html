@@ -1,5 +1,5 @@
 <div class="wrapper">
-  @if (token != '')
+  @if (token && token.trim().length > 0) 
   {
   <app-navbar></app-navbar>
   <app-sidebar></app-sidebar>
@@ -11,6 +11,7 @@
     </section>
   </div>
   } @else {
+  <app-navbar></app-navbar>
   <app-sign-in></app-sign-in>
   }
 </div>

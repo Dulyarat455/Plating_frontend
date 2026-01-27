@@ -2,7 +2,7 @@
 import { RouterModule } from '@angular/router';
 
 // navbar.component.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
@@ -16,9 +16,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   formattedTime: string = '';
   private timeInterval: any;
 
+  token: string | undefined = 'sssss';
+  constructor(private renderer: Renderer2) {}
+
   ngOnInit(): void {
     this.updateDateTime();
     // Update time every second
+
+    this.applyAuthLayoutClass();
+
     this.timeInterval = setInterval(() => {
       this.updateDateTime();
     }, 1000);
@@ -33,6 +39,25 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
     window.removeEventListener('scroll', this.onScroll);
   }
+
+
+
+  private applyAuthLayoutClass() {
+    const hasToken = !!this.token && this.token.trim().length > 0;
+
+    if (!hasToken) {
+      // ไม่ login -> บังคับ layout แบบ sidebar ปิด
+      this.renderer.addClass(document.body, 'no-auth');
+      this.renderer.addClass(document.body, 'sidebar-collapse');
+      this.renderer.addClass(document.body, 'sidebar-closed');
+    } else {
+      this.renderer.removeClass(document.body, 'no-auth');
+      this.renderer.removeClass(document.body, 'sidebar-closed');
+      // sidebar-collapse จะให้ user กดเปิด/ปิดเองได้ ไม่ต้องลบก็ได้
+    }
+  }
+
+
 
   updateDateTime(): void {
     const now = new Date();
