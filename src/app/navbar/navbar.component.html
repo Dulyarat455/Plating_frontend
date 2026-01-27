@@ -1,47 +1,85 @@
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
-  <!-- Left navbar links -->
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+<!-- navbar.component.html -->
+<nav class="plating-navbar">
+  <div class="navbar-container">
+    <!-- Left Section: Logo & Title -->
+    <div class="navbar-left">
+      <a class="nav-link sidebar-toggle" data-widget="pushmenu" href="#" role="button">
         <i class="fas fa-bars"></i>
       </a>
-    </li>
-    <li class="nav-item d-none d-sm-inline-block">
-      <a [routerLink]="['/']" class="nav-link">Home</a>
-    </li>
-    <li class="nav-item d-none d-sm-inline-block">
-      <a href="#" class="nav-link">Contact</a>
-    </li>
-  </ul>
+      <div class="navbar-brand">
+        <i class="fas fa-box navbar-icon"></i>
+        
+      </div>
+    </div>
 
-  <!-- Right navbar links -->
-  <ul class="navbar-nav ml-auto">
-    <!-- DateTime Display -->
-    <li class="nav-item">
-      <span class="nav-link">
-        <i class="far fa-calendar-alt mr-1"></i>
-        <span id="currentDate">{{formattedDate}}</span>
-      </span>
-    </li>
-    <li class="nav-item">
-      <span class="nav-link">
-        <i class="far fa-clock mr-1"></i>
-        <span id="currentTime">{{formattedTime}}</span>
-      </span>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-        <i class="fas fa-expand-arrows-alt"></i>
+    <!-- Center Section: Navigation Tabs -->
+    <div class="navbar-center d-none d-lg-flex">
+      <a class="nav-link sidebar-toggle" data-widget="pushmenu" href="#" role="button">
+        <i class="fas fa-bars"></i>
       </a>
-    </li>
-    <!-- <li class="nav-item">
-      <a class="nav-link" 
-         data-widget="control-sidebar" 
-         data-controlsidebar-slide="true" 
-         href="#" 
-         role="button">
-        <i class="fas fa-th-large"></i>
+      <a [routerLink]="['/dashboard']" routerLinkActive="active" class="nav-tab">
+        <i class="fas fa-chart-bar"></i>
+        <span>Dashboard</span>
       </a>
-    </li> -->
-  </ul>
+      <a [routerLink]="['/issue']" routerLinkActive="active" class="nav-tab">
+        <i class="fas fa-truck"></i>
+        <span>Issue Part</span>
+      </a>
+      <a [routerLink]="['/receive']" routerLinkActive="active" class="nav-tab">
+        <i class="fas fa-box-open"></i>
+        <span>Receive Part</span>
+      </a>
+      <a [routerLink]="['/scan']" routerLinkActive="active" class="nav-tab">
+        <i class="fas fa-qrcode"></i>
+        <span>QR Scan</span>
+      </a>
+    </div>
+
+    <!-- Right Section: DateTime & User -->
+    <div class="navbar-right">
+      <div class="datetime-display d-none d-md-flex">
+        <div class="datetime-item">
+          <i class="far fa-calendar-alt"></i>
+          <span>{{formattedDate}}</span>
+        </div>
+        <div class="datetime-divider"></div>
+        <div class="datetime-item">
+          <i class="far fa-clock"></i>
+          <span>{{formattedTime}}</span>
+        </div>
+      </div>
+      
+      <div class="navbar-actions">
+        <a class="action-btn" data-widget="fullscreen" href="#" role="button" title="Fullscreen">
+          <i class="fas fa-expand-arrows-alt"></i>
+        </a>
+        <div class="user-profile">
+          <div class="user-avatar">
+            <span>AD</span>
+          </div>
+          <span class="user-name d-none d-lg-inline">Admin</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu d-lg-none">
+    <a [routerLink]="['/dashboard']" routerLinkActive="active" class="mobile-nav-item">
+      <i class="fas fa-chart-bar"></i>
+      <span>Dashboard</span>
+    </a>
+    <a [routerLink]="['/issue']" routerLinkActive="active" class="mobile-nav-item">
+      <i class="fas fa-truck"></i>
+      <span>Issue</span>
+    </a>
+    <a [routerLink]="['/receive']" routerLinkActive="active" class="mobile-nav-item">
+      <i class="fas fa-box-open"></i>
+      <span>Receive</span>
+    </a>
+    <a [routerLink]="['/scan']" routerLinkActive="active" class="mobile-nav-item">
+      <i class="fas fa-qrcode"></i>
+      <span>Scan</span>
+    </a>
+  </div>
 </nav>

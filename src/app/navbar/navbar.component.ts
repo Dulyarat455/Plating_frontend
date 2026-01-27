@@ -1,52 +1,63 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
+
+// navbar.component.ts
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [RouterModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   formattedDate: string = '';
   formattedTime: string = '';
   private timeInterval: any;
 
-  ngOnInit() {
-    // Initial update
+  ngOnInit(): void {
     this.updateDateTime();
-
     // Update time every second
     this.timeInterval = setInterval(() => {
       this.updateDateTime();
     }, 1000);
+
+    // Add scroll listener for navbar shadow effect
+    window.addEventListener('scroll', this.onScroll);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
     }
+    window.removeEventListener('scroll', this.onScroll);
   }
 
-  private updateDateTime() {
+  updateDateTime(): void {
     const now = new Date();
-    this.formattedDate = this.formatDate(now);
-    this.formattedTime = this.formatTime(now);
+    
+    // Format date: DD/MM/YYYY
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    this.formattedDate = `${day}/${month}/${year}`;
+    
+    // Format time: HH:mm:ss
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    this.formattedTime = `${hours}:${minutes}:${seconds}`;
   }
 
-  private formatDate(date: Date): string {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  }
-
-  private formatTime(date: Date): string {
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${hours}:${minutes}:${seconds}`;
+  onScroll = (): void => {
+    const navbar = document.querySelector('.plating-navbar');
+    if (navbar) {
+      if (window.scrollY > 50) {
+        navbar.classList.add('navbar-scrolled');
+      } else {
+        navbar.classList.remove('navbar-scrolled');
+      }
+    }
   }
 }
