@@ -369,3 +369,38 @@ body.sidebar-mini.sidebar-collapse .plating-navbar {
     display: none;
   }
 }
+
+
+
+
+/* Override Mobile Menu Colors */
+@media (max-width: 991.98px) {
+  .mobile-nav-item {
+    background: #2c3e50 !important; /* เทาน้ำเงิน */
+    /* หรือ */
+
+    
+  }
+  .mobile-nav-item i,
+  .mobile-nav-item span {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  .mobile-nav-item:hover,
+  .mobile-nav-item.active {
+    color: #ffffff !important;
+  }
+  
+  .mobile-nav-item:hover i,
+  .mobile-nav-item:hover span,
+  .mobile-nav-item.active i,
+  .mobile-nav-item.active span {
+    color: #ffffff !important;
+  }
+  
+  .mobile-nav-item.active {
+    background-color: rgba(52, 152, 219, 0.3) !important;
+  }
+}
