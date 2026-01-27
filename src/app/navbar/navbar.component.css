@@ -11,7 +11,7 @@
   left: 250px;
   right: 0;
   z-index: 1030;
-  height: 60px;
+  height: 70px;
   transition: left 0.3s ease-in-out;
 }
 
