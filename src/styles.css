@@ -14,4 +14,176 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
   
 
+
+
+
+
+
+  
+  /* Global Layout CSS - ให้ทุกอย่างอยู่ใน layer เดียวกัน */
+/* เพิ่มใน styles.css หรือ global stylesheet */
+
+/* ==================================================
+   CRITICAL: เพิ่ม CSS นี้ใน styles.css (Global)
+   ================================================== */
+
+/* Body และ Wrapper */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Content Wrapper - เว้นที่สำหรับ Navbar และ Sidebar */
+.content-wrapper {
+  margin-left: 250px; /* เว้นที่สำหรับ sidebar */
+  margin-top: 60px;   /* เว้นที่สำหรับ navbar */
+  padding: 1.5rem;
+  min-height: calc(100vh - 60px);
+  transition: margin-left 0.3s ease-in-out;
+  background: #f4f6f9;
+  position: relative;
+  z-index: 1;
+}
+
+/* เมื่อ sidebar ปิด - content ขยายเต็ม */
+body.sidebar-collapse .content-wrapper,
+body.sidebar-mini.sidebar-collapse .content-wrapper {
+  margin-left: 0;
+}
+
+/* Mobile: content ไม่มี margin-left */
+@media (max-width: 991.98px) {
+  .content-wrapper {
+    margin-left: 0 !important;
+  }
+}
+
+/* Sidebar - Fixed Position */
+.main-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
+  z-index: 1000;
+  transition: margin-left 0.3s ease-in-out;
+  overflow-y: auto;
+}
+
+/* เมื่อ sidebar ปิด */
+body.sidebar-collapse .main-sidebar,
+body.sidebar-mini.sidebar-collapse .main-sidebar {
+  margin-left: -250px;
+}
+
+/* Mobile: sidebar ซ่อนไว้ */
+@media (max-width: 991.98px) {
+  .main-sidebar {
+    margin-left: -250px;
+    z-index: 1040;
+  }
+  
+  /* เมื่อเปิด sidebar บน mobile */
+  body.sidebar-open .main-sidebar {
+    margin-left: 0;
+  }
+  
+  /* Backdrop บน mobile */
+  body.sidebar-open::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1035;
+  }
+}
+
+/* Navbar - Fixed Position */
+.plating-navbar {
+  position: fixed;
+  top: 0;
+  left: 250px;
+  right: 0;
+  height: 60px;
+  z-index: 1030;
+  transition: left 0.3s ease-in-out;
+}
+
+/* เมื่อ sidebar ปิด - navbar เต็มจอ */
+body.sidebar-collapse .plating-navbar,
+body.sidebar-mini.sidebar-collapse .plating-navbar {
+  left: 0;
+}
+
+/* Mobile: navbar เต็มจอเสมอ */
+@media (max-width: 991.98px) {
+  .plating-navbar {
+    left: 0 !important;
+  }
+}
+
+/* ============================================
+   RESPONSIVE PADDING ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 1199.98px) {
+  .content-wrapper {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .content-wrapper {
+    padding: 0.75rem;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  .plating-navbar,
+  .main-sidebar {
+    display: none !important;
+  }
+  
+  .content-wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* ============================================
+   SMOOTH SCROLLING
+   ============================================ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.no-padding {
+  padding: 0 !important;
+}
+
+.no-margin {
+  margin: 0 !important;
+}
+
+.full-width {
+  width: 100% !important;
+}
   
