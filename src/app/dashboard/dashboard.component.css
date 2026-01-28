@@ -1,0 +1,423 @@
+/* page spacing (เผื่อ navbar fixed) */
+.dash-page{
+    padding: 20px 22px;
+    background: #f6f8fb;
+    min-height: calc(100vh - 70px);
+  }
+  
+  /* grid: 2 cards top */
+  .dash-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  
+  /* card base */
+  .dash-card{
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
+    border: 1px solid rgba(16, 24, 40, 0.06);
+    overflow: hidden;
+  }
+  
+  /* header */
+  .card-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+  }
+  
+  .card-title{
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0;
+    color: #1f2a37;
+  }
+  
+  /* small count pill */
+  .count-pill{
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 13px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  
+  .pill-issue{
+    color: #9a6b00;
+    background: #fff2c2;
+    border-color: #ffe7a0;
+  }
+  
+  .pill-receive{
+    color: #1f4aa8;
+    background: #dbeafe;
+    border-color: #c7ddff;
+  }
+  
+  /* pending list */
+  .pending-list{
+    padding: 0 18px 18px;
+    display: grid;
+    gap: 12px;
+  }
+  
+  .pending-item{
+    border-radius: 12px;
+    padding: 14px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid transparent;
+  }
+  
+  .pending-item .left{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+  
+  .meta{
+    min-width: 0;
+  }
+  
+  .meta .name{
+    font-weight: 900;
+    color: #1f2a37;
+    line-height: 1.1;
+  }
+  
+  .meta .sub{
+    margin-top: 4px;
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* icon circle */
+  .icon-circle{
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border: 2px solid transparent;
+  }
+  
+  .icon-circle i{
+    font-size: 14px;
+  }
+  
+  /* issue theme */
+  .pending-item.issue{
+    background: #fff8db;
+    border-color: #ffe08a;
+  }
+  
+  .icon-circle.issue{
+    background: #fff2c2;
+    border-color: #ffd76d;
+    color: #9a6b00;
+  }
+  
+  .status.issue{
+    color: #9a6b00;
+    font-weight: 900;
+  }
+  
+  /* receive theme */
+  .pending-item.receive{
+    background: #eef5ff;
+    border-color: #b8d4ff;
+  }
+  
+  .icon-circle.receive{
+    background: #dbeafe;
+    border-color: #b8d4ff;
+    color: #1f4aa8;
+  }
+  
+  .status.receive{
+    color: #1f4aa8;
+    font-weight: 900;
+  }
+  
+  /* table */
+  .table-wrap{
+    padding: 0 0 6px;
+    border-top: 1px solid rgba(16, 24, 40, 0.06);
+  }
+  
+  .tx-table{
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tx-table thead th{
+    text-align: left;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: #6b7280;
+    font-weight: 900;
+    padding: 14px 18px;
+    background: #fbfcfe;
+    border-bottom: 1px solid rgba(16, 24, 40, 0.06);
+  }
+  
+  .tx-table tbody td{
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(16, 24, 40, 0.06);
+    color: #111827;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  
+  .tx-table tbody tr:hover{
+    background: #fbfcfe;
+  }
+  
+  .strong{
+    font-weight: 900;
+  }
+  
+  /* chips */
+  .chip{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 900;
+    font-size: 12px;
+    border: 1px solid transparent;
+  }
+  
+  .chip-issue{
+    color: #6d28d9;
+    background: #f3e8ff;
+    border-color: #e9d5ff;
+  }
+  
+  .chip-receive{
+    color: #15803d;
+    background: #dcfce7;
+    border-color: #bbf7d0;
+  }
+  
+  /* status pill */
+  .status-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 900;
+    font-size: 13px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  
+  .status-pill.wait{
+    color: #9a6b00;
+    background: #fff2c2;
+    border-color: #ffe7a0;
+  }
+  
+  .status-pill.done{
+    color: #15803d;
+    background: #dcfce7;
+    border-color: #bbf7d0;
+  }
+  
+  /* spacing helper */
+  .mt-18{ margin-top: 18px; }
+  
+  /* responsive */
+  @media (max-width: 991.98px){
+    .dash-page{
+      padding: 16px 14px;
+    }
+  
+    .dash-grid{
+      grid-template-columns: 1fr;
+    }
+  
+    .tx-table{
+      min-width: 920px; /* ให้ตารางเลื่อนได้ */
+    }
+  
+    .table-wrap{
+      overflow-x: auto;
+    }
+  }
+  
+
+  /* =========================
+   Mobile fix: pending items
+========================= */
+@media (max-width: 575.98px) {
+
+    /* ให้การ์ดข้างในมีพื้นที่หายใจ */
+    .dash-page{
+      padding: 14px 12px;
+    }
+  
+    /* pending item: ให้ยืดหยุ่นและไม่ล้น */
+    .pending-item{
+      flex-wrap: wrap;           /* สำคัญ */
+      gap: 10px;
+      align-items: flex-start;
+    }
+  
+    /* ฝั่งซ้ายให้กินพื้นที่เต็มก่อน */
+    .pending-item .left{
+      flex: 1 1 100%;
+      min-width: 0;
+    }
+  
+    /* บรรทัด vendor/qty ให้ตัดบรรทัดได้ ไม่ดันให้ล้น */
+    .meta .sub{
+      white-space: normal;       /* จากเดิม nowrap */
+      overflow: visible;
+      text-overflow: unset;
+      line-height: 1.25;
+    }
+  
+    /* status ลงบรรทัดล่าง แล้วชิดขวา */
+    .pending-item .status{
+      flex: 0 0 auto;
+      margin-left: auto;         /* ดันไปขวา */
+      font-size: 14px;
+    }
+  
+    /* ถ้าอยากให้ item ดูไม่แน่นเกิน */
+    .pending-item{
+      padding: 12px;
+    }
+  }
+  
+
+
+
+ /* =========================
+   Vendor Summary (REFINED v2)
+========================= */
+
+.vendor-summary{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  
+  /* card */
+  .vendor-card{
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    padding: 16px;
+    position: relative;
+    border: 1px solid #eef2f7; /* ✅ เพิ่มเส้นบางๆให้ดูคม */
+  }
+  
+  /* slim color bar */
+  .vendor-card::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:14px;
+    bottom:14px;
+    width:4px;
+    border-radius: 4px;
+  }
+  
+  .vendor-zip::before{ background:#5fa8ff; }
+  .vendor-metek::before{ background:#48c78e; }
+  
+  /* title */
+  .vendor-title{
+    font-size: 20px;         /* 🔽 ลดนิด ให้บาลานซ์ */
+    font-weight: 800;
+    color: #1f2a37;
+    margin: 2px 0 12px 10px;
+  }
+  
+  /* metrics */
+  .vendor-metrics{
+    display: grid;
+    gap: 10px;
+    padding-left: 6px;
+  }
+  
+  .metric-row{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;              /* ✅ อ่อนลง ดูแพงขึ้น */
+    border: 1px solid #eef2f7;        /* ✅ แยกชั้น */
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  
+  /* ✅ ทำ label ให้เด่นแบบสุภาพ */
+  .metric-label{
+    font-size: 12px;                 /* 🔽 เล็กลง */
+    font-weight: 700;                /* 🔼 หนาขึ้น */
+    color: #475569;                  /* slate-600 */
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  /* ✅ จุด/ไอคอนเล็กๆ นำหน้า ช่วยสแกน */
+  .metric-label::before{
+    content: "•";
+    color: #94a3b8;                  /* muted */
+    font-size: 18px;
+    line-height: 1;
+  }
+  
+  /* value */
+  .metric-value{
+    font-size: 24px;                 /* 🔽 ลดให้เข้ากับ UI */
+    font-weight: 800;
+    letter-spacing: 0.2px;
+  }
+  
+  /* softer colors */
+  .value-blue{ color:#3b82f6; }
+  .value-green{ color:#22c55e; }
+  .value-red{ color:#ef4444; }
+  .value-orange{ color:#f59e0b; }
+  
+  /* (optional) ช่วยให้ hover ดู interactive แบบเบาๆ */
+  .metric-row:hover{
+    background: #f1f5f9;
+  }
+  
+  /* =========================
+     Responsive
+  ========================= */
+  @media (max-width: 768px){
+    .vendor-summary{
+      grid-template-columns: 1fr;
+    }
+    .vendor-title{
+      font-size: 18px;
+    }
+    .metric-value{
+      font-size: 22px;
+    }
+  }
+  

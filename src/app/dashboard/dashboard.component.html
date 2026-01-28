@@ -1,1 +1,225 @@
-<p>dashboard works!</p>
+<div class="dash-page">
+
+    <!-- Vendor Summary (TOP) -->
+<section class="vendor-summary">
+    <div class="vendor-card vendor-zip">
+      <div class="vendor-title">Vendor ZIP</div>
+  
+      <div class="vendor-metrics">
+        <div class="metric-row">
+          <div class="metric-label">Total Issue</div>
+          <div class="metric-value value-blue">850</div>
+        </div>
+  
+        <div class="metric-row">
+          <div class="metric-label">Total Receive</div>
+          <div class="metric-value value-blue">720</div>
+        </div>
+  
+        <div class="metric-row">
+          <div class="metric-label">Balance</div>
+          <div class="metric-value value-red">130</div>
+        </div>
+  
+        <div class="metric-row">
+          <div class="metric-label">Receive Rate</div>
+          <div class="metric-value value-blue">85%</div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="vendor-card vendor-metek">
+      <div class="vendor-title">Vendor METEK</div>
+  
+      <div class="vendor-metrics">
+        <div class="metric-row">
+          <div class="metric-label">Total Issue</div>
+          <div class="metric-value value-green">780</div>
+        </div>
+  
+        <div class="metric-row">
+          <div class="metric-label">Total Receive</div>
+          <div class="metric-value value-green">650</div>
+        </div>
+  
+        <div class="metric-row">
+          <div class="metric-label">Balance</div>
+          <div class="metric-value value-orange">130</div>
+        </div>
+  
+        <div class="metric-row">
+          <div class="metric-label">Receive Rate</div>
+          <div class="metric-value value-green">83%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- (ต่อด้วย) Issue Pending + Receive Pending ของเดิม -->
+  
+
+    <!-- TOP SUMMARY -->
+    <div class="dash-grid">
+      <!-- Issue Pending -->
+      <section class="dash-card card-issue">
+        <div class="card-head">
+          <h3 class="card-title">Issue OnProcess</h3>
+          <span class="count-pill pill-issue">2 รายการ</span>
+        </div>
+  
+        <div class="pending-list">
+          <div class="pending-item issue">
+            <div class="left">
+              <span class="icon-circle issue">
+                <i class="far fa-clock"></i>
+              </span>
+              <div class="meta">
+                <div class="name">YOKE#1</div>
+                <div class="sub">Vendor: ZIP | QTY: 4000</div>
+              </div>
+            </div>
+            <div class="status issue">Wait</div>
+          </div>
+  
+          <div class="pending-item issue">
+            <div class="left">
+              <span class="icon-circle issue">
+                <i class="far fa-clock"></i>
+              </span>
+              <div class="meta">
+                <div class="name">SHAFT#2</div>
+                <div class="sub">Vendor: METEK | QTY: 3000</div>
+              </div>
+            </div>
+            <div class="status issue">Wait</div>
+          </div>
+        </div>
+      </section>
+  
+      <!-- Receive Pending -->
+      <section class="dash-card card-receive">
+        <div class="card-head">
+          <h3 class="card-title">Receive</h3>
+          <span class="count-pill pill-receive">2 รายการ</span>
+        </div>
+  
+        <div class="pending-list">
+          <div class="pending-item receive">
+            <div class="left">
+              <span class="icon-circle receive">
+                <i class="fas fa-check"></i>
+              </span>
+              <div class="meta">
+                <div class="name">YOKE#1</div>
+                <div class="sub">Vendor: ZIP | QTY: 2000</div>
+              </div>
+            </div>
+            <div class="status receive">Complete</div>
+          </div>
+  
+          <div class="pending-item receive">
+            <div class="left">
+              <span class="icon-circle receive">
+                <i class="fas fa-check"></i>
+              </span>
+              <div class="meta">
+                <div class="name">SHAFT#2</div>
+                <div class="sub">Vendor: METEK | QTY: 1500</div>
+              </div>
+            </div>
+            <div class="status receive">Complete</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  
+    <!-- TRANSACTION HISTORY -->
+    <section class="dash-card mt-18">
+      <div class="card-head">
+        <h3 class="card-title">Transaction History</h3>
+      </div>
+  
+      <div class="table-wrap">
+        <table class="tx-table">
+          <thead>
+            <tr>
+              <th style="width: 170px;">DATE/TIME</th>
+              <th style="width: 120px;">TYPE</th>
+              <th style="width: 120px;">VENDOR</th>
+              <th style="width: 180px;">ITEM NO.</th>
+              <th>ITEM NAME</th>
+              <th style="width: 120px;">QUANTITY</th>
+              <th style="width: 150px;">STATUS</th>
+            </tr>
+          </thead>
+  
+          <tbody>
+            <tr>
+              <td>01/26/2026 14:30</td>
+              <td>
+                <span class="chip chip-issue">Issue</span>
+              </td>
+              <td>ZIP</td>
+              <td>10000206936</td>
+              <td class="strong">YOKE#1</td>
+              <td>4000</td>
+              <td>
+                <span class="status-pill wait">
+                  <i class="far fa-clock"></i> Wait
+                </span>
+              </td>
+            </tr>
+  
+            <tr>
+              <td>01/26/2026 14:15</td>
+              <td>
+                <span class="chip chip-receive">Receive</span>
+              </td>
+              <td>ZIP</td>
+              <td>10000206936</td>
+              <td class="strong">YOKE#1</td>
+              <td>2000</td>
+              <td>
+                <span class="status-pill done">
+                  <i class="fas fa-check-circle"></i> Complete
+                </span>
+              </td>
+            </tr>
+  
+            <tr>
+              <td>01/26/2026 13:45</td>
+              <td>
+                <span class="chip chip-issue">Issue</span>
+              </td>
+              <td>METEK</td>
+              <td>10000206937</td>
+              <td class="strong">SHAFT#2</td>
+              <td>3000</td>
+              <td>
+                <span class="status-pill wait">
+                  <i class="far fa-clock"></i> Wait
+                </span>
+              </td>
+            </tr>
+  
+            <tr>
+              <td>01/26/2026 13:20</td>
+              <td>
+                <span class="chip chip-receive">Receive</span>
+              </td>
+              <td>METEK</td>
+              <td>10000206937</td>
+              <td class="strong">SHAFT#2</td>
+              <td>1500</td>
+              <td>
+                <span class="status-pill done">
+                  <i class="fas fa-check-circle"></i> Complete
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  

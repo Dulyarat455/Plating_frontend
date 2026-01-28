@@ -1,0 +1,128 @@
+<div class="issue-page">
+    <div class="issue-card">
+      <div class="issue-header">
+        <h2 class="issue-title">Issue Part to Vendor</h2>
+      </div>
+  
+      <!-- Form -->
+      <form class="issue-form" autocomplete="off">
+        <div class="form-grid">
+          <!-- วันที่ส่งงาน -->
+          <div class="form-field">
+            <label class="form-label">วันที่ส่งงาน</label>
+            <div class="input-wrap">
+              <input class="form-control" type="date" />
+              <span class="input-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+            </div>
+          </div>
+  
+          <!-- Shift -->
+          <div class="form-field">
+            <label class="form-label">Shift</label>
+            <div class="input-wrap">
+              <select class="form-control">
+                <option value="" selected disabled>เลือกกะการทำงาน</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+              </select>
+              <span class="input-icon">
+                <i class="fas fa-chevron-down"></i>
+              </span>
+            </div>
+          </div>
+  
+          <!-- Select Vendor (full width like screenshot) -->
+          <div class="form-field span-2">
+            <label class="form-label">Select Vendor</label>
+            <div class="input-wrap">
+              <select class="form-control">
+                <option value="" selected disabled>เลือก Vendor</option>
+                <option>ZIP</option>
+                <option>METEK</option>
+              </select>
+              <span class="input-icon">
+                <i class="fas fa-chevron-down"></i>
+              </span>
+            </div>
+          </div>
+  
+          <!-- Auto Item No. -->
+          <div class="form-field">
+            <label class="form-label">Auto Item No.</label>
+            <input class="form-control" type="text" placeholder="" />
+          </div>
+  
+          <!-- Select Item Name -->
+          <div class="form-field">
+            <label class="form-label">Select Item Name</label>
+            <div class="input-wrap">
+              <select class="form-control">
+                <option value="" selected disabled>เลือก Item Name</option>
+                <option>YOKE#1</option>
+                <option>SHAFT#2</option>
+              </select>
+              <span class="input-icon">
+                <i class="fas fa-chevron-down"></i>
+              </span>
+            </div>
+          </div>
+  
+          <!-- Control Lot -->
+          <div class="form-field">
+            <label class="form-label">Control Lot</label>
+            <div class="input-wrap">
+              <select class="form-control">
+                <option selected>งานแพ็คคุม</option>
+                <option>งานทั่วไป</option>
+              </select>
+              <span class="input-icon">
+                <i class="fas fa-chevron-down"></i>
+              </span>
+            </div>
+          </div>
+  
+          <!-- Total QTY BOX -->
+          <div class="form-field">
+            <label class="form-label">Total QTY BOX</label>
+            <input class="form-control" type="number" placeholder="Max 42 Box/ครั้ง" />
+          </div>
+        </div>
+  
+        <!-- Save button -->
+        <button type="button" class="btn-save">
+          Save
+        </button>
+      </form>
+  
+
+
+
+
+
+
+      
+      <!-- Instruction box -->
+      <div class="instruction-card">
+        <div class="instruction-title">
+          <i class="fas fa-qrcode"></i>
+          <span>Scan QR Code Instructions</span>
+        </div>
+  
+        <ul class="instruction-list">
+          <li>หลังจาก scan QR ให้ทำเส้นเดียวกันหัวกดดี scan จนครบทุกใบที่ scan</li>
+          <li>ถ้าต้องมีการยกเลิกการ Scan QR ที่แสดงกล่องชัดเจน จะไม่สามารถ Scan QR ได้</li>
+          <li>หาก Scan QR ซ้ำ ให้มี Pop up เตือนแจ้ง เพื่อให้เห็นกะทำงานก่อน Scan ซ้ำ</li>
+          <li>ไม่สามารถ Scan QR แสดงลงทำการรับทั้งก่อนออนไลน์ได้ ทั้ง Send และ Receive จะทำได้ต่อเมื่อมีการ Receive complete แล้วเท่านั้น</li>
+        </ul>
+      </div>
+
+
+
+
+
+    </div>
+  </div>
+  

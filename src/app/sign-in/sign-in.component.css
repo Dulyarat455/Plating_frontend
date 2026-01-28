@@ -431,3 +431,134 @@
 .menu-item:nth-child(2) { animation-delay: 0.2s; }
 .menu-item:nth-child(3) { animation-delay: 0.3s; }
 .menu-item:nth-child(4) { animation-delay: 0.4s; }
+
+
+
+
+/* =====================================================
+   SignIn UI Theme (match Navbar: dark blue + accent cyan)
+   * Paste at bottom to override
+===================================================== */
+
+/* Background ให้เข้มขึ้นเล็กน้อย + คลีน */
+.login-container{
+    background: linear-gradient(135deg, #e9eef6 0%, #d5deec 100%) !important;
+  }
+  
+  /* Card */
+  .login-card{
+    border-radius: 14px !important;
+    border: 1px solid rgba(44, 62, 80, 0.12);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12) !important;
+    overflow: hidden;
+  }
+  
+  /* Header โทนเดียวกับ navbar */
+  .login-card .card-header{
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+    padding: 1.05rem 1.1rem !important;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  
+  .login-card .card-header h4,
+  .login-card .card-header i{
+    color: #ffffff !important;
+    letter-spacing: .2px;
+  }
+  
+  /* Body */
+  .login-card .card-body{
+    background: #ffffff;
+  }
+  
+  /* Section Title */
+  .section-title span{
+    color: #2c3e50 !important;
+    font-weight: 600 !important;
+  }
+  
+  .section-title .line{
+    background: rgba(44,62,80,0.15) !important;
+  }
+  
+  /* Divider */
+  .divider::before,
+  .divider::after{
+    background-color: rgba(44,62,80,0.14) !important;
+  }
+  
+  .divider-text{
+    color: #6c7a89 !important;
+    font-weight: 600;
+  }
+  
+  /* Input group ให้เนียนขึ้น */
+  .input-group{
+    border-radius: 10px !important;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.05) !important;
+  }
+  
+  .input-group-text{
+    background: rgba(44, 62, 80, 0.06) !important;
+    border-color: rgba(44,62,80,0.18) !important;
+  }
+  
+  .input-group-text i{
+    color: #3498db !important; /* accent */
+  }
+  
+  /* Input */
+  .form-control{
+    border-color: rgba(44,62,80,0.18) !important;
+  }
+  
+  .form-control:focus{
+    border-color: rgba(52,152,219,0.8) !important;
+    box-shadow: 0 0 0 0.2rem rgba(52,152,219,0.18) !important;
+  }
+  
+  /* Buttons */
+  .btn{
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+  }
+  
+  .btn-primary{
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%) !important;
+    border: none !important;
+    box-shadow: 0 8px 16px rgba(52,152,219,0.22);
+  }
+  
+  .btn-primary:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(52,152,219,0.28);
+  }
+  
+  /* Clear ให้เข้าธีม (ไม่เหลืองโดด) */
+  .btn-warning{
+    background: rgba(44,62,80,0.08) !important;
+    color: #2c3e50 !important;
+    border: 1px solid rgba(44,62,80,0.18) !important;
+    box-shadow: none !important;
+  }
+  
+  .btn-warning:hover{
+    background: rgba(44,62,80,0.12) !important;
+    transform: translateY(-1px);
+  }
+  
+  /* Loading text */
+  .text-muted{
+    color: rgba(44,62,80,0.65) !important;
+  }
+  
+  /* Mobile: เว้นระยะให้ดูโปรขึ้น */
+  @media (max-width: 576px){
+    .login-card{
+      border-radius: 12px !important;
+    }
+    .login-card .card-header{
+      padding: 0.95rem 1rem !important;
+    }
+  }
+  

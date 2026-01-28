@@ -373,35 +373,71 @@ body.sidebar-mini.sidebar-collapse .plating-navbar {
 
 
 
-/* Override Mobile Menu Colors */
+/* =========================
+   Mobile Menu = Single Bar
+========================= */
 @media (max-width: 991.98px) {
 
-  .mobile-nav-item {
-    background: #2c3e50 !important; /* เทาน้ำเงิน */
-    /* หรือ */
-
-    
+  /* แถบเมนูทั้งแถบ */
+  .mobile-menu {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #2c3e50; /* สีเดียวกับ navbar */
+    padding: 0.25rem 0;
+    border-top: 1px solid rgba(255,255,255,0.15);
   }
+
+  /* ปุ่มเมนู ไม่เป็นกล่อง */
+  .mobile-nav-item {
+    flex: 1 1 0;
+    padding: 0.4rem 0;
+    background: transparent !important;
+    border-radius: 0 !important;
+    text-align: center;
+    min-width: auto;
+  }
+
+  .mobile-nav-item i {
+    font-size: 1.25rem;
+    margin-bottom: 2px;
+  }
+
+  .mobile-nav-item span {
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  /* สีปกติ */
   .mobile-nav-item i,
   .mobile-nav-item span {
-    color: #ffffff !important;
-    font-weight: 600 !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    color: rgba(255,255,255,0.8);
   }
-  
+
+  /* hover / active */
   .mobile-nav-item:hover,
   .mobile-nav-item.active {
-    color: #ffffff !important;
+    background: transparent !important;
   }
-  
-  .mobile-nav-item:hover i,
-  .mobile-nav-item:hover span,
+
+  /* active = ขีดเส้นล่าง */
+  .mobile-nav-item.active {
+    position: relative;
+  }
+
+  .mobile-nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    width: 60%;
+    height: 3px;
+    background: #3498db;
+    border-radius: 2px;
+  }
+
   .mobile-nav-item.active i,
   .mobile-nav-item.active span {
-    color: #ffffff !important;
-  }
-  
-  .mobile-nav-item.active {
-    background-color: rgba(52, 152, 219, 0.3) !important;
+    color: #ffffff;
   }
 }

@@ -6,39 +6,47 @@
     style="text-decoration: none; padding: 1rem"
   >
     <img
-      src="dist/img/factory.png"
+      src="dist/img/move.png"
       alt="AdminLTE Logo"
-      class="brand-image img-circle elevation-2"
+      class="brand-image "
     />
     <span class="brand-text ms-2">
-      <h3 class="mb-0">Plating</h3>
+      <h3>Plating LPB</h3>
+
     </span>
   </a>
 
   <!-- Sidebar -->
   <div class="sidebar">
     <!-- User Panel -->
-    @if (name != undefined) {
+   
     <div class="user-panel mt-3 pb-3 mb-3">
       <div class="d-flex align-items-center p-3 mb-3 bg-dark rounded">
         <div class="image">
-          <img
-            src="dist/img/employee.png"
-            class="img-circle elevation-2"
-            alt="User Image"
-            style="width: 45px; height: 45px; object-fit: cover"
-          />
+          <div>
+            <img
+              src="dist/img/employee.png"
+              class="img-circle elevation-2 mr-2"
+              alt="User Image"
+              style="width: 45px; height: 45px; object-fit: cover"
+              
+            />
+          LE519 
+        </div>
         </div>
         <div class="info ms-3">
           <h5 class="text-white mb-1">{{ empNo }}</h5>
           <small class="text-light opacity-75">{{ level }}</small>
         </div>
       </div>
+      <div class="d-flex align-items-center p-3 mb-3 bg-dark rounded">
+        <div class="ml-2">Dulyarat Tovijit</div>
+      </div>
       <button class="btn btn-danger w-100" (click)="signout()">
         <i class="fas fa-sign-out-alt me-2"></i>Sign Out
       </button>
     </div>
-    }
+    
 
     <!-- Menu -->
     <nav class="mt-2">

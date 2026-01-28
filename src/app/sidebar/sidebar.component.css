@@ -12,7 +12,7 @@
 .brand-link {
   border-bottom: 1px solid rgba(52, 152, 219, 0.2);
   background: rgba(52, 152, 219, 0.05);
-  height: 60px;
+  height: 100px;
   display: flex;
   align-items: center;
   padding: 0 1rem !important;
@@ -26,10 +26,10 @@
 
 .brand-image {
   width: 40px !important;
-  height: 40px !important;
-  border: 2px solid rgba(52, 152, 219, 0.5);
+  height: 60px !important;
+ 
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+  
 }
 
 .brand-link:hover .brand-image {
@@ -326,3 +326,5 @@
     0 0 15px rgba(52, 152, 219, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
+
+

@@ -16,7 +16,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   formattedTime: string = '';
   private timeInterval: any;
 
-  token: string | undefined = 'sssss';
+  token: string | undefined = '111111';
   constructor(private renderer: Renderer2) {}
 
   ngOnInit(): void {
