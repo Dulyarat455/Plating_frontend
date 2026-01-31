@@ -328,3 +328,22 @@
 }
 
 
+
+
+
+/* ===== Sidebar Scrollbar (FIX TARGET) ===== */
+.main-sidebar {
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Firefox */
+  scrollbar-width: none;
+
+  /* กัน layout กระพริบ */
+  scrollbar-gutter: stable;
+}
+
+/* Chrome / Edge / Safari */
+.main-sidebar::-webkit-scrollbar {
+  display: none;
+}

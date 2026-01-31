@@ -12,6 +12,12 @@
   </div>
   } @else {
   <app-navbar></app-navbar>
-  <app-sign-in></app-sign-in>
+  <div class="content-wrapper">
+    <section class="content">
+      <div class="container-fluid ">
+        <router-outlet></router-outlet>
+      </div>
+    </section>
+</div>
   }
 </div>

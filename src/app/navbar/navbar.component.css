@@ -304,9 +304,6 @@ body.sidebar-mini.sidebar-collapse .plating-navbar {
     padding: 0.5rem 1rem;
   }
   
-  .navbar-title {
-    display: none;
-  }
   
   .datetime-display {
     display: none !important;
@@ -440,4 +437,10 @@ body.sidebar-mini.sidebar-collapse .plating-navbar {
   .mobile-nav-item.active span {
     color: #ffffff;
   }
+}
+
+
+.nav-right {
+  margin-left: auto;
+  gap: 16px;
 }

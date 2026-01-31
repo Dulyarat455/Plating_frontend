@@ -19,6 +19,7 @@
     box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
     border: 1px solid rgba(16, 24, 40, 0.06);
     overflow: hidden;
+    margin-bottom: 20px;
   }
   
   /* header */
@@ -421,3 +422,161 @@
     }
   }
   
+
+
+
+
+
+
+
+  /* =========================
+   Transaction Lot Tables
+========================= */
+
+.tx-wrap{
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.col-exp{
+  width: 44px;
+  text-align: center;
+}
+
+.tx-lot thead th{
+  font-size: 12px;
+  color: #334155;
+  background: linear-gradient(180deg, #f7fbff 0%, #fbfcfe 100%);
+}
+
+.lot-row td{
+  vertical-align: middle;
+}
+
+/* Expand button (soft) */
+.btn-expand{
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .12s ease, transform .12s ease;
+}
+
+.btn-expand:hover{ background: #f1f5f9; }
+.btn-expand:active{ transform: scale(0.98); }
+.btn-expand i{ font-size: 12px; color: #334155; }
+
+/* Box count pill */
+.box-pill{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef6ff;
+  border: 1px solid #d9e9ff;
+  color: #1f4aa8;
+  font-weight: 900;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.box-pill-green{
+  background: #ecfdf3;
+  border-color: #bbf7d0;
+  color: #15803d;
+}
+
+/* Expanded row container */
+.lot-detail td{
+  padding: 0;
+  border-bottom: none;
+  background: #fbfdff;
+}
+
+.lot-detail-card{
+  margin: 10px 14px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(59, 130, 246, 0.16);
+  background: #ffffff;
+  box-shadow: 0 6px 16px rgba(16,24,40,0.06);
+  overflow: hidden;
+}
+
+.lot-detail-card-green{
+  border-color: rgba(34, 197, 94, 0.18);
+}
+
+.lot-detail-head{
+  padding: 12px 14px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  background: linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.lot-detail-title{
+  font-weight: 900;
+  color: #0f172a;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lot-detail-title i{ color: #3b82f6; }
+.lot-detail-card-green .lot-detail-title i{ color: #22c55e; }
+
+.lot-detail-hint{
+  color: #64748b;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.lot-box-wrap{ overflow-x: auto; }
+
+.box-table{
+  width: 100%;
+  min-width: 860px;
+  border-collapse: collapse;
+}
+
+.box-table thead th{
+  padding: 12px 14px;
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 900;
+  background: #fbfcfe;
+  border-bottom: 1px solid rgba(15,23,42,0.06);
+}
+
+.box-table tbody td{
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(15,23,42,0.06);
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.box-table tbody tr:hover{ background: #fbfdff; }
+
+.empty-row{
+  padding: 14px;
+  color: #64748b;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* Mobile: detail head stack */
+@media (max-width: 575.98px){
+  .lot-detail-card{ margin: 10px 10px 12px; }
+  .lot-detail-head{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

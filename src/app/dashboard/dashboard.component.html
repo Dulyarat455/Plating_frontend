@@ -55,171 +55,233 @@
     </div>
   </section>
   
-  <!-- (ต่อด้วย) Issue Pending + Receive Pending ของเดิม -->
-  
 
-    <!-- TOP SUMMARY -->
-    <div class="dash-grid">
-      <!-- Issue Pending -->
-      <section class="dash-card card-issue">
-        <div class="card-head">
-          <h3 class="card-title">Issue OnProcess</h3>
-          <span class="count-pill pill-issue">2 รายการ</span>
-        </div>
-  
-        <div class="pending-list">
-          <div class="pending-item issue">
-            <div class="left">
-              <span class="icon-circle issue">
-                <i class="far fa-clock"></i>
-              </span>
-              <div class="meta">
-                <div class="name">YOKE#1</div>
-                <div class="sub">Vendor: ZIP | QTY: 4000</div>
-              </div>
-            </div>
-            <div class="status issue">Wait</div>
-          </div>
-  
-          <div class="pending-item issue">
-            <div class="left">
-              <span class="icon-circle issue">
-                <i class="far fa-clock"></i>
-              </span>
-              <div class="meta">
-                <div class="name">SHAFT#2</div>
-                <div class="sub">Vendor: METEK | QTY: 3000</div>
-              </div>
-            </div>
-            <div class="status issue">Wait</div>
-          </div>
-        </div>
-      </section>
-  
-      <!-- Receive Pending -->
-      <section class="dash-card card-receive">
-        <div class="card-head">
-          <h3 class="card-title">Receive</h3>
-          <span class="count-pill pill-receive">2 รายการ</span>
-        </div>
-  
-        <div class="pending-list">
-          <div class="pending-item receive">
-            <div class="left">
-              <span class="icon-circle receive">
-                <i class="fas fa-check"></i>
-              </span>
-              <div class="meta">
-                <div class="name">YOKE#1</div>
-                <div class="sub">Vendor: ZIP | QTY: 2000</div>
-              </div>
-            </div>
-            <div class="status receive">Complete</div>
-          </div>
-  
-          <div class="pending-item receive">
-            <div class="left">
-              <span class="icon-circle receive">
-                <i class="fas fa-check"></i>
-              </span>
-              <div class="meta">
-                <div class="name">SHAFT#2</div>
-                <div class="sub">Vendor: METEK | QTY: 1500</div>
-              </div>
-            </div>
-            <div class="status receive">Complete</div>
-          </div>
-        </div>
-      </section>
-    </div>
-  
     <!-- TRANSACTION HISTORY -->
-    <section class="dash-card mt-18">
+    <section class="dash-card">
       <div class="card-head">
-        <h3 class="card-title">Transaction History</h3>
+        <h3 class="card-title">Transaction Issue (By Lot)</h3>
       </div>
-  
-      <div class="table-wrap">
-        <table class="tx-table">
+    
+      <div class="table-wrap tx-wrap">
+        <table class="tx-table tx-lot">
           <thead>
             <tr>
+              <th class="col-exp"></th>
               <th style="width: 170px;">DATE/TIME</th>
-              <th style="width: 120px;">TYPE</th>
               <th style="width: 120px;">VENDOR</th>
-              <th style="width: 180px;">ITEM NO.</th>
-              <th>ITEM NAME</th>
-              <th style="width: 120px;">QUANTITY</th>
+    
+              <th style="width: 220px;">LOT ISSUE NO</th>
+              <th style="width: 110px;" class="text-center">BOX</th>
+              <th style="width: 120px;">TOTAL QTY</th>
               <th style="width: 150px;">STATUS</th>
             </tr>
           </thead>
-  
+    
           <tbody>
-            <tr>
-              <td>01/26/2026 14:30</td>
-              <td>
-                <span class="chip chip-issue">Issue</span>
-              </td>
-              <td>ZIP</td>
-              <td>10000206936</td>
-              <td class="strong">YOKE#1</td>
-              <td>4000</td>
-              <td>
-                <span class="status-pill wait">
-                  <i class="far fa-clock"></i> Wait
-                </span>
-              </td>
-            </tr>
-  
-            <tr>
-              <td>01/26/2026 14:15</td>
-              <td>
-                <span class="chip chip-receive">Receive</span>
-              </td>
-              <td>ZIP</td>
-              <td>10000206936</td>
-              <td class="strong">YOKE#1</td>
-              <td>2000</td>
-              <td>
-                <span class="status-pill done">
-                  <i class="fas fa-check-circle"></i> Complete
-                </span>
-              </td>
-            </tr>
-  
-            <tr>
-              <td>01/26/2026 13:45</td>
-              <td>
-                <span class="chip chip-issue">Issue</span>
-              </td>
-              <td>METEK</td>
-              <td>10000206937</td>
-              <td class="strong">SHAFT#2</td>
-              <td>3000</td>
-              <td>
-                <span class="status-pill wait">
-                  <i class="far fa-clock"></i> Wait
-                </span>
-              </td>
-            </tr>
-  
-            <tr>
-              <td>01/26/2026 13:20</td>
-              <td>
-                <span class="chip chip-receive">Receive</span>
-              </td>
-              <td>METEK</td>
-              <td>10000206937</td>
-              <td class="strong">SHAFT#2</td>
-              <td>1500</td>
-              <td>
-                <span class="status-pill done">
-                  <i class="fas fa-check-circle"></i> Complete
-                </span>
-              </td>
-            </tr>
+            <ng-container *ngFor="let lot of issueLots">
+              <!-- Lot row -->
+              <tr class="lot-row">
+                <td class="col-exp">
+                  <button
+                    class="btn-expand"
+                    type="button"
+                    (click)="toggleLot('issue', lot.lotIssueNo)"
+                    [attr.aria-expanded]="isExpanded('issue', lot.lotIssueNo)"
+                    aria-label="Expand"
+                  >
+                    <i
+                      class="fas"
+                      [ngClass]="isExpanded('issue', lot.lotIssueNo) ? 'fa-chevron-up' : 'fa-chevron-down'"
+                    ></i>
+                  </button>
+                </td>
+    
+                <td>{{ lot.dateTime }}</td>
+                <td>{{ lot.vendor }}</td>
+    
+                <td class="mono">{{ lot.lotIssueNo }}</td>
+    
+                <td class="text-center">
+                  <span class="box-pill"><i class="fas fa-box"></i> {{ lot.boxCount }}</span>
+                </td>
+    
+                <td class="mono">{{ lot.totalQty }}</td>
+    
+                <td>
+                  <span class="status-pill" [ngClass]="lot.status === 'Wait' ? 'wait' : 'done'">
+                    <i class="far" [ngClass]="lot.status === 'Wait' ? 'fa-clock' : 'fa-check-circle'"></i>
+                    {{ lot.status }}
+                  </span>
+                </td>
+              </tr>
+    
+              <!-- Expanded: Boxes inside lot -->
+              <tr class="lot-detail" *ngIf="isExpanded('issue', lot.lotIssueNo)">
+                <td colspan="7">
+                  <div class="lot-detail-card">
+                    <div class="lot-detail-head">
+                      <div class="lot-detail-title">
+                        <i class="fas fa-boxes"></i>
+                        Box list in Lot Issue: <span class="mono">{{ lot.lotIssueNo }}</span>
+                      </div>
+                      <div class="lot-detail-hint">* รายการกล่องทั้งหมดใน Lot นี้</div>
+                    </div>
+    
+                    <div class="lot-box-wrap">
+                      <table class="box-table">
+                        <thead>
+                          <tr>
+                            <th>Item No.</th>
+                            <th>Item Name</th>
+                            <th>WOS</th>
+                            <th>DWG</th>
+                            <th>DIE</th>
+                            <th>LOT</th>
+                            <th class="text-end">QTY</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let b of lot.boxes">
+                            <td class="mono">{{ b.itemNo }}</td>
+                            <td class="strong">{{ b.itemName }}</td>
+                            <td class="mono">{{ b.wos }}</td>
+                            <td class="mono">{{ b.dwg }}</td>
+                            <td class="mono">{{ b.die }}</td>
+                            <td class="mono">{{ b.lotNo }}</td>
+                            <td class="text-end strong">{{ b.qty }}</td>
+                          </tr>
+    
+                          <tr *ngIf="!lot.boxes?.length">
+                            <td colspan="7" class="empty-row">No box in this lot</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
           </tbody>
         </table>
       </div>
     </section>
+
+
+
+
+    <section class="dash-card">
+      <div class="card-head">
+        <h3 class="card-title">Transaction Receive (By Lot)</h3>
+      </div>
+    
+      <div class="table-wrap tx-wrap">
+        <table class="tx-table tx-lot tx-lot-receive">
+          <thead>
+            <tr>
+              <th class="col-exp"></th>
+              <th style="width: 170px;">DATE/TIME</th>
+              <th style="width: 120px;">VENDOR</th>
+    
+              <th style="width: 220px;">LOT RECEIVE NO</th>
+              <th style="width: 110px;" class="text-center">BOX</th>
+              <th style="width: 120px;">TOTAL QTY</th>
+              <th style="width: 150px;">STATUS</th>
+            </tr>
+          </thead>
+    
+          <tbody>
+            <ng-container *ngFor="let lot of receiveLots">
+              <!-- Lot row -->
+              <tr class="lot-row">
+                <td class="col-exp">
+                  <button
+                    class="btn-expand"
+                    type="button"
+                    (click)="toggleLot('receive', lot.lotReceiveNo)"
+                    [attr.aria-expanded]="isExpanded('receive', lot.lotReceiveNo)"
+                    aria-label="Expand"
+                  >
+                    <i
+                      class="fas"
+                      [ngClass]="isExpanded('receive', lot.lotReceiveNo) ? 'fa-chevron-up' : 'fa-chevron-down'"
+                    ></i>
+                  </button>
+                </td>
+    
+                <td>{{ lot.dateTime }}</td>
+                <td>{{ lot.vendor }}</td>
+    
+                <td class="mono">{{ lot.lotReceiveNo }}</td>
+    
+                <td class="text-center">
+                  <span class="box-pill box-pill-green"><i class="fas fa-box"></i> {{ lot.boxCount }}</span>
+                </td>
+    
+                <td class="mono">{{ lot.totalQty }}</td>
+    
+                <td>
+                  <span class="status-pill" [ngClass]="lot.status === 'Wait' ? 'wait' : 'done'">
+                    <i class="far" [ngClass]="lot.status === 'Wait' ? 'fa-clock' : 'fa-check-circle'"></i>
+                    {{ lot.status }}
+                  </span>
+                </td>
+              </tr>
+    
+              <!-- Expanded: Boxes inside lot -->
+              <tr class="lot-detail" *ngIf="isExpanded('receive', lot.lotReceiveNo)">
+                <td colspan="7">
+                  <div class="lot-detail-card lot-detail-card-green">
+                    <div class="lot-detail-head">
+                      <div class="lot-detail-title">
+                        <i class="fas fa-boxes"></i>
+                        Box list in Lot Receive: <span class="mono">{{ lot.lotReceiveNo }}</span>
+                      </div>
+                      <div class="lot-detail-hint">* รายการกล่องทั้งหมดใน Lot นี้</div>
+                    </div>
+    
+                    <div class="lot-box-wrap">
+                      <table class="box-table">
+                        <thead>
+                          <tr>
+                            <th>Item No.</th>
+                            <th>Item Name</th>
+                            <th>WOS</th>
+                            <th>DWG</th>
+                            <th>DIE</th>
+                            <th>LOT</th>
+                            <th class="text-end">QTY</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let b of lot.boxes">
+                            <td class="mono">{{ b.itemNo }}</td>
+                            <td class="strong">{{ b.itemName }}</td>
+                            <td class="mono">{{ b.wos }}</td>
+                            <td class="mono">{{ b.dwg }}</td>
+                            <td class="mono">{{ b.die }}</td>
+                            <td class="mono">{{ b.lotNo }}</td>
+                            <td class="text-end strong">{{ b.qty }}</td>
+                          </tr>
+    
+                          <tr *ngIf="!lot.boxes?.length">
+                            <td colspan="7" class="empty-row">No box in this lot</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    
+  <!-- (ต่อด้วย) Issue Pending + Receive Pending ของเดิม -->
+  
+
+    
+  
   </div>
   

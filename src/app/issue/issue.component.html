@@ -51,16 +51,26 @@
   
           <!-- Auto Item No. -->
           <div class="form-field">
-            <label class="form-label">Auto Item No.</label>
-            <input class="form-control" type="text" placeholder="" />
+            <label class="form-label">Select Item No.</label>
+            <!-- <input class="form-control" type="text" placeholder="" /> -->
+            <div class="input-wrap">
+              <select class="form-control">
+                <option value="" selected disabled>เลือก Item Name</option>
+                <option>YOKE#1</option>
+                <option>SHAFT#2</option>
+              </select>
+              <span class="input-icon">
+                <i class="fas fa-chevron-down"></i>
+              </span>
+              </div>
           </div>
   
           <!-- Select Item Name -->
           <div class="form-field">
-            <label class="form-label">Select Item Name</label>
+            <label class="form-label">Auto Item Name</label>
             <div class="input-wrap">
               <select class="form-control">
-                <option value="" selected disabled>เลือก Item Name</option>
+                <option value="" selected disabled></option>
                 <option>YOKE#1</option>
                 <option>SHAFT#2</option>
               </select>
@@ -122,6 +132,117 @@
 
 
 
+
+      <!-- ===== Temp Stack (รอรับข้อมูล / ยังไม่ Confirm) ===== -->
+        <div class="stack-card">
+            <div class="stack-header">
+            <div class="stack-title">
+                <i class="fas fa-hourglass-half"></i>
+                <span>รายการรอ Confirm (Temp Stack)</span>
+            </div>
+        
+            </div>
+        
+            <!-- tag rows -->
+            <div class="stack-grid">
+            <!-- ตัวอย่าง 1 -->
+            <div class="stack-item">
+                <div class="stack-k">Item No.</div>
+                <input class="form-control" type="text" placeholder="" />
+            </div>
+        
+            <div class="stack-item">
+                <div class="stack-k">Item Name</div>
+                <input class="form-control" type="text" placeholder="" />
+            </div>
+        
+            <div class="stack-item">
+                <div class="stack-k">Item WOS No.</div>
+                <input class="form-control" type="text" placeholder="" />
+            </div>
+        
+            <div class="stack-item">
+                <div class="stack-k">Die No.</div>
+                <input class="form-control" type="text" placeholder="" />
+            </div>
+        
+            <div class="stack-item">
+                <div class="stack-k">Lot No.</div>
+                   <input class="form-control" type="text" placeholder="" />
+            </div>
+        
+            <div class="stack-item">
+                <div class="stack-k">Quantity</div>
+                <input class="form-control" type="text" placeholder="" />
+            </div>
+            </div>
+        
+            <div class="stack-note">
+            * Temp Stack = รายการที่ scan เข้าแล้ว แต่ยังไม่กด Confirm Lot
+            </div>
+
+            
+            <div class="stack-actions">
+              <button type="button" class="btn-soft">
+              <i class="fas fa-check-circle me-1"></i>
+              Confirm Lot
+              </button>
+              <button type="button" class="btn-soft danger">
+              <i class="fas fa-trash-alt me-1"></i>
+              Clear
+              </button>
+          </div>
+        </div>
+        
+        
+        <!-- ===== Saved List (บันทึกแล้ว / IQC) ===== -->
+        <div class="saved-card">
+            <div class="saved-header">
+            <div class="saved-title">
+                <i class="fas fa-clipboard-check"></i>
+                <span>รายการที่รับแล้ว (IQC)</span>
+            </div>
+               
+              <div class="saved-actions">
+              <button type="button" class="btn-issue">
+                <i class="fas fa-truck"></i>
+                Issue
+              </button>
+            </div>
+           
+           
+            </div>
+        
+            <div class="table-wrap">
+            <table class="saved-table">
+                <thead>
+                <tr>
+                    <th>Item No.</th>
+                    <th>Item Name</th>
+                    <th>WOS NO</th>
+                    <th>DWG</th>
+                    <th>DIE NO</th>
+                    <th>LOT NO</th>
+                    <th class="text-end">QTY</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- ตัวอย่าง row -->
+                <tr>
+                    <td>10000206936</td>
+                    <td class="fw-600">YOKE#1</td>
+                    <td>JB615021K002</td>
+                    <td>A19-321027-3E</td>
+                    <td>D8</td>
+                    <td>L26119AB4</td>
+                    <td class="text-end fw-600">4000</td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+  
+        
 
     </div>
   </div>

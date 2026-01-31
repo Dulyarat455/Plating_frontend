@@ -32,8 +32,10 @@ export class SidebarComponent {
     this.authService.refreshComponents$.subscribe(() => {
       this.loadUserData();
     });
-    this.name = localStorage.getItem('angular_name')!;
-    this.empNo = localStorage.getItem('angular_empNo')!;
+    this.name = localStorage.getItem('plating_name')!;
+    this.empNo = localStorage.getItem('plating_empNo')!;
+
+
     if (!this.name) {
       // เปลี่ยนเส้นทางไปที่หน้า LoginPage ก่อน
       this.router.navigate(['/']).then(() => {
@@ -48,6 +50,8 @@ export class SidebarComponent {
       });
     }
    
+
+
   }
 
   async signout() {
@@ -79,8 +83,8 @@ export class SidebarComponent {
     });
   }
   loadUserData() {
-    this.name = localStorage.getItem('angular_name') || '';
-    this.empNo = localStorage.getItem('angular_empNo') || '';
+    this.name = localStorage.getItem('plating_name') || '';
+    this.empNo = localStorage.getItem('plating_empNo') || '';
 
     if (!this.name) {
       this.router.navigate(['/']).then(() => {

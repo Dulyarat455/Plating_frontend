@@ -1,175 +1,501 @@
+/* =========================
+   ISSUE PAGE - NEW DESIGN
+   Theme: Blue / Shipping
+========================= */
+
 /* Page background */
 .issue-page{
-    padding: 24px;
-    background: #f5f7fb;
-  }
-  
-  /* Main card */
-  .issue-card{
-    max-width: 1180px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.06);
-    padding: 22px 22px 18px;
-  }
-  
-  /* Title */
-  .issue-header{
-    padding-bottom: 10px;
-  }
-  .issue-title{
-    margin: 0;
-    font-size: 22px;
-    font-weight: 800;
-    color: #2c3e50;
-  }
-  
-  /* Form layout */
-  .issue-form{
-    margin-top: 12px;
-  }
-  
+  padding: 24px;
+  background: radial-gradient(1200px 500px at 20% 0%, rgba(52,152,219,0.10) 0%, rgba(245,247,251,1) 55%),
+              linear-gradient(180deg, #f7fbff 0%, #f5f7fb 60%);
+}
+
+/* Main card */
+.issue-card{
+  max-width: 1180px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid rgba(52,152,219,0.18);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.06);
+  padding: 18px 18px 16px;
+  overflow: hidden;
+}
+
+/* ===== Header (gradient bar) ===== */
+.issue-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(52,152,219,0.14) 0%, rgba(31,186,214,0.10) 55%, rgba(255,255,255,0) 100%);
+  border: 1px solid rgba(52,152,219,0.16);
+  margin-bottom: 12px;
+  position: relative;
+}
+
+/* Accent line */
+.issue-header::before{
+  content:"";
+  position:absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 5px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #3498db 0%, #1fbad6 100%);
+}
+
+.issue-title{
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+  color: #1f2d3d;
+  padding-left: 10px; /* เว้นจากเส้น accent */
+}
+
+/* Form layout */
+.issue-form{
+  margin-top: 10px;
+}
+
+.form-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+
+.form-field{
+  min-width: 0;
+}
+
+.form-field.span-2{
+  grid-column: 1 / -1;
+}
+
+.form-label{
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  color: #516173;
+  margin-bottom: 6px;
+}
+
+/* Controls */
+.form-control{
+  width: 100%;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid #d7dee8;
+  background: #fff;
+  padding: 10px 12px;
+  font-size: 14px;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease, transform .08s ease;
+}
+
+.form-control:focus{
+  border-color: rgba(31,186,214,0.75);
+  box-shadow: 0 0 0 0.22rem rgba(31,186,214,0.14);
+}
+
+.form-control:hover{
+  border-color: rgba(52,152,219,0.28);
+}
+
+input.form-control::placeholder{
+  color: #9aa7b5;
+}
+
+/* input icon on right */
+.input-wrap{
+  position: relative;
+}
+.input-wrap .form-control{
+  padding-right: 38px;
+}
+
+.input-icon{
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #97a6b7;
+  pointer-events: none;
+  font-size: 14px;
+}
+
+/* ===== Save button (shipping blue) ===== */
+.btn-save{
+  margin-top: 14px;
+  width: 100%;
+  height: 46px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 900;
+  letter-spacing: .2px;
+  color: #fff;
+  background: linear-gradient(135deg, #1fbad6 0%, #3498db 55%, #2b73ff 100%);
+  box-shadow: 0 12px 22px rgba(52,152,219,0.20);
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  cursor: pointer;
+}
+
+.btn-save:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(52,152,219,0.24);
+  filter: brightness(1.02);
+}
+
+.btn-save:active{
+  transform: translateY(0);
+}
+
+/* ===== Instruction box (blue tint + icon chip) ===== */
+.instruction-card{
+  margin-top: 18px;
+  background: linear-gradient(180deg, #eef6ff 0%, #f4fbff 100%);
+  border: 1px solid #cfe3ff;
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.instruction-title{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  color: #1f2d3d;
+  margin-bottom: 8px;
+}
+
+.instruction-title i{
+  color: #3498db;
+  background: rgba(52,152,219,0.12);
+  border: 1px solid rgba(52,152,219,0.18);
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.instruction-list{
+  margin: 0;
+  padding-left: 18px;
+  color: #4c5a6a;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.instruction-list li{ margin: 6px 0; }
+
+/* =========================
+   Temp Stack Card (Issue)
+========================= */
+.stack-card{
+  margin-top: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(52,152,219,0.18);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  padding: 14px;
+}
+
+.stack-header{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.stack-title{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  color:#1f2d3d;
+  font-weight: 900;
+}
+
+.stack-title i{
+  color:#3498db;
+}
+
+.stack-actions{
+  display:flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-soft{
+  border: 1px solid rgba(52,152,219,0.20);
+  background: rgba(52,152,219,0.10);
+  color: #1f3b6d;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.btn-soft:hover{
+  transform: translateY(-1px);
+  background: rgba(52,152,219,0.14);
+}
+
+.btn-soft.danger{
+  background:#fff3f3;
+  border-color:#ffd3d3;
+  color:#8a1f1f;
+}
+.btn-soft.danger:hover{ background:#ffe9e9; }
+
+.stack-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stack-item{
+  background:#f4fbff;
+  border: 1px solid rgba(52,152,219,0.16);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.stack-k{
+  font-size: 0.9rem;
+  font-weight: 900;
+  color:#1f2d3d;
+  margin-bottom: 6px;
+}
+
+.stack-note{
+  margin-top: 10px;
+  color:#6b7c93;
+  font-size: 0.85rem;
+}
+
+/* =========================
+   Saved Table Card (IQC)
+========================= */
+.saved-card{
+  margin-top: 14px;
+  background: linear-gradient(180deg, rgba(52,152,219,0.10) 0%, rgba(238,246,255,1) 60%);
+  border: 1px solid rgba(52,152,219,0.18);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.saved-header{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.saved-title{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  font-weight: 900;
+  color:#1f2d3d;
+}
+
+.saved-title i{
+  color:#3498db;
+}
+
+.saved-badge{
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background:#ffffff;
+  border: 1px solid rgba(52,152,219,0.18);
+  color:#2b90d9;
+  font-weight: 900;
+  font-size: 0.85rem;
+}
+
+.table-wrap{
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 14px;
+}
+
+.saved-table{
+  width: 100%;
+  min-width: 820px;
+  border-collapse: collapse;
+  background:#ffffff;
+  border-radius: 14px;
+  overflow:hidden;
+}
+
+.saved-table thead th{
+  text-align:left;
+  background: #f4fbff;
+  color:#1f2d3d;
+  font-weight: 900;
+  font-size: 0.85rem;
+  padding: 12px;
+  border-bottom: 1px solid rgba(52,152,219,0.14);
+}
+
+.saved-table tbody td{
+  padding: 12px;
+  border-bottom: 1px solid #f0f3f9;
+  color:#2d3a4a;
+  font-size: 0.92rem;
+}
+
+.saved-table tbody tr:hover{
+  background:#f7fbff;
+}
+
+.text-end{ text-align:right; }
+.fw-600{ font-weight: 600; }
+
+
+
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 991.98px){
+  .issue-page{ padding: 16px; }
+  .issue-card{ padding: 16px; }
+}
+
+@media (max-width: 767.98px){
   .form-grid{
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px 16px;
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
-  
-  .form-field{
-    min-width: 0;
+  .form-field.span-2{ grid-column: auto; }
+  .issue-title{ font-size: 20px; }
+}
+
+@media (max-width: 768px){
+  .stack-grid{ grid-template-columns: 1fr; }
+  .btn-soft{ width: 100%; justify-content: center; }
+}
+
+
+
+/* ===== Issue Button (Blue style like Receive) ===== */
+.btn-issue{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: none;
+
+  background: linear-gradient(135deg, #4facfe 0%, #1f88ff 100%);
+  color: #ffffff;
+
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+
+  /* 🔽 shadow เบาลง */
+  box-shadow:
+    0 6px 12px rgba(31,136,255,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.25);
+
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+/* hover */
+.btn-issue:hover{
+  transform: translateY(-1px);
+  box-shadow:
+    0 8px 16px rgba(31,136,255,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+  filter: brightness(1.03);
+}
+
+/* active */
+.btn-issue:active{
+  transform: translateY(0);
+  box-shadow:
+    0 4px 8px rgba(31,136,255,0.22),
+    inset 0 2px 4px rgba(0,0,0,0.12);
+}
+
+
+
+
+
+/* =========================
+   Saved Header Responsive FIX
+========================= */
+
+.saved-header{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  flex-wrap: wrap;         /* ✅ สำคัญ */
+}
+
+/* title ให้ยืด/หด และไม่ดันปุ่ม */
+.saved-title{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  font-weight: 900;
+  color:#1f2d3d;
+
+  flex: 1 1 auto;          /* ✅ กินพื้นที่ได้ */
+  min-width: 0;            /* ✅ กัน overflow */
+}
+
+/* ให้ข้อความตัดบรรทัดได้จริง */
+.saved-title span{
+  white-space: normal;
+  line-height: 1.2;
+}
+
+/* wrapper ปุ่ม */
+.saved-actions{
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* =========================
+   Mobile behavior
+========================= */
+@media (max-width: 576px){
+
+  .saved-title{
+    flex: 1 1 100%;
   }
-  
-  .form-field.span-2{
-    grid-column: 1 / -1;
+
+  /* ✅ จากเดิม justify-content:flex-end -> เปลี่ยนเป็น flex-start */
+  .saved-actions{
+    flex: 1 1 100%;
+    justify-content: flex-start;
   }
-  
-  .form-label{
-    display: block;
-    font-size: 13px;
-    font-weight: 700;
-    color: #546273;
-    margin-bottom: 6px;
+
+  .btn-issue{
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    gap: 8px;
   }
-  
-  /* Controls */
-  .form-control{
-    width: 100%;
-    height: 44px;
-    border-radius: 10px;
-    border: 1px solid #d7dee8;
-    background: #fff;
-    padding: 10px 12px;
-    font-size: 14px;
-    outline: none;
-    transition: box-shadow .15s ease, border-color .15s ease;
-  }
-  
-  .form-control:focus{
-    border-color: rgba(52, 152, 219, 0.65);
-    box-shadow: 0 0 0 0.2rem rgba(52,152,219,0.15);
-  }
-  
-  input.form-control::placeholder{
-    color: #9aa7b5;
-  }
-  
-  /* input icon on right */
-  .input-wrap{
-    position: relative;
-  }
-  .input-wrap .form-control{
-    padding-right: 38px;
-  }
-  
-  .input-icon{
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #97a6b7;
-    pointer-events: none;
-    font-size: 14px;
-  }
-  
-  /* save button */
-  .btn-save{
-    margin-top: 14px;
-    width: 100%;
-    height: 46px;
-    border: none;
-    border-radius: 10px;
-    font-weight: 800;
-    letter-spacing: .2px;
-    color: #fff;
-    background: linear-gradient(135deg, #1fbad6 0%, #14a3c8 100%);
-    box-shadow: 0 10px 20px rgba(20,163,200,0.18);
-    transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
-    cursor: pointer;
-  }
-  
-  .btn-save:hover{
-    transform: translateY(-1px);
-    box-shadow: 0 12px 24px rgba(20,163,200,0.22);
-    filter: brightness(1.02);
-  }
-  
-  .btn-save:active{
-    transform: translateY(0);
-  }
-  
-  /* Instruction box */
-  .instruction-card{
-    margin-top: 18px;
-    background: #eef6ff;
-    border: 1px solid #cfe3ff;
-    border-radius: 12px;
-    padding: 14px 16px;
-  }
-  
-  .instruction-title{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 800;
-    color: #2c3e50;
-    margin-bottom: 8px;
-  }
-  
-  .instruction-title i{
-    color: #3498db;
-  }
-  
-  .instruction-list{
-    margin: 0;
-    padding-left: 18px;
-    color: #4c5a6a;
-    font-size: 13px;
-    line-height: 1.55;
-  }
-  
-  .instruction-list li{
-    margin: 6px 0;
-  }
-  
-  /* =========================
-     Responsive
-  ========================= */
-  @media (max-width: 991.98px){
-    .issue-page{ padding: 16px; }
-    .issue-card{ padding: 18px 16px; }
-  }
-  
-  @media (max-width: 767.98px){
-    .form-grid{
-      grid-template-columns: 1fr; /* มือถือเป็น 1 คอลัมน์ */
-      gap: 12px;
-    }
-    .form-field.span-2{
-      grid-column: auto;
-    }
-    .issue-title{
-      font-size: 20px;
-    }
-  }
-  
+}

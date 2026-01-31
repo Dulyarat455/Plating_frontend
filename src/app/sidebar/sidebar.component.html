@@ -11,7 +11,7 @@
       class="brand-image "
     />
     <span class="brand-text ms-2">
-      <h3>Plating LPB</h3>
+      <h3>Plating PRESS</h3>
 
     </span>
   </a>
@@ -31,16 +31,15 @@
               style="width: 45px; height: 45px; object-fit: cover"
               
             />
-          LE519 
+       
         </div>
         </div>
         <div class="info ms-3">
           <h5 class="text-white mb-1">{{ empNo }}</h5>
-          <small class="text-light opacity-75">{{ level }}</small>
         </div>
       </div>
       <div class="d-flex align-items-center p-3 mb-3 bg-dark rounded">
-        <div class="ml-2">Dulyarat Tovijit</div>
+        <div class="ml-2">{{name}}</div>
       </div>
       <button class="btn btn-danger w-100" (click)="signout()">
         <i class="fas fa-sign-out-alt me-2"></i>Sign Out
@@ -76,82 +75,40 @@
           <a href="#" class="nav-link">
             <i class="nav-icon fas fa-cofas fa-warehouse"></i>
             <p class="ms-2">
-              Inventory
+              Data Master
               <i class="fas fa-angle-right ms-auto"></i>
             </p>
           </a>
           <ul class="nav nav-treeview bg-dark bg-opacity-50 rounded mx-2 mt-1">
-            @if(level !== '') {
+         
             <li class="nav-item">
               <a
-                routerLink="/input-production"
-                class="nav-link"
-                routerLinkActive="active"
-              >
-                <i class="fas fa-boxes nav-icon"></i>
-                <p class="ms-2">Input Production</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                routerLink="/move-by-wos"
-                class="nav-link"
-                ZY
-                routerLinkActive="active"
-              >
-                <i class="fas fa-route nav-icon"></i>
-                <p class="ms-2">Move part</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                routerLink="/close-wos"
-                class="nav-link"
-                routerLinkActive="active"
-              >
-                <i class="fas fa-clipboard-check nav-icon"></i>
-                <p class="ms-2">Close WOS</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                routerLink="/shipment"
-                class="nav-link"
-                routerLinkActive="active"
-              >
-                <i class="fas fa-truck nav-icon"></i>
-                <p class="ms-2">Shipment</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                routerLink="/hold-by-wos"
-                class="nav-link"
-                routerLinkActive="active"
-              >
-                <i class="fas fa-store-slash nav-icon"></i>
-                <p class="ms-2">Hold/Reject</p>
-              </a>
-            </li>
-            }
-            <li class="nav-item">
-              <a
-                routerLink="/inventory-report"
+                routerLink="/group"
                 class="nav-link"
                 routerLinkActive="active"
               >
                 <i class="fas fa-warehouse nav-icon"></i>
-                <p class="ms-2">Inventory Report</p>
+                <p class="ms-2">Group</p>
               </a>
             </li>
             <li class="nav-item">
               <a
-                routerLink="/machine-output"
+                routerLink="/section"
                 class="nav-link"
                 routerLinkActive="active"
               >
                 <i class="fas fa-chart-bar nav-icon"></i>
-                <p class="ms-2">Production Output</p>
+                <p class="ms-2">Section</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                routerLink="/partmaster"
+                class="nav-link"
+                routerLinkActive="active"
+              >
+                <i class="fas fa-chart-bar nav-icon"></i>
+                <p class="ms-2">Part Master</p>
               </a>
             </li>
           </ul>

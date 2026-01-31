@@ -16,13 +16,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   formattedTime: string = '';
   private timeInterval: any;
 
-  token: string | undefined = '111111';
+  token: string | undefined = '';
   constructor(private renderer: Renderer2) {}
 
   ngOnInit(): void {
+    this.token = localStorage.getItem('plating_token')!;
     this.updateDateTime();
     // Update time every second
-
     this.applyAuthLayoutClass();
 
     this.timeInterval = setInterval(() => {

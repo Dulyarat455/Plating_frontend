@@ -11,6 +11,12 @@ export class AuthService {
   private authStatus = new BehaviorSubject<boolean>(false);
   authStatus$ = this.authStatus.asObservable();
 
+
+   // true ถ้ามี token ตั้งแต่เปิดหน้า
+   private loggedIn$ = new BehaviorSubject<boolean>(!!localStorage.getItem('plating_token'));
+   isLoggedIn$ = this.loggedIn$.asObservable();
+
+
   // เพิ่ม BehaviorSubject สำหรับแจ้ง component refresh
   private refreshComponents = new BehaviorSubject<boolean>(false);
   refreshComponents$ = this.refreshComponents.asObservable();
@@ -33,19 +39,19 @@ export class AuthService {
 
   login(userData: any) {
     //เปลี่ยนชื่อ token ตาม Project ที่ทำด้วย
-    localStorage.setItem('angular_token', userData.token);
-    localStorage.setItem('angular_name', userData.name);
-    localStorage.setItem('angular_id', userData.id);
-    localStorage.setItem('angular_empNo', userData.empNo);
+    localStorage.setItem('plating_token', userData.token);
+    localStorage.setItem('plating_name', userData.name);
+    localStorage.setItem('plating_id', userData.id);
+    localStorage.setItem('plating_empNo', userData.empNo);
     this.authStatus.next(true);
     this.refreshComponents.next(true);
   }
 
   logout() {
-    localStorage.removeItem('angular_token');
-    localStorage.removeItem('angular_name');
-    localStorage.removeItem('angular_id');
-    localStorage.removeItem('angular_empNo');
+    localStorage.removeItem('plating_token');
+    localStorage.removeItem('plating_name');
+    localStorage.removeItem('plating_id');
+    localStorage.removeItem('plating_empNo');
     this.authStatus.next(false);
     window.location.href = '/PlatingPress';
     // this.refreshComponents.next(true); // แจ้ง components ให้ refresh

@@ -9,35 +9,60 @@
           <a class="nav-link sidebar-toggle" data-widget="pushmenu" href="#" role="button">
             <i class="fas fa-bars"></i>
           </a>
-          <div class="navbar-brand">
-            <i class="fas fa-box navbar-icon"></i>
-            
-          </div>
+         
         }
+        <div class="navbar-brand">
+          <i class="fas fa-box navbar-icon"> </i>
+          @if (!token || token.trim().length === 0) {
+            <span class="navbar-title ">Plating Shipping PRESS</span>
+          }
+        </div>
+        
+      
+      
+        <div class="d-none d-lg-flex ml-4">
+          @if (!token || token.trim().length === 0) {
+        
+            <a [routerLink]="['/dashboard']"  routerLinkActive="active" class="nav-tab">
+              <i class="fas fa-chart-bar"></i>
+              <span>Dashboard</span>
+            </a>
+            <a [routerLink]="['/signin']" routerLinkActive="active" class="nav-tab">
+              <i class="fas fa-user-check"></i>
+              <span>signin</span>
+            </a>
+          }
+        </div>
+
     </div>
-    @if (token && token.trim().length > 0) {
+    
+
+
     <!-- Center Section: Navigation Tabs -->
     <div class="navbar-center d-none d-lg-flex">
+
+        @if (token && token.trim().length > 0) {
+        <a [routerLink]="['/dashboard']" routerLinkActive="active" class="nav-tab">
+          <i class="fas fa-chart-bar"></i>
+          <span>Dashboard</span>
+        </a>
+        <a [routerLink]="['/issue']" routerLinkActive="active" class="nav-tab">
+          <i class="fas fa-truck"></i>
+          <span>Issue Part</span>
+        </a>
+        <a [routerLink]="['/receive']" routerLinkActive="active" class="nav-tab">
+          <i class="fas fa-box-open"></i>
+          <span>Receive Part</span>
+        </a>
+        <a [routerLink]="['/scan']" routerLinkActive="active" class="nav-tab">
+          <i class="fas fa-qrcode"></i>
+          <span>Report</span>
+        </a>
+      }
       
-      <a [routerLink]="['/dashboard']" routerLinkActive="active" class="nav-tab">
-        <i class="fas fa-chart-bar"></i>
-        <span>Dashboard</span>
-      </a>
-      <a [routerLink]="['/issue']" routerLinkActive="active" class="nav-tab">
-        <i class="fas fa-truck"></i>
-        <span>Issue Part</span>
-      </a>
-      <a [routerLink]="['/receive']" routerLinkActive="active" class="nav-tab">
-        <i class="fas fa-box-open"></i>
-        <span>Receive Part</span>
-      </a>
-      <a [routerLink]="['/scan']" routerLinkActive="active" class="nav-tab">
-        <i class="fas fa-qrcode"></i>
-        <span>QR Scan</span>
-      </a>
     </div>
 
-  }
+  
 
     <!-- Right Section: DateTime & User -->
     <div class="navbar-right">
@@ -72,9 +97,9 @@
   </div>
 
   <!-- Mobile Menu -->
-   
+
   <div class="mobile-menu d-lg-none">
-   
+    @if (token && token.trim().length > 0) { 
     <a [routerLink]="['/dashboard']" routerLinkActive="active" class="mobile-nav-item">
       <i class="fas fa-chart-bar"></i>
       <span>Dashboard</span>
@@ -91,6 +116,20 @@
       <i class="fas fa-qrcode"></i>
       <span>Scan</span>
     </a>
-  
+    }
+    @if (!token || token.trim().length === 0) {
+      <a [routerLink]="['/dashboard']" routerLinkActive="active" class="nav-tab">
+        <i class="fas fa-chart-bar"></i>
+        <span>Dashboard</span>
+      </a>
+      
+      <a [routerLink]="['/signin']" routerLinkActive="active" class="nav-tab">
+        <i class="fas fa-user-check"></i>
+        <span>SignIn</span>
+      </a>
+    }
   </div>
+
+
+
 </nav>
