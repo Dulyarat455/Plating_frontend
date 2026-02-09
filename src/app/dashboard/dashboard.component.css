@@ -424,11 +424,6 @@
   
 
 
-
-
-
-
-
   /* =========================
    Transaction Lot Tables
 ========================= */
@@ -580,3 +575,62 @@
     align-items: flex-start;
   }
 }
+
+
+
+
+
+
+
+
+/* เส้น accent ด้านซ้ายหัวเรื่อง */
+.receive-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(52, 219, 116, 0.14) 0%, rgba(31,186,214,0.10) 55%, rgba(255,255,255,0) 100%);
+  border: 1px solid rgba(52,152,219,0.16);
+  margin-bottom: 12px;
+  position: relative;
+}
+.receive-header::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 5px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
+}
+
+
+
+.issue-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(52,152,219,0.14) 0%, rgba(31,186,214,0.10) 55%, rgba(255,255,255,0) 100%);
+  border: 1px solid rgba(52,152,219,0.16);
+  margin-bottom: 12px;
+  position: relative;
+}
+
+/* Accent line */
+.issue-header::before{
+  content:"";
+  position:absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 5px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #3498db 0%, #1fbad6 100%);
+}
+

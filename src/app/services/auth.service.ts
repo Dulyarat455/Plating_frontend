@@ -41,8 +41,14 @@ export class AuthService {
     //เปลี่ยนชื่อ token ตาม Project ที่ทำด้วย
     localStorage.setItem('plating_token', userData.token);
     localStorage.setItem('plating_name', userData.name);
-    localStorage.setItem('plating_id', userData.id);
+    localStorage.setItem('plating_userId', userData.id);
     localStorage.setItem('plating_empNo', userData.empNo);
+    localStorage.setItem('plating_groupId', userData.groupId);
+    localStorage.setItem('plating_groupName', userData.groupName);
+    localStorage.setItem('plating_sectionId', userData.sectionId);
+    localStorage.setItem('plating_sectionName', userData.sectionName);
+
+
     this.authStatus.next(true);
     this.refreshComponents.next(true);
   }
@@ -50,8 +56,12 @@ export class AuthService {
   logout() {
     localStorage.removeItem('plating_token');
     localStorage.removeItem('plating_name');
-    localStorage.removeItem('plating_id');
+    localStorage.removeItem('plating_userId');
     localStorage.removeItem('plating_empNo');
+    localStorage.removeItem('plating_groupId');
+    localStorage.removeItem('plating_groupName');
+    localStorage.removeItem('plating_sectionId');
+    localStorage.removeItem('plating_sectionName');
     this.authStatus.next(false);
     window.location.href = '/PlatingPress';
     // this.refreshComponents.next(true); // แจ้ง components ให้ refresh

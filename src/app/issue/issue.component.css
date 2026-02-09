@@ -499,3 +499,94 @@ input.form-control::placeholder{
     gap: 8px;
   }
 }
+
+
+
+
+/* ===== Header Summary (ตอนบันทึกแล้ว) ===== */
+.header-summary{
+  margin-top: 10px;
+  margin-bottom: 8px;
+  background: linear-gradient(180deg, #eef6ff 0%, #ffffff 70%);
+  border: 1px solid rgba(52,152,219,0.18);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.header-summary-title{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  font-weight: 900;
+  color:#1f2d3d;
+  margin-bottom: 10px;
+}
+
+.header-summary-title i{
+  color:#3498db;
+  background: rgba(52,152,219,0.12);
+  border: 1px solid rgba(52,152,219,0.18);
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.header-summary-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+}
+
+.hs-item{
+  background:#ffffff;
+  border: 1px solid rgba(52,152,219,0.14);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+
+.hs-item.span-2{ grid-column: 1 / -1; }
+
+.hs-k{
+  font-size: 12px;
+  font-weight: 900;
+  color:#516173;
+  margin-bottom: 4px;
+}
+
+.hs-v{
+  font-size: 14px;
+  font-weight: 800;
+  color:#1f2d3d;
+  word-break: break-word;
+}
+
+.header-summary-actions{
+  margin-top: 12px;
+  display:flex;
+  justify-content:flex-end;
+}
+
+/* Cancel button */
+.btn-cancel{
+  margin-top: 10px;
+  width: 100%;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.10);
+  background: #ffffff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.btn-cancel:hover{
+  background: #f7fbff;
+}
+
+@media (max-width: 767.98px){
+  .header-summary-grid{ grid-template-columns: 1fr; }
+  .hs-item.span-2{ grid-column: auto; }
+  .header-summary-actions{ justify-content: flex-start; }
+}
