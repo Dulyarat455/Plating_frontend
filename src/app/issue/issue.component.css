@@ -590,3 +590,74 @@ input.form-control::placeholder{
   .hs-item.span-2{ grid-column: auto; }
   .header-summary-actions{ justify-content: flex-start; }
 }
+
+
+
+.saved-title .badge {
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(37,99,235,.35);
+}
+
+
+
+
+
+
+
+/* wrapper จัดกึ่งกลาง */
+.box-full-wrap{
+  display: flex;
+  justify-content: center;
+  margin: 14px 0 18px;
+}
+
+/* ตัว banner */
+.box-full-banner{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  width: 100%;
+  max-width: 720px;        /* desktop */
+  padding: 14px 20px;
+
+  border-radius: 14px;
+
+  background: linear-gradient(
+    180deg,
+    #eaf4ff 0%,
+    #dbeeff 100%
+  );
+
+  border: 1px solid rgba(43,140,255,.35);
+  box-shadow: 0 10px 26px rgba(43,140,255,.18);
+
+  color: #1f4fd8;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: .3px;
+
+  justify-content: center; /* ตัวอักษรอยู่กลาง */
+  text-align: center;
+}
+
+/* icon */
+.box-full-banner i{
+  font-size: 1.25rem;
+  color: #2b8cff;
+}
+
+/* 📱 Mobile */
+@media (max-width: 576px){
+  .box-full-banner{
+    max-width: 100%;
+    font-size: .95rem;
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+}

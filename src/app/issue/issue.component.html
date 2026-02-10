@@ -238,8 +238,18 @@
       </ul>
     </div>
 
-    <!-- ===== Temp Stack (รอรับข้อมูล / ยังไม่ Confirm) ===== -->
-    <div class="stack-card">
+      <!-- ===== Temp Stack (รอรับข้อมูล / ยังไม่ Confirm) ===== -->
+      <div class="box-full-wrap" *ngIf="isBoxFull">
+        <div class="box-full-banner">
+          <i class="fas fa-check-circle"></i>
+          <span>Box ครบแล้ว</span>
+        </div>
+      </div>
+      
+      
+      
+      
+    <div class="stack-card" *ngIf="!isBoxFull" >
       <div class="stack-header">
         <div class="stack-title">
           <i class="fas fa-hourglass-half"></i>
@@ -250,37 +260,89 @@
       <div class="stack-grid">
         <div class="stack-item">
           <div class="stack-k">Item No.</div>
-          <input class="form-control" type="text" placeholder="" />
+          <input
+            #scanItemNo
+            class="form-control"
+            type="text"
+            placeholder=""
+            [(ngModel)]="boxForm.itemNo"
+            name="box_itemNo"
+            [disabled]="!header || isEditingHeader || isSavingBox"
+          />
         </div>
 
         <div class="stack-item">
           <div class="stack-k">Item Name</div>
-          <input class="form-control" type="text" placeholder="" />
+          <input
+            class="form-control"
+            type="text"
+            placeholder=""
+            [(ngModel)]="boxForm.itemName"
+            name="box_itemName"
+            [disabled]="!header || isEditingHeader || isSavingBox"
+          />
         </div>
 
         <div class="stack-item">
           <div class="stack-k">Item WOS No.</div>
-          <input class="form-control" type="text" placeholder="" />
+          <input
+            class="form-control"
+            type="text"
+            placeholder=""
+            [(ngModel)]="boxForm.wosNo"
+            name="box_wosNo"
+            [disabled]="!header || isEditingHeader || isSavingBox"
+          />
         </div>
 
         <div class="stack-item">
-          <div class="stack-k">Lot No.</div>
-          <input class="form-control" type="text" placeholder="" />
+          <div class="stack-k">DWG</div>
+          <input
+            class="form-control"
+            type="text"
+            placeholder=""
+            [(ngModel)]="boxForm.dwg"
+            name="box_dwg"
+            [disabled]="!header || isEditingHeader || isSavingBox"
+          />
         </div>
 
         <div class="stack-item">
           <div class="stack-k">Die No.</div>
-          <input class="form-control" type="text" placeholder="" />
+          <input
+            class="form-control"
+            type="text"
+            placeholder=""
+            [(ngModel)]="boxForm.dieNo"
+            name="box_dieNo"
+            [disabled]="!header || isEditingHeader || isSavingBox"
+          />
         </div>
 
         <div class="stack-item">
           <div class="stack-k">Lot No.</div>
-          <input class="form-control" type="text" placeholder="" />
+          <input
+            class="form-control"
+            type="text"
+            placeholder=""
+            [(ngModel)]="boxForm.lotNo"
+            name="box_lotNo"
+            [disabled]="!header || isEditingHeader || isSavingBox"
+          />
         </div>
 
         <div class="stack-item">
           <div class="stack-k">Quantity</div>
-          <input class="form-control" type="text" placeholder="" />
+          <input
+            class="form-control"
+            type="number"
+            placeholder=""
+            [(ngModel)]="boxForm.qty"
+            name="box_qty"
+            [disabled]="!header || isEditingHeader || isSavingBox"
+            (keydown.tab)="loopFocusToFirst($event)"
+            (keydown.enter)="loopFocusToFirst($event)"
+          />
         </div>
       </div>
 
@@ -289,23 +351,43 @@
       </div>
 
       <div class="stack-actions">
-        <button type="button" class="btn-soft">
+        <button
+          type="button"
+          class="btn-soft"
+          (click)="onConfirmLot()"
+          [disabled]="!header || isEditingHeader || isSavingBox"
+        >
           <i class="fas fa-check-circle me-1"></i>
           Confirm Lot
         </button>
-        <button type="button" class="btn-soft danger">
+
+        <button
+          type="button"
+          class="btn-soft danger"
+          (click)="onClearBoxForm()"
+          [disabled]="isSavingBox"
+        >
           <i class="fas fa-trash-alt me-1"></i>
           Clear
         </button>
       </div>
     </div>
 
+
     <!-- ===== Saved List (บันทึกแล้ว / IQC) ===== -->
     <div class="saved-card">
       <div class="saved-header">
         <div class="saved-title">
           <i class="fas fa-clipboard-check"></i>
-          <span>รายการที่รับแล้ว (IQC)</span>
+          <span>รายการที่สแกนแล้ว</span>
+            <span
+            class="ms-2 badge rounded-pill bg-secondary"
+            *ngIf="header && !isEditingHeader"
+            title="จำนวนรายการที่บันทึกแล้ว"
+          >
+            BOX: {{ savedRows.length || 0 }}
+
+          </span>
         </div>
 
         <div class="saved-actions">
@@ -330,18 +412,35 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>10000206936</td>
-              <td class="fw-600">YOKE#1</td>
-              <td>JB615021K002</td>
-              <td>A19-321027-3E</td>
-              <td>D8</td>
-              <td>L26119AB4</td>
-              <td class="text-end fw-600">4000</td>
+            <!-- Loading -->
+            <tr *ngIf="isLoadingSaved">
+              <td colspan="7" class="text-center text-muted py-3">
+                <i class="fas fa-spinner fa-spin me-1"></i> Loading...
+              </td>
+            </tr>
+          
+            <!-- Empty -->
+            <tr *ngIf="!isLoadingSaved && header && !isEditingHeader && (!savedRows || savedRows.length === 0)">
+              <td colspan="7" class="text-center text-muted py-3">
+                No data
+              </td>
+            </tr>
+          
+            <!-- Rows -->
+            <tr *ngFor="let r of savedRows">
+              <td>{{ r.itemNo }}</td>
+              <td class="fw-600">{{ r.itemName }}</td>
+              <td>{{ r.wosNo }}</td>
+              <td>{{ r.dwg }}</td>
+              <td>{{ r.dieNo }}</td>
+              <td>{{ r.lotNo }}</td>
+              <td class="text-end fw-600">{{ r.qty }}</td>
             </tr>
           </tbody>
+          
         </table>
       </div>
+
     </div>
   </div>
 </div>
