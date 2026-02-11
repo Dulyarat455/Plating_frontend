@@ -606,9 +606,6 @@ input.form-control::placeholder{
 
 
 
-
-
-
 /* wrapper จัดกึ่งกลาง */
 .box-full-wrap{
   display: flex;
@@ -661,3 +658,87 @@ input.form-control::placeholder{
     border-radius: 12px;
   }
 }
+
+
+
+
+/* part delete & edit */
+
+.btn-row {
+  border: none;
+  background: transparent;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-row i {
+  font-size: 14px;
+}
+
+.btn-row.edit {
+  color: #3b82f6;
+}
+
+.btn-row.edit:hover {
+  background: rgba(59,130,246,.12);
+}
+
+.btn-row.delete {
+  color: #ef4444;
+}
+
+.btn-row.delete:hover {
+  background: rgba(239,68,68,.12);
+}
+
+
+
+
+
+
+
+/* =========================
+   Desktop toast: almost reach sidebar
+========================= */
+
+@media (min-width: 992px) {
+
+  :root{
+    --sidebar-w: 320px;          /* 👈 ปรับตาม sidebar ของคุณ */
+    --toast-gap: 16px;           /* ระยะห่างจากขอบ */
+  }
+
+  /* ✅ ทำให้พื้นที่ container กว้างเกือบเต็มจอ (สำคัญสุด) */
+  .swal2-container.app-toast-container.swal2-top-end{
+    right: var(--toast-gap) !important;
+    left: calc(var(--sidebar-w) + var(--toast-gap)) !important;
+    width: auto !important;      /* ให้กินพื้นที่จาก left -> right */
+    padding: 0 !important;
+  }
+
+  /* ✅ ตัว popup ให้กว้างเต็มพื้นที่ container */
+  .swal2-popup.app-toast{
+    width: 100% !important;
+    max-width: none !important;  /* ตัด max-width เดิมของ sweetalert */
+    margin: 0 !important;
+
+    padding: 18px 24px !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,.2);
+  }
+
+  /* ขยายตัวหนังสือ + ไอคอน */
+  .swal2-title{
+    font-size: 18px !important;
+    font-weight: 600 !important;
+  }
+
+  .swal2-icon{
+    transform: scale(1.35);
+    margin-right: 10px !important;
+  }
+}
+
+

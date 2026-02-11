@@ -37,7 +37,12 @@ type FetchHeaderResp = {
 
 type VendorRow = { id: number; name: string };
 type ControlLotRow = { id: number; name: string };
-type PartMasterRow = { id: number; itemNo: string; itemName: string; groupId: number };
+type PartMasterRow = {
+  id: number;
+  itemNo: string;
+  itemName: string;
+  groupId: number;
+};
 
 type HeaderForm = {
   sentDateByUser: string; // YYYY-MM-DDTHH:mm
@@ -82,6 +87,27 @@ type FetchBoxTempResp = {
   results: BoxIssueTempRow[];
 };
 
+type DeleteBoxTempResp = {
+  message: string;
+  data: {
+    id: number;
+    itemNo: string;
+    itemName: string;
+    wosNo: string;
+  };
+};
+
+// ✅ update แก้เฉพาะ qty
+type UpdateBoxTempResp = {
+  message: string;
+  data: {
+    id: number;
+    itemNo: string;
+    itemName: string;
+    wosNo: string;
+  };
+};
+
 /* =======================
    Component
 ======================= */
@@ -113,16 +139,20 @@ export class IssueComponent implements OnInit, AfterViewInit {
   controlLots: ControlLotRow[] = [];
   items: PartMasterRow[] = [];
 
-  // ✅ ช่องสแกนตัวแรกของ Temp Stack (ต้องมี #scanItemNo ใน HTML)
+  // ✅ ช่องสแกนตัวแรกของ Temp Stack
   @ViewChild('scanItemNo') scanItemNo!: ElementRef<HTMLInputElement>;
-  
-
+  @ViewChild('scanItemName') scanItemName!: ElementRef<HTMLInputElement>;
+  @ViewChild('scanWosNo') scanWosNo!: ElementRef<HTMLInputElement>;
+  @ViewChild('scanDwg') scanDwg!: ElementRef<HTMLInputElement>;
+  @ViewChild('scanDieNo') scanDieNo!: ElementRef<HTMLInputElement>;
+  @ViewChild('scanLotNo') scanLotNo!: ElementRef<HTMLInputElement>;
+  @ViewChild('scanQty') scanQty!: ElementRef<HTMLInputElement>;
 
   // ===== Box Temp =====
   isSavingBox = false;
   boxForm: BoxForm = this.createEmptyBoxForm();
 
-  // ===== Saved List scan box =====
+  // ===== Saved List =====
   isLoadingSaved = false;
   savedRows: BoxIssueTempRow[] = [];
 
@@ -148,7 +178,6 @@ export class IssueComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // เผื่อเคส header ถูก set แล้วก่อน view init
     this.focusScanFirst();
   }
 
@@ -160,17 +189,82 @@ export class IssueComponent implements OnInit, AfterViewInit {
     return !this.header || this.isEditingHeader;
   }
 
-  /** ✅ ครบจำนวน BOX แล้วไหม (ใช้ไป hide/disable scan area ใน HTML) */
+  /** ✅ ครบจำนวน BOX แล้วไหม */
   get isBoxFull(): boolean {
     if (!this.header) return false;
     return (this.savedRows?.length ?? 0) >= this.header.qtyBox;
+  }
+
+  /** โฟกัส helper */
+  private focusEl(ref?: ElementRef<HTMLInputElement>) {
+    setTimeout(() => {
+      const el = ref?.nativeElement;
+      if (!el) return;
+      el.focus();
+      el.select();
+    }, 0);
+  }
+
+  /** Enter -> ไปช่องถัดไป หรือ Confirm */
+  onScanEnter(
+    field: 'itemNo' | 'itemName' | 'wosNo' | 'dwg' | 'dieNo' | 'lotNo' | 'qty',
+    ev: any
+  ) {
+    if (ev?.key === 'Enter') ev.preventDefault();
+
+    if (
+      !this.header ||
+      this.isEditingHeader ||
+      this.isSavingBox ||
+      this.isBoxFull
+    )
+      return;
+
+    const requiredOk =
+      !!this.boxForm.itemNo &&
+      !!this.boxForm.itemName &&
+      !!this.boxForm.wosNo &&
+      !!this.boxForm.dwg &&
+      !!this.boxForm.dieNo &&
+      !!this.boxForm.lotNo &&
+      this.boxForm.qty != null &&
+      this.boxForm.qty > 0;
+
+    switch (field) {
+      case 'itemNo':
+        if (!this.boxForm.itemNo) return;
+        return this.focusEl(this.scanItemName);
+
+      case 'itemName':
+        if (!this.boxForm.itemName) return;
+        return this.focusEl(this.scanWosNo);
+
+      case 'wosNo':
+        if (!this.boxForm.wosNo) return;
+        return this.focusEl(this.scanDwg);
+
+      case 'dwg':
+        if (!this.boxForm.dwg) return;
+        return this.focusEl(this.scanDieNo);
+
+      case 'dieNo':
+        if (!this.boxForm.dieNo) return;
+        return this.focusEl(this.scanLotNo);
+
+      case 'lotNo':
+        if (!this.boxForm.lotNo) return;
+        return this.focusEl(this.scanQty);
+
+      case 'qty':
+        if (!requiredOk) return;
+        return this.onConfirmLot();
+    }
   }
 
   createEmptyForm(): HeaderForm {
     const d = new Date();
     const f = (v: number) => String(v).padStart(2, '0');
 
-    // ✅ datetime-local = YYYY-MM-DDTHH:mm
     return {
       sentDateByUser: `${d.getFullYear()}-${f(d.getMonth() + 1)}-${f(
         d.getDate()
@@ -207,14 +301,14 @@ export class IssueComponent implements OnInit, AfterViewInit {
   private isoToDatetimeLocal(iso: string) {
     const d = new Date(iso);
     const f = (v: number) => String(v).padStart(2, '0');
-    return `${d.getFullYear()}-${f(d.getMonth() + 1)}-${f(d.getDate())}T${f(
-      d.getHours()
-    )}:${f(d.getMinutes())}`;
+    return `${d.getFullYear()}-${f(d.getMonth() + 1)}-${f(
+      d.getDate()
+    )}T${f(d.getHours())}:${f(d.getMinutes())}`;
   }
 
   private mapHeaderToForm(h: HeaderIssueTemp): HeaderForm {
     return {
-      sentDateByUser: this.isoToDatetimeLocal(h.sentDateByUser), // ✅ ให้ input datetime-local เห็นเวลา
+      sentDateByUser: this.isoToDatetimeLocal(h.sentDateByUser),
       shift: h.shift,
       venderId: h.venderId,
       controlLotId: h.controlLotId,
@@ -237,13 +331,9 @@ export class IssueComponent implements OnInit, AfterViewInit {
   ======================= */
 
   private focusScanFirst() {
-    // focus เฉพาะตอน header มีแล้ว และไม่ได้ edit header
     if (!this.header || this.isEditingHeader) return;
-
-    // ✅ ถ้าครบแล้ว ไม่ต้อง focus/scan
     if (this.isBoxFull) return;
 
-    // ✅ ต้องหน่วงเล็กน้อย เพราะตอน save header form จะถูกซ่อน แล้ว Temp Stack เพิ่ง render
     setTimeout(() => {
       const el = this.scanItemNo?.nativeElement;
       if (!el) return;
@@ -252,8 +342,6 @@ export class IssueComponent implements OnInit, AfterViewInit {
     }, 120);
   }
 
-  // 🔁 ใช้กับ (keydown.tab)/(keydown.enter) ใน HTML
-  // ✅ ใช้ any เพื่อกัน Error template: Event not assignable to KeyboardEvent
   loopFocusToFirst(ev: any) {
     if (!this.header || this.isEditingHeader) return;
 
@@ -262,11 +350,10 @@ export class IssueComponent implements OnInit, AfterViewInit {
   }
 
   /* =======================
-     Saved List (IQC)
+     Saved List
   ======================= */
 
   fetchBoxTempByHeadId() {
-    // ✅ ไม่มี header / กำลัง edit -> ไม่ยิง และเคลียร์ตาราง
     if (!this.header || this.isEditingHeader) {
       this.savedRows = [];
       return;
@@ -275,15 +362,16 @@ export class IssueComponent implements OnInit, AfterViewInit {
     this.isLoadingSaved = true;
 
     this.http
-      .post<FetchBoxTempResp>(config.apiServer + '/api/issue/fetchBoxTempByHeadId', {
-        headerId: this.header.id,
-      })
+      .post<FetchBoxTempResp>(
+        config.apiServer + '/api/issue/fetchBoxTempByHeadId',
+        {
+          headerId: this.header.id,
+        }
+      )
       .subscribe({
         next: (res) => {
           this.savedRows = res.results || [];
           this.isLoadingSaved = false;
-
-          // ✅ โหลดเสร็จ ถ้ายังไม่ full -> โฟกัสช่องแรก
           this.focusScanFirst();
         },
         error: (err) => {
@@ -314,20 +402,19 @@ export class IssueComponent implements OnInit, AfterViewInit {
       return this.toast('warning', 'กรุณาบันทึก Header ให้เสร็จก่อน');
     }
 
-    // ✅ ถ้าครบแล้ว ไม่ต้องให้ confirm เพิ่ม
     if (this.isBoxFull) {
-      return this.toast('info', 'ครบจำนวน BOX แล้ว');
+      return this.toastFull('info', 'ครบจำนวน BOX แล้ว');
     }
 
-    // validate
     if (!this.boxForm.itemNo) return this.toast('warning', 'กรุณากรอก Item No.');
-    if (!this.boxForm.itemName) return this.toast('warning', 'กรุณากรอก Item Name');
-    if (!this.boxForm.wosNo) return this.toast('warning', 'กรุณากรอก WOS No.');
-    if (!this.boxForm.dwg) return this.toast('warning', 'กรุณากรอก DWG');
-    if (!this.boxForm.dieNo) return this.toast('warning', 'กรุณากรอก Die No.');
-    if (!this.boxForm.lotNo) return this.toast('warning', 'กรุณากรอก Lot No.');
+    if (!this.boxForm.itemName)
+      return this.toastFull('warning', 'กรุณากรอก Item Name');
+    if (!this.boxForm.wosNo) return this.toastFull('warning', 'กรุณากรอก WOS No.');
+    if (!this.boxForm.dwg) return this.toastFull('warning', 'กรุณากรอก DWG');
+    if (!this.boxForm.dieNo) return this.toastFull('warning', 'กรุณากรอก Die No.');
+    if (!this.boxForm.lotNo) return this.toastFull('warning', 'กรุณากรอก Lot No.');
     if (this.boxForm.qty == null || this.boxForm.qty <= 0)
-      return this.toast('warning', 'กรุณากรอก QTY');
+      return this.toastFull('warning', 'กรุณากรอก QTY');
 
     this.isSavingBox = true;
 
@@ -343,17 +430,15 @@ export class IssueComponent implements OnInit, AfterViewInit {
     };
 
     this.http
-      .post<CreateBoxTempResp>(config.apiServer + '/api/issue/createBoxTemp', payload)
+      .post<CreateBoxTempResp>(
+        config.apiServer + '/api/issue/createBoxTemp',
+        payload
+      )
       .subscribe({
         next: (_res: any) => {
-          this.toast('success', 'Confirm Lot สำเร็จ');
-
-          // ✅ clear ก่อน
+          this.toastFull('success', 'Confirm Lot สำเร็จ');
           this.boxForm = this.createEmptyBoxForm();
-
-          // ✅ refresh ตาราง IQC (โหลดเสร็จจะ focus ให้เองใน fetchBoxTempByHeadId)
           this.fetchBoxTempByHeadId();
-
           this.isSavingBox = false;
         },
         error: (err) => {
@@ -422,9 +507,12 @@ export class IssueComponent implements OnInit, AfterViewInit {
   fetchHeader() {
     this.isLoadingHeader = true;
     this.http
-      .post<FetchHeaderResp>(config.apiServer + '/api/issue/fetchHeaderTempByUser', {
-        userId: this.userId,
-      })
+      .post<FetchHeaderResp>(
+        config.apiServer + '/api/issue/fetchHeaderTempByUser',
+        {
+          userId: this.userId,
+        }
+      )
       .subscribe({
         next: (r) => {
           this.header = r.results ?? null;
@@ -432,14 +520,10 @@ export class IssueComponent implements OnInit, AfterViewInit {
           if (this.header) {
             this.form = this.mapHeaderToForm(this.header);
             this.isEditingHeader = false;
-
-            // ✅ โหลดตาราง IQC เมื่อมี header
             this.fetchBoxTempByHeadId();
           } else {
             this.isEditingHeader = true;
             this.form = this.createEmptyForm();
-
-            // ✅ ไม่มี header -> เคลียร์ตาราง
             this.savedRows = [];
           }
 
@@ -460,16 +544,12 @@ export class IssueComponent implements OnInit, AfterViewInit {
     if (!this.header) return;
     this.form = this.mapHeaderToForm(this.header);
     this.isEditingHeader = true;
-
-    // optional: ตอน edit ไม่ต้องโชว์ list
     this.savedRows = [];
   }
 
   onCancelEditHeader() {
     if (!this.header) return;
     this.isEditingHeader = false;
-
-    // ✅ กลับมาโหลด list (โหลดเสร็จจะ focus ให้เอง)
     this.fetchBoxTempByHeadId();
   }
 
@@ -494,30 +574,150 @@ export class IssueComponent implements OnInit, AfterViewInit {
       itemNo: this.form.itemNo,
       itemName: this.form.itemName,
       qtyBox: this.form.qtyBox,
-      // datetime-local เป็น local time -> แปลงเป็น ISO ส่ง backend
       sentDateByUser: new Date(this.form.sentDateByUser).toISOString(),
     };
 
     const isEdit = !!this.header && this.isEditingHeader;
-    const url = isEdit ? '/api/issue/updateHeaderTemp' : '/api/issue/createHeaderTemp';
-
+    const url = isEdit
+      ? '/api/issue/updateHeaderTemp'
+      : '/api/issue/createHeaderTemp';
     if (isEdit) payload.headTempId = this.header!.id;
 
     this.http.post<any>(config.apiServer + url, payload).subscribe({
       next: (r) => {
         this.header = r.data;
         this.isEditingHeader = false;
-        this.toast('success', 'Save Header OK');
-
-        // ✅ โหลดตาราง IQC (โหลดเสร็จจะ focus ให้เอง)
+        this.toastFull('success', 'Save Header OK');
         this.fetchBoxTempByHeadId();
-
         this.isSavingHeader = false;
       },
       error: (_e) => {
         this.isSavingHeader = false;
         Swal.fire('Error', 'Save fail', 'error');
       },
+    });
+  }
+
+  /* =======================
+     Row Actions (Edit / Delete)
+  ======================= */
+
+  // ✅ SweetAlert2: แก้ QTY อย่างเดียว
+  onEditRow(r: BoxIssueTempRow) {
+    if (!r?.id) return;
+
+    Swal.fire({
+      title: 'Edit QTY',
+      html: `
+        <div style="text-align:left">
+          <div class="mb-1"><b>Item:</b> ${r.itemNo} - ${r.itemName}</div>
+          <div class="mb-2"><b>WOS / LOT:</b> ${r.wosNo} / ${r.lotNo}</div>
+
+          <div style="margin-top:10px">
+            <label style="display:block; font-weight:600; margin-bottom:6px">Quantity (QTY)</label>
+            <input id="swal-qty" type="number" min="1" class="swal2-input" value="${Number(
+              r.qty ?? 0
+            )}" />
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Update',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#2563eb',
+      cancelButtonColor: '#6b7280',
+      focusConfirm: false,
+      didOpen: () => {
+        const el = document.getElementById('swal-qty') as HTMLInputElement | null;
+        if (el) {
+          el.focus();
+          el.select();
+        }
+      },
+      preConfirm: () => {
+        const el = document.getElementById('swal-qty') as HTMLInputElement | null;
+        const qtyNum = Number(el?.value);
+
+        if (!Number.isFinite(qtyNum) || qtyNum <= 0) {
+          Swal.showValidationMessage('กรุณากรอก QTY ให้ถูกต้อง');
+          return;
+        }
+        return qtyNum;
+      },
+    }).then((result) => {
+      if (!result.isConfirmed) return;
+
+      const qtyNum = Number(result.value);
+
+      Swal.fire({
+        title: 'Updating...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+
+      this.http
+        .put<UpdateBoxTempResp>(config.apiServer + '/api/issue/updateBoxTemp', {
+          boxTempId: r.id,
+          qty: qtyNum,
+        })
+        .subscribe({
+          next: () => {
+            Swal.close();
+            this.toastFull('success', 'Update QTY สำเร็จ');
+            this.fetchBoxTempByHeadId();
+            setTimeout(() => this.focusScanFirst(), 150);
+          },
+          error: (err) => {
+            console.error(err);
+            Swal.fire({
+              title: 'Error',
+              text: err?.error?.message || err?.message || 'Update fail',
+              icon: 'error',
+            });
+          },
+        });
+    });
+  }
+
+  onDeleteRow(r: BoxIssueTempRow) {
+    if (!r?.id) return;
+
+    Swal.fire({
+      title: 'ลบรายการนี้?',
+      html: `
+        <div style="text-align:left">
+          <div><b>Item:</b> ${r.itemNo}</div>
+          <div><b>WOS:</b> ${r.wosNo}</div>
+          <div><b>LOT:</b> ${r.lotNo}</div>
+        </div>
+      `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#ef4444',
+    }).then((result) => {
+      if (!result.isConfirmed) return;
+
+      this.http
+        .post<DeleteBoxTempResp>(config.apiServer + '/api/issue/deleteBoxTemp', {
+          boxTempId: r.id,
+        })
+        .subscribe({
+          next: (_res) => {
+            this.toastFull('success', 'ลบสำเร็จ');
+            this.fetchBoxTempByHeadId();
+            setTimeout(() => this.focusScanFirst(), 150);
+          },
+          error: (err) => {
+            console.error(err);
+            Swal.fire({
+              title: 'Error',
+              text: err?.error?.message || err?.message || 'Delete fail',
+              icon: 'error',
+            });
+          },
+        });
     });
   }
 
@@ -533,6 +733,29 @@ export class IssueComponent implements OnInit, AfterViewInit {
       title,
       timer: 1800,
       showConfirmButton: false,
+  
+      customClass: {
+        container: 'app-toast-container',
+        popup: 'app-toast'
+      }
     });
   }
+
+  private toastFull(icon: any, title: string) {
+    Swal.fire({
+      icon,
+      title,
+      timer: 1800,
+      showConfirmButton: false,
+  
+      customClass: {
+        container: 'app-toast-container',
+        popup: 'app-toast'
+      }
+    });
+  }
+  
+  
+
+
 }

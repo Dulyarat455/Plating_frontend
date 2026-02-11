@@ -268,83 +268,96 @@
             [(ngModel)]="boxForm.itemNo"
             name="box_itemNo"
             [disabled]="!header || isEditingHeader || isSavingBox"
+            (keydown.enter)="onScanEnter('itemNo', $event)"
           />
         </div>
-
+      
         <div class="stack-item">
           <div class="stack-k">Item Name</div>
           <input
+            #scanItemName
             class="form-control"
             type="text"
             placeholder=""
             [(ngModel)]="boxForm.itemName"
             name="box_itemName"
             [disabled]="!header || isEditingHeader || isSavingBox"
+            (keydown.enter)="onScanEnter('itemName', $event)"
           />
         </div>
-
+      
         <div class="stack-item">
           <div class="stack-k">Item WOS No.</div>
           <input
+            #scanWosNo
             class="form-control"
             type="text"
             placeholder=""
             [(ngModel)]="boxForm.wosNo"
             name="box_wosNo"
             [disabled]="!header || isEditingHeader || isSavingBox"
+            (keydown.enter)="onScanEnter('wosNo', $event)"
           />
         </div>
-
+      
         <div class="stack-item">
           <div class="stack-k">DWG</div>
           <input
+            #scanDwg
             class="form-control"
             type="text"
             placeholder=""
             [(ngModel)]="boxForm.dwg"
             name="box_dwg"
             [disabled]="!header || isEditingHeader || isSavingBox"
+            (keydown.enter)="onScanEnter('dwg', $event)"
           />
         </div>
-
+      
         <div class="stack-item">
           <div class="stack-k">Die No.</div>
           <input
+            #scanDieNo
             class="form-control"
             type="text"
             placeholder=""
             [(ngModel)]="boxForm.dieNo"
             name="box_dieNo"
             [disabled]="!header || isEditingHeader || isSavingBox"
+            (keydown.enter)="onScanEnter('dieNo', $event)"
           />
         </div>
-
+      
         <div class="stack-item">
           <div class="stack-k">Lot No.</div>
           <input
+            #scanLotNo
             class="form-control"
             type="text"
             placeholder=""
             [(ngModel)]="boxForm.lotNo"
             name="box_lotNo"
             [disabled]="!header || isEditingHeader || isSavingBox"
+            (keydown.enter)="onScanEnter('lotNo', $event)"
           />
         </div>
-
+      
         <div class="stack-item">
           <div class="stack-k">Quantity</div>
           <input
+            #scanQty
             class="form-control"
             type="number"
             placeholder=""
             [(ngModel)]="boxForm.qty"
             name="box_qty"
             [disabled]="!header || isEditingHeader || isSavingBox"
+            (keydown.enter)="onScanEnter('qty', $event)"
             (keydown.tab)="loopFocusToFirst($event)"
-            (keydown.enter)="loopFocusToFirst($event)"
           />
         </div>
       </div>
+      
 
       <div class="stack-note">
         * Temp Stack = รายการที่ scan เข้าแล้ว แต่ยังไม่กด Confirm Lot
@@ -409,19 +422,21 @@
               <th>DIE NO</th>
               <th>LOT NO</th>
               <th class="text-end">QTY</th>
+              <th class="text-center">Edit</th>
+              <th class="text-center">Delete</th>
             </tr>
           </thead>
           <tbody>
             <!-- Loading -->
             <tr *ngIf="isLoadingSaved">
-              <td colspan="7" class="text-center text-muted py-3">
+              <td colspan="9" class="text-center text-muted py-3">
                 <i class="fas fa-spinner fa-spin me-1"></i> Loading...
               </td>
             </tr>
           
             <!-- Empty -->
             <tr *ngIf="!isLoadingSaved && header && !isEditingHeader && (!savedRows || savedRows.length === 0)">
-              <td colspan="7" class="text-center text-muted py-3">
+              <td colspan="9" class="text-center text-muted py-3">
                 No data
               </td>
             </tr>
@@ -434,7 +449,26 @@
               <td>{{ r.dwg }}</td>
               <td>{{ r.dieNo }}</td>
               <td>{{ r.lotNo }}</td>
-              <td class="text-end fw-600">{{ r.qty }}</td>
+              <td class="text-end fw-600">{{ r.qty }}</td>                          
+              <td class="text-center">
+                <button
+                  class="btn-row edit"
+                  (click)="onEditRow(r)"
+                  title="Edit"
+                >
+                  <i class="fas fa-pen"></i>
+                </button>
+              </td>
+
+              <td class="text-center">
+                <button
+                  class="btn-row delete"
+                  (click)="onDeleteRow(r)"
+                  title="Delete"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
             </tr>
           </tbody>
           
@@ -444,3 +478,8 @@
     </div>
   </div>
 </div>
+
+
+
+
+
