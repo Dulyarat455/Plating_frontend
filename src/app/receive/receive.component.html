@@ -16,24 +16,23 @@
          Header form (create / edit)
     ======================== -->
     <form class="receive-form" autocomplete="off" *ngIf="showHeaderForm">
-
       <div class="form-grid">
-
-        <!-- วันที่รับ -->
+    
+        <!-- วันที่รับ (ซ้าย) -->
         <div class="form-field">
           <label class="form-label">วันที่รับ</label>
           <div class="input-wrap">
             <input
               class="form-control"
               type="datetime-local"
-              [(ngModel)]="form. receiveDateByUser"
-              name="sentDateByUser"
+              [(ngModel)]="form.receiveDateByUser"
+              name="receiveDateByUser"
             />
             <span class="input-icon"><i class="far fa-calendar"></i></span>
           </div>
         </div>
-
-        <!-- Shift -->
+    
+        <!-- Shift (ขวา) -->
         <div class="form-field">
           <label class="form-label">Shift</label>
           <div class="input-wrap">
@@ -46,8 +45,8 @@
             <span class="input-icon"><i class="fas fa-chevron-down"></i></span>
           </div>
         </div>
-
-        <!-- Vendor -->
+    
+        <!-- Vendor (เต็มแถว) -->
         <div class="form-field span-2">
           <label class="form-label">Select Vendor</label>
           <div class="input-wrap">
@@ -58,22 +57,10 @@
             <span class="input-icon"><i class="fas fa-chevron-down"></i></span>
           </div>
         </div>
-
-        <!-- ControlLot -->
-        <div class="form-field span-2">
-          <label class="form-label">Select ControlLot</label>
-          <div class="input-wrap">
-            <select class="form-control" [(ngModel)]="form.controlLotId" name="controlLotId">
-              <option [ngValue]="null" disabled>เลือก ControlLot</option>
-              <option *ngFor="let c of controlLots" [ngValue]="c.id">{{ c.name }}</option>
-            </select>
-            <span class="input-icon"><i class="fas fa-chevron-down"></i></span>
-          </div>
-        </div>
-
-        <!-- Item -->
-        <div class="form-field span-2">
-          <label class="form-label">Item No</label>
+    
+        <!-- Item No (ซ้าย) -->
+        <div class="form-field">
+          <label class="form-label">Select Item No.</label>
           <div class="input-wrap">
             <select class="form-control" [(ngModel)]="form.itemNo" name="itemNo" (ngModelChange)="onSelectItemNo($event)">
               <option value="" disabled>เลือก Item No</option>
@@ -82,25 +69,41 @@
             <span class="input-icon"><i class="fas fa-chevron-down"></i></span>
           </div>
         </div>
-
-        <!-- ItemName -->
-        <div class="form-field span-2">
-          <label class="form-label">Item Name</label>
-          <input class="form-control" type="text" [(ngModel)]="form.itemName" name="itemName" readonly />
+    
+        <!-- Item Name (ขวา) -->
+        <div class="form-field">
+          <label class="form-label">Auto Item Name</label>
+          <div class="input-wrap">
+            <input class="form-control" type="text" [(ngModel)]="form.itemName" name="itemName" readonly />
+            <span class="input-icon"><i class="fas fa-tag"></i></span>
+          </div>
         </div>
-
-        <!-- QtyBox -->
-        <div class="form-field span-2">
-          <label class="form-label">Qty Box</label>
-          <input class="form-control" type="number" min="1" [(ngModel)]="form.qtyBox" name="qtyBox" />
+    
+        <!-- ControlLot (ซ้าย) -->
+        <div class="form-field">
+          <label class="form-label">Control Lot</label>
+          <div class="input-wrap">
+            <select class="form-control" [(ngModel)]="form.controlLotId" name="controlLotId">
+              <option [ngValue]="null" disabled>เลือก ControlLot</option>
+              <option *ngFor="let c of controlLots" [ngValue]="c.id">{{ c.name }}</option>
+            </select>
+            <span class="input-icon"><i class="fas fa-chevron-down"></i></span>
+          </div>
         </div>
-
+    
+        <!-- QtyBox (ขวา) -->
+        <div class="form-field">
+          <label class="form-label">Total QTY BOX</label>
+          <input class="form-control" type="number" min="1" [(ngModel)]="form.qtyBox" name="qtyBox" placeholder="Max 42 Box/ครั้ง" />
+        </div>
+    
       </div>
-
+    
       <button type="button" class="btn-save" (click)="onSaveHeader()" [disabled]="isSavingHeader">
-        {{ isSavingHeader ? 'Saving...' : 'Save Header' }}
+        {{ isSavingHeader ? 'Saving...' : 'Save' }}
       </button>
     </form>
+    
 
     <!-- =======================
          Header summary (saved)
