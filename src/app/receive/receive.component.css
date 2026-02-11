@@ -459,4 +459,166 @@
   
 
 
-  
+  /* =========================
+   Header Summary (เหมือน Issue)
+========================= */
+.header-summary{
+  margin-top: 10px;
+  margin-bottom: 8px;
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.header-summary-title{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.header-summary-title i{
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.header-summary-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+}
+
+.hs-item{
+  border-radius: 14px;
+  padding: 10px 12px;
+  min-width: 0;
+}
+
+.hs-item.span-2{ grid-column: 1 / -1; }
+
+.hs-k{
+  font-size: 12px;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+
+.hs-v{
+  font-size: 14px;
+  font-weight: 800;
+  word-break: break-word;
+}
+
+.header-summary-actions{
+  margin-top: 12px;
+  display:flex;
+  justify-content:flex-end; /* ✅ ปุ่มชิดขวาเหมือน Issue */
+}
+
+/* mobile */
+@media (max-width: 767.98px){
+  .header-summary-grid{ grid-template-columns: 1fr; }
+  .hs-item.span-2{ grid-column: auto; }
+  .header-summary-actions{ justify-content: flex-start; }
+}
+
+
+
+/* =========================
+   Receive: Header Saved card (like Issue)
+   เพิ่มกรอบ + ไล่ gradient + inner card
+========================= */
+
+.header-summary-wrap{
+  margin-top: 10px;
+  margin-bottom: 8px;
+
+  /* กรอบใหญ่ + ไล่ gradient แบบ issue */
+  background: linear-gradient(
+    135deg,
+    rgba(52, 219, 116, 0.14) 0%,
+    rgba(31,186,214,0.10) 55%,
+    rgba(255,255,255,0) 100%
+  );
+  border: 1px solid rgba(52, 219, 174, 0.16);
+  border-radius: 16px;
+  padding: 12px;
+}
+
+/* ตัวการ์ดด้านใน */
+.header-summary{
+  background: #ffffff;
+  border: 1px solid rgba(52,152,219,0.14);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+/* Title row */
+.header-summary-title{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  font-weight: 900;
+  color:#1f2d3d;
+  margin-bottom: 12px;
+}
+
+/* icon chip แบบ issue */
+.header-summary-title .hs-icon{
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  color: #34db8d;
+  background: rgba(52,152,219,0.12);
+  border: 1px solid rgba(52,152,219,0.18);
+}
+
+/* grid เหมือน issue */
+.header-summary-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+}
+
+.hs-item{
+  background:#ffffff;
+  border: 1px solid rgba(52,152,219,0.14);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+
+.hs-item.span-2{ grid-column: 1 / -1; }
+
+.hs-k{
+  font-size: 12px;
+  font-weight: 900;
+  color:#517363;
+  margin-bottom: 4px;
+}
+
+.hs-v{
+  font-size: 14px;
+  font-weight: 800;
+  color:#1f3d30;
+  word-break: break-word;
+}
+
+.header-summary-actions{
+  margin-top: 12px;
+  display:flex;
+  justify-content:flex-end;
+}
+
+/* responsive */
+@media (max-width: 767.98px){
+  .header-summary-grid{ grid-template-columns: 1fr; }
+  .hs-item.span-2{ grid-column: auto; }
+  .header-summary-actions{ justify-content: flex-start; }
+}

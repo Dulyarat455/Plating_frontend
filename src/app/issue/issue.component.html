@@ -363,7 +363,7 @@
         * Temp Stack = รายการที่ scan เข้าแล้ว แต่ยังไม่กด Confirm Lot
       </div>
 
-      <div class="stack-actions">
+      <!-- <div class="stack-actions">
         <button
           type="button"
           class="btn-soft"
@@ -383,7 +383,9 @@
           <i class="fas fa-trash-alt me-1"></i>
           Clear
         </button>
-      </div>
+      </div> -->
+
+      
     </div>
 
 
@@ -403,12 +405,33 @@
           </span>
         </div>
 
-        <div class="saved-actions">
-          <button type="button" class="btn-issue">
-            <i class="fas fa-truck"></i>
-            Issue
-          </button>
-        </div>
+        <button
+        type="button"
+        class="btn-soft danger"
+        (click)="onDeleteAllBoxScan()"
+        [disabled]="!header || isEditingHeader || isLoadingSaved || isClearingAll || (savedRows.length === 0)"
+      >
+      <i class="fas fa-trash-alt me-1"></i>
+        Clear
+      </button>
+      
+
+        <button
+          type="button"
+          class="btn-issue"
+          (click)="onClickIssue()"
+          [disabled]="
+            isIssuing ||
+            !header ||
+            isEditingHeader ||
+            isLoadingSaved ||
+            (savedRows.length < header!.qtyBox)
+          "
+        >
+          <i class="fas fa-truck"></i>
+          {{ isIssuing ? 'Issuing...' : 'Issue' }}
+        </button>
+
       </div>
 
       <div class="table-wrap">

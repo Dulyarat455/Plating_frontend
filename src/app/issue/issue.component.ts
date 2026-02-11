@@ -156,6 +156,11 @@ export class IssueComponent implements OnInit, AfterViewInit {
   isLoadingSaved = false;
   savedRows: BoxIssueTempRow[] = [];
 
+  // ===== issue =========
+  isIssuing = false;
+
+  isClearingAll = false;
+
   constructor(private http: HttpClient) {}
 
   /* =======================
@@ -436,7 +441,7 @@ export class IssueComponent implements OnInit, AfterViewInit {
       )
       .subscribe({
         next: (_res: any) => {
-          this.toastFull('success', 'Confirm Lot สำเร็จ');
+          this.toastFullScan('success', 'Confirm Lot สำเร็จ');
           this.boxForm = this.createEmptyBoxForm();
           this.fetchBoxTempByHeadId();
           this.isSavingBox = false;
@@ -721,6 +726,196 @@ export class IssueComponent implements OnInit, AfterViewInit {
     });
   }
 
+
+  onClickIssue() {
+    if (!this.header || this.isEditingHeader) {
+      return this.toast('warning', 'กรุณาบันทึก Header ให้เสร็จก่อน');
+    }
+  
+    if ((this.savedRows?.length ?? 0) < (this.header.qtyBox ?? 0)) {
+      return this.toastFull(
+        'warning',
+        `จำนวน BOX ยังไม่ครบ (${this.savedRows.length}/${this.header.qtyBox})`
+      );
+    }
+  
+    if (this.isIssuing) return;
+
+    const summaryHtml = this.buildItemSummaryHtml();
+
+    Swal.fire({
+      title: 'ยืนยันการ Issue?',
+      html: `
+        <div style="text-align:left">
+           ${summaryHtml}
+           <div style="margin-top:10px"><b>Total:</b> ${this.savedRows.length} รายการ</div>
+        </div>
+      `,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Issue',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#16a34a',
+      cancelButtonColor: '#6b7280',
+    }).then((r) => {
+      if (!r.isConfirmed) return;
+  
+      this.isIssuing = true;
+  
+      Swal.fire({
+        title: 'Issuing...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+  
+      const payload = {
+        userId: this.userId,
+        headTempId: this.header!.id,
+      };
+  
+      this.http
+        .post<any>(config.apiServer + '/api/issue/createHeaderBox', payload) // ใช้ path ตาม backend คุณ
+        .subscribe({
+          next: (_res) => {
+            Swal.close();
+            this.isIssuing = false;
+            this.toastFull('success', 'Issue สำเร็จ');
+  
+            // ✅ อัปเดต UI ทันที (ไม่รีเฟรชหน้า)
+            // 1) เคลียร์ state ปัจจุบันก่อน เพื่อให้หน้าเปลี่ยนทันที
+            this.header = null;
+            this.savedRows = [];
+            this.boxForm = this.createEmptyBoxForm();
+            this.isEditingHeader = true;
+            this.form = this.createEmptyForm();
+  
+            // 2) ดึงข้อมูลใหม่จากหลังบ้าน (ถ้ามี header temp ใหม่ / หรือกลับมาเป็นหน้าสร้างใหม่)
+            this.fetchHeader();
+  
+            // 3) โฟกัสกลับไปที่ช่องแรก
+            setTimeout(() => this.focusScanFirst(), 150);
+          },
+          error: (err) => {
+            console.error(err);
+            this.isIssuing = false;
+  
+            Swal.fire({
+              title: 'Error',
+              text: err?.error?.message || err?.message || 'Issue fail',
+              icon: 'error',
+            });
+          },
+        });
+    });
+  }
+
+
+  private buildItemSummaryHtml(): string {
+    if (!this.savedRows || this.savedRows.length === 0) return '';
+  
+    const map = new Map<string, number>();
+  
+    this.savedRows.forEach(r => {
+      const name = (r.itemName || '').trim() || 'UNKNOWN';
+      map.set(name, (map.get(name) || 0) + 1);
+    });
+  
+    let html = `<div style="margin-top:6px">`;
+  
+    map.forEach((count, name) => {
+      html += `
+        <div style="display:flex;justify-content:space-between;gap:12px">
+          <span><b>${name}</b></span>
+          <span>${count} BOX</span>
+        </div>
+      `;
+    });
+  
+    html += `</div>`;
+  
+    return html;
+  }
+  
+
+
+
+  onDeleteAllBoxScan() {
+    if (!this.header || this.isEditingHeader) {
+      return this.toast('warning', 'กรุณาบันทึก Header ให้เสร็จก่อน');
+    }
+  
+    if ((this.savedRows?.length ?? 0) === 0) {
+      return this.toastFull('info', 'ยังไม่มีรายการให้ลบ');
+    }
+  
+    if (this.isClearingAll) return;
+    const summaryHtml = this.buildItemSummaryHtml();
+
+
+    Swal.fire({
+      title: 'Clear BOX ทั้งหมด?',
+      html: `
+        <div style="text-align:left">
+        <div><b>Summary:</b></div>
+        ${summaryHtml}
+         <div style="margin-top:10px"><b>Total:</b> ${this.savedRows.length} รายการ</div>
+        </div>
+      `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Clear',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+    }).then((r) => {
+      if (!r.isConfirmed) return;
+  
+      this.isClearingAll = true;
+  
+      Swal.fire({
+        title: 'Clearing...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+  
+      const payload = { headerTempId: this.header!.id };
+  
+      this.http
+        .post<any>(config.apiServer + '/api/issue/deleteBoxTempAll', payload)
+        .subscribe({
+          next: (_res) => {
+            Swal.close();
+            this.isClearingAll = false;
+  
+            this.toastFull('success', 'Clear สำเร็จ');
+  
+            // ✅ อัปเดต UI ทันที
+            this.savedRows = [];
+            this.boxForm = this.createEmptyBoxForm();
+  
+            // ✅ ดึง list ใหม่ (กันกรณี server ยังมี record อื่น)
+            this.fetchBoxTempByHeadId();
+  
+            setTimeout(() => this.focusScanFirst(), 150);
+          },
+          error: (err) => {
+            console.error(err);
+            this.isClearingAll = false;
+  
+            Swal.fire({
+              title: 'Error',
+              text: err?.error?.message || err?.message || 'Clear fail',
+              icon: 'error',
+            });
+          },
+        });
+    });
+  }
+  
+
+
+  
+
   /* =======================
      Toast
   ======================= */
@@ -746,6 +941,21 @@ export class IssueComponent implements OnInit, AfterViewInit {
       icon,
       title,
       timer: 1800,
+      showConfirmButton: false,
+  
+      customClass: {
+        container: 'app-toast-container',
+        popup: 'app-toast'
+      }
+    });
+  }
+
+
+  private toastFullScan(icon: any, title: string) {
+    Swal.fire({
+      icon,
+      title,
+      timer: 500,
       showConfirmButton: false,
   
       customClass: {

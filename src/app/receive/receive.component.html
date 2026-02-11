@@ -1,209 +1,319 @@
 <div class="receive-page">
-    <div class="receive-card">
-      <div class="receive-header">
-        <h2 class="receive-title">Receive Part (IQC)</h2>
-       
-      </div>
-  
-      <!-- Form (Header data before scan) -->
-      <form class="receive-form" autocomplete="off">
-        <div class="form-grid">
-          <!-- วันที่รับ -->
-          <div class="form-field">
-            <label class="form-label">วันที่รับ</label>
-            <div class="input-wrap">
-              <input class="form-control" type="date" />
-              <span class="input-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-            </div>
-          </div>
-  
-          <!-- Shift -->
-          <div class="form-field">
-            <label class="form-label">Shift</label>
-            <div class="input-wrap">
-              <select class="form-control">
-                <option value="" selected disabled>เลือกกะการทำงาน</option>
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-              </select>
-              <span class="input-icon">
-                <i class="fas fa-chevron-down"></i>
-              </span>
-            </div>
-          </div>
-  
-          <!-- Vendor (full width) -->
-          <div class="form-field span-2">
-            <label class="form-label">Select Vendor</label>
-            <div class="input-wrap">
-              <select class="form-control">
-                <option value="" selected disabled>เลือก Vendor</option>
-                <option>ZIP</option>
-                <option>METEK</option>
-              </select>
-              <span class="input-icon">
-                <i class="fas fa-chevron-down"></i>
-              </span>
-            </div>
-          </div>
-  
-          <!-- Receive Lot No (หัวรับเข้า) -->
-          <div class="form-field span-2">
-            <label class="form-label">Receive Lot No. (หัว Lot ที่จะรับเข้า)</label>
-            <div class="input-wrap">
-              <input class="form-control" type="text" placeholder="กรอก/สแกน Lot หลักที่จะ Receive" />
-              <span class="input-icon">
-                <i class="fas fa-tag"></i>
-              </span>
-            </div>
-          </div>
-  
-          <!-- Optional note -->
-          <div class="form-field span-2">
-            <label class="form-label">Remark (optional)</label>
-            <input class="form-control" type="text" placeholder="หมายเหตุ..." />
-          </div>
-        </div>
-  
-        <!-- Save Header button -->
-        <button type="button" class="btn-save">
-          Save Header
-        </button>
-      </form>
-  
-      <!-- Instruction box -->
-      <div class="instruction-card">
-        <div class="instruction-title">
-          <i class="fas fa-qrcode"></i>
-          <span>Scan QR Code Instructions</span>
-        </div>
-  
-        <ul class="instruction-list">
-          <li>QR มีข้อมูล ItemNo / ItemName / WOS / Die / Lot / Qty อยู่แล้ว</li>
-          <li>สแกนได้ทีละ 1 QR ต่อครั้ง ถ้าสแกนซ้ำให้ “ทับค่าเดิม” ใน Temp Stack</li>
-          <li>กด <b>Confirm Lot</b> เพื่อบันทึกลง Temp (แสดงในตารางด้านล่าง)</li>
-          <li>กด <b>Receive</b> เพื่อบันทึกจาก Temp ลง Table จริง</li>
-        </ul>
-      </div>
-  
-      <!-- ===== Temp Stack (รอ Confirm) ===== -->
-      <div class="stack-card">
-        <div class="stack-header">
-          <div class="stack-title">
-            <i class="fas fa-hourglass-half"></i>
-            <span>รายการรอ Confirm (Temp Stack)</span>
-          </div>
-  
-          <!-- ช่อง Scan (รับได้ทีละ QR) -->
-          <div class="scan-box">
-            <i class="fas fa-qrcode"></i>
-            <input class="scan-input" type="text" placeholder="Scan QR here แล้วกด Enter" />
-          </div>
-        </div>
-  
-        <div class="stack-grid">
-          <div class="stack-item">
-            <div class="stack-k">Item No.</div>
-            <input class="form-control" type="text" />
-          </div>
-  
-          <div class="stack-item">
-            <div class="stack-k">Item Name</div>
-            <input class="form-control" type="text" />
-          </div>
-  
-          <div class="stack-item">
-            <div class="stack-k">Item WOS No.</div>
-            <input class="form-control" type="text" />
-          </div>
-  
-          <div class="stack-item">
-            <div class="stack-k">Die No.</div>
-            <input class="form-control" type="text" />
-          </div>
-  
-          <div class="stack-item">
-            <div class="stack-k">Lot No.</div>
-            <input class="form-control" type="text" />
-          </div>
-  
-          <div class="stack-item">
-            <div class="stack-k">Quantity</div>
-            <input class="form-control" type="number" />
-          </div>
-        </div>
-  
-        <div class="stack-note">
-          * Temp Stack = รายการที่สแกนเข้ามาแล้ว แต่ยังไม่กด Confirm Lot
-        </div>
-  
-        <div class="stack-actions">
-          <button type="button" class="btn-soft">
-            <i class="fas fa-check-circle me-1"></i>
-            Confirm Lot
-          </button>
-          <button type="button" class="btn-soft danger">
-            <i class="fas fa-trash-alt me-1"></i>
-            Clear
-          </button>
-        </div>
-      </div>
-  
-      <!-- ===== Saved List (Temp DB) ===== -->
-      <div class="saved-card">
-        <div class="saved-header">
-          <div class="saved-title">
-            <i class="fas fa-clipboard-check"></i>
-            <span>รายการที่บันทึก Temp แล้ว (IQC)</span>
-          </div>
-  
-          <div class="saved-right">
-            <div class="saved-badge">
-              <i class="fas fa-database"></i>
-              Temp Saved
-            </div>
-  
-            <button type="button" class="btn-receive">
-              <i class="fas fa-check-double me-1"></i>
-              Receive
-            </button>
-          </div>
-        </div>
-  
-        <div class="table-wrap">
-          <table class="saved-table">
-            <thead>
-              <tr>
-                <th>Item No.</th>
-                <th>Item Name</th>
-                <th>WOS NO</th>
-                <th>DWG</th>
-                <th>DIE NO</th>
-                <th>LOT NO</th>
-                <th class="text-end">QTY</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>10000206936</td>
-                <td class="fw-600">YOKE#1</td>
-                <td>JB615021K002</td>
-                <td>A19-321027-3E</td>
-                <td>D8</td>
-                <td>L26119AB4</td>
-                <td class="text-end fw-600">4000</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-  
-        <div class="saved-footnote">
-          * ปุ่ม Receive จะย้ายข้อมูลจาก Temp ไป Table จริง และล้าง Temp
-        </div>
+  <div class="receive-card">
+
+    <div class="receive-header">
+      <h2 class="receive-title">Receive Part (IQC)</h2>
+
+    </div>
+    <div class="instruction-card" *ngIf="isLoadingHeader">
+      <div class="instruction-title">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>Loading header...</span>
       </div>
     </div>
+
+    <!-- =======================
+         Header form (create / edit)
+    ======================== -->
+    <form class="receive-form" autocomplete="off" *ngIf="showHeaderForm">
+
+      <div class="form-grid">
+
+        <!-- วันที่รับ -->
+        <div class="form-field">
+          <label class="form-label">วันที่รับ</label>
+          <div class="input-wrap">
+            <input
+              class="form-control"
+              type="datetime-local"
+              [(ngModel)]="form. receiveDateByUser"
+              name="sentDateByUser"
+            />
+            <span class="input-icon"><i class="far fa-calendar"></i></span>
+          </div>
+        </div>
+
+        <!-- Shift -->
+        <div class="form-field">
+          <label class="form-label">Shift</label>
+          <div class="input-wrap">
+            <select class="form-control" [(ngModel)]="form.shift" name="shift">
+              <option value="" disabled>เลือกกะการทำงาน</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
+            <span class="input-icon"><i class="fas fa-chevron-down"></i></span>
+          </div>
+        </div>
+
+        <!-- Vendor -->
+        <div class="form-field span-2">
+          <label class="form-label">Select Vendor</label>
+          <div class="input-wrap">
+            <select class="form-control" [(ngModel)]="form.venderId" name="venderId">
+              <option [ngValue]="null" disabled>เลือก Vendor</option>
+              <option *ngFor="let v of vendors" [ngValue]="v.id">{{ v.name }}</option>
+            </select>
+            <span class="input-icon"><i class="fas fa-chevron-down"></i></span>
+          </div>
+        </div>
+
+        <!-- ControlLot -->
+        <div class="form-field span-2">
+          <label class="form-label">Select ControlLot</label>
+          <div class="input-wrap">
+            <select class="form-control" [(ngModel)]="form.controlLotId" name="controlLotId">
+              <option [ngValue]="null" disabled>เลือก ControlLot</option>
+              <option *ngFor="let c of controlLots" [ngValue]="c.id">{{ c.name }}</option>
+            </select>
+            <span class="input-icon"><i class="fas fa-chevron-down"></i></span>
+          </div>
+        </div>
+
+        <!-- Item -->
+        <div class="form-field span-2">
+          <label class="form-label">Item No</label>
+          <div class="input-wrap">
+            <select class="form-control" [(ngModel)]="form.itemNo" name="itemNo" (ngModelChange)="onSelectItemNo($event)">
+              <option value="" disabled>เลือก Item No</option>
+              <option *ngFor="let it of items" [value]="it.itemNo">{{ it.itemNo }}</option>
+            </select>
+            <span class="input-icon"><i class="fas fa-chevron-down"></i></span>
+          </div>
+        </div>
+
+        <!-- ItemName -->
+        <div class="form-field span-2">
+          <label class="form-label">Item Name</label>
+          <input class="form-control" type="text" [(ngModel)]="form.itemName" name="itemName" readonly />
+        </div>
+
+        <!-- QtyBox -->
+        <div class="form-field span-2">
+          <label class="form-label">Qty Box</label>
+          <input class="form-control" type="number" min="1" [(ngModel)]="form.qtyBox" name="qtyBox" />
+        </div>
+
+      </div>
+
+      <button type="button" class="btn-save" (click)="onSaveHeader()" [disabled]="isSavingHeader">
+        {{ isSavingHeader ? 'Saving...' : 'Save Header' }}
+      </button>
+    </form>
+
+    <!-- =======================
+         Header summary (saved)
+    ======================== -->
+   <!-- ===== HEADER SUMMARY (มี header แล้ว และไม่ได้ edit) ===== -->
+<!-- ===== HEADER SUMMARY (Receive) ===== -->
+<div class="header-summary-wrap" *ngIf="header && !isEditingHeader">
+
+  <div class="header-summary">
+    <div class="header-summary-title">
+      <span class="hs-icon">
+        <i class="fas fa-clipboard-list"></i>
+      </span>
+      <span>Header Saved</span>
+    </div>
+
+    <div class="header-summary-grid">
+      <div class="hs-item">
+        <div class="hs-k">วันที่รับ</div>
+        <div class="hs-v">{{ header.receiveDateByUser | date:'yyyy-MM-dd HH:mm' }}</div>
+      </div>
+
+      <div class="hs-item">
+        <div class="hs-k">Shift</div>
+        <div class="hs-v">{{ header.shift }}</div>
+      </div>
+
+      <div class="hs-item span-2">
+        <div class="hs-k">Vendor</div>
+        <div class="hs-v">{{ vendorName(header.venderId) }}</div>
+      </div>
+
+      <div class="hs-item">
+        <div class="hs-k">Item No.</div>
+        <div class="hs-v">{{ header.itemNo }}</div>
+      </div>
+
+      <div class="hs-item">
+        <div class="hs-k">Item Name</div>
+        <div class="hs-v">{{ header.itemName }}</div>
+      </div>
+
+      <div class="hs-item">
+        <div class="hs-k">Control Lot</div>
+        <div class="hs-v">{{ controlLotName(header.controlLotId) }}</div>
+      </div>
+
+      <div class="hs-item">
+        <div class="hs-k">Qty Box</div>
+        <div class="hs-v">{{ header.qtyBox }}</div>
+      </div>
+    </div>
+
+    <div class="header-summary-actions">
+      <button type="button" class="btn-soft" (click)="onClickEditHeader()">
+        <i class="fas fa-pen me-1"></i>
+        Edit Header
+      </button>
+    </div>
   </div>
-  
+
+</div>
+
+
+
+    <!-- Instruction -->
+    <div class="instruction-card">
+      <div class="instruction-title">
+        <i class="fas fa-qrcode"></i>
+        <span>Scan QR Code Instructions</span>
+      </div>
+
+      <ul class="instruction-list">
+        <li>สแกนได้ทีละ 1 QR ต่อครั้ง</li>
+        <li>กด <b>Confirm Lot</b> เพื่อบันทึกลง Temp</li>
+        <li>กด <b>Receive</b> เพื่อย้ายไป Table จริง (เดี๋ยวทำต่อขั้นนี้)</li>
+      </ul>
+    </div>
+
+    <!-- =======================
+         Temp Stack
+    ======================== -->
+    <div class="stack-card">
+      <div class="stack-header">
+        <div class="stack-title">
+          <i class="fas fa-hourglass-half"></i>
+          <span>รายการรอ Confirm (Temp Stack)</span>
+        </div>
+      </div>
+
+      <div class="stack-grid">
+        <div class="stack-item">
+          <div class="stack-k">Item No.</div>
+          <input #scanItemNo class="form-control" type="text" [(ngModel)]="boxForm.itemNo" name="scanItemNo"
+                 (keydown)="onScanEnter('itemNo', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-k">Item Name</div>
+          <input #scanItemName class="form-control" type="text" [(ngModel)]="boxForm.itemName" name="scanItemName"
+                 (keydown)="onScanEnter('itemName', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-k">Item WOS No.</div>
+          <input #scanWosNo class="form-control" type="text" [(ngModel)]="boxForm.wosNo" name="scanWosNo"
+                 (keydown)="onScanEnter('wosNo', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-k">DWG</div>
+          <input #scanDwg class="form-control" type="text" [(ngModel)]="boxForm.dwg" name="scanDwg"
+                 (keydown)="onScanEnter('dwg', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-k">Die No.</div>
+          <input #scanDieNo class="form-control" type="text" [(ngModel)]="boxForm.dieNo" name="scanDieNo"
+                 (keydown)="onScanEnter('dieNo', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-k">Lot No.</div>
+          <input #scanLotNo class="form-control" type="text" [(ngModel)]="boxForm.lotNo" name="scanLotNo"
+                 (keydown)="onScanEnter('lotNo', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+        </div>
+
+        <div class="stack-item">
+          <div class="stack-k">Quantity</div>
+          <input #scanQty class="form-control" type="number" [(ngModel)]="boxForm.qty" name="scanQty"
+                 (keydown)="onScanEnter('qty', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+        </div>
+      </div>
+
+      <div class="stack-actions">
+        <button type="button" class="btn-soft" (click)="onConfirmLot()" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox">
+          <i class="fas fa-check-circle me-1"></i>
+          Confirm Lot
+        </button>
+        <button type="button" class="btn-soft danger" (click)="onClearBoxForm()" [disabled]="!header || isEditingHeader || isSavingBox">
+          <i class="fas fa-trash-alt me-1"></i>
+          Clear
+        </button>
+      </div>
+    </div>
+
+    <!-- =======================
+         Saved list (Temp DB)
+    ======================== -->
+    <div class="saved-card">
+      <div class="saved-header">
+        <div class="saved-title">
+          <i class="fas fa-clipboard-check"></i>
+          <span>รายการที่บันทึก Temp แล้ว (IQC)</span>
+        </div>
+
+        <div class="saved-right">
+          <div class="saved-badge">
+            <i class="fas fa-database"></i>
+            Temp Saved {{ savedRows.length }}
+          </div>
+
+          <button type="button" class="btn-receive" disabled>
+            <i class="fas fa-check-double me-1"></i>
+            Receive
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="saved-table">
+          <thead>
+            <tr>
+              <th>Item No.</th>
+              <th>Item Name</th>
+              <th>WOS NO</th>
+              <th>DWG</th>
+              <th>DIE NO</th>
+              <th>LOT NO</th>
+              <th class="text-end">QTY</th>
+              <th class="text-end">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let r of savedRows">
+              <td>{{ r.itemNo }}</td>
+              <td class="fw-600">{{ r.itemName }}</td>
+              <td>{{ r.wosNo }}</td>
+              <td>{{ r.dwg }}</td>
+              <td>{{ r.dieNo }}</td>
+              <td>{{ r.lotNo }}</td>
+              <td class="text-end fw-600">{{ r.qty }}</td>
+              <td class="text-end">
+                <button type="button" class="btn-row delete" (click)="onDeleteRow(r)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="!savedRows.length">
+              <td colspan="8" style="text-align:center; padding:14px; color:#6b7c93">
+                No temp box
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="saved-footnote">
+        * ปุ่ม Receive จะย้ายข้อมูลจาก Temp ไป Table จริง และล้าง Temp
+      </div>
+    </div>
+
+  </div>
+</div>
