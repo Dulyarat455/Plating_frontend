@@ -64,7 +64,12 @@
         </div>
       </div>
 
-      <div class="header-summary-actions">
+
+      <div class="header-summary-actions gap-2">
+        <button type="button" class="btn-delete-header" (click)="onDeleteHeaderTemp()">
+          <i class="fas fa-trash-alt"></i>
+          Delete Header
+        </button>
         <button type="button" class="btn-soft" (click)="onClickEditHeader()">
           <i class="fas fa-pen me-1"></i>
           Edit Header
@@ -252,8 +257,8 @@
     <div class="stack-card" *ngIf="!isBoxFull" >
       <div class="stack-header">
         <div class="stack-title">
-          <i class="fas fa-hourglass-half"></i>
-          <span>รายการรอ Confirm (Temp Stack)</span>
+          <i class="fas fa-qrcode me-2"></i>
+          <span>Scan QR Form WOS</span>
         </div>
       </div>
 
@@ -363,8 +368,8 @@
         * Temp Stack = รายการที่ scan เข้าแล้ว แต่ยังไม่กด Confirm Lot
       </div>
 
-      <!-- <div class="stack-actions">
-        <button
+      <div class="stack-actions">
+        <!-- <button
           type="button"
           class="btn-soft"
           (click)="onConfirmLot()"
@@ -372,7 +377,7 @@
         >
           <i class="fas fa-check-circle me-1"></i>
           Confirm Lot
-        </button>
+        </button> -->
 
         <button
           type="button"
@@ -383,7 +388,7 @@
           <i class="fas fa-trash-alt me-1"></i>
           Clear
         </button>
-      </div> -->
+      </div>
 
       
     </div>
@@ -425,7 +430,8 @@
             !header ||
             isEditingHeader ||
             isLoadingSaved ||
-            (savedRows.length < header!.qtyBox)
+            (savedRows.length < header!.qtyBox) || 
+            (savedRows.length > header!.qtyBox)
           "
         >
           <i class="fas fa-truck"></i>

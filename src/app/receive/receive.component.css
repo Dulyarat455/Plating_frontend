@@ -200,7 +200,7 @@
   }
   
   .stack-item{
-    background:#f7fbff;
+    background:#f7fffa;
     border: 1px solid #e3eefc;
     border-radius: 12px;
     padding: 12px 12px;
@@ -255,7 +255,7 @@
   ========================= */
   .saved-card{
     margin-top: 14px;
-    background: #eef6ff;
+    background: #eefff7;
     border: 1px solid #d9e9ff;
     border-radius: 14px;
     padding: 14px;
@@ -622,3 +622,186 @@
   .hs-item.span-2{ grid-column: auto; }
   .header-summary-actions{ justify-content: flex-start; }
 }
+
+
+
+
+
+
+/* wrapper จัดกึ่งกลาง */
+.box-full-wrap{
+  display: flex;
+  justify-content: center;
+  margin: 14px 0 18px;
+}
+
+/* ตัว banner */
+.box-full-banner{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  width: 100%;
+  max-width: 720px;        /* desktop */
+  padding: 14px 20px;
+
+  border-radius: 14px;
+
+  background: linear-gradient(
+    180deg,
+    #c9e0d9 0%,
+    #dbfff4 100%
+  );
+
+  border: 1px solid rgba(52, 219, 116, 0.14);
+  box-shadow: 0 10px 26px rgba(216, 232, 227, 0.1);
+
+  color: #02091c;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: .3px;
+
+  justify-content: center; /* ตัวอักษรอยู่กลาง */
+  text-align: center;
+}
+
+/* icon */
+.box-full-banner i{
+  font-size: 1.25rem;
+  color: #0f7d4d;
+}
+
+/* 📱 Mobile */
+@media (max-width: 576px){
+  .box-full-banner{
+    max-width: 100%;
+    font-size: .95rem;
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+}
+
+
+
+
+
+/* part delete & edit */
+
+.btn-row {
+  border: none;
+  background: transparent;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-row i {
+  font-size: 14px;
+}
+
+.btn-row.edit {
+  color: #3b82f6;
+}
+
+.btn-row.edit:hover {
+  background: rgba(59,130,246,.12);
+}
+
+.btn-row.delete {
+  color: #ef4444;
+}
+
+.btn-row.delete:hover {
+  background: rgba(239,68,68,.12);
+}
+
+
+
+
+
+/* ===== Delete Header Button ===== */
+.btn-delete-header{
+  border: 1px solid rgba(239,68,68,0.35);
+  background: linear-gradient(135deg, rgba(239,68,68,0.12), rgba(239,68,68,0.18));
+  color: #991b1b;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all .15s ease;
+}
+
+/* hover */
+.btn-delete-header:hover{
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, rgba(239,68,68,0.18), rgba(239,68,68,0.26));
+  box-shadow: 0 6px 14px rgba(239,68,68,.25);
+}
+
+/* active */
+.btn-delete-header:active{
+  transform: translateY(0);
+}
+
+/* icon */
+.btn-delete-header i{
+  color:#dc2626;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ✅ Disabled state: ให้ดูจาง + เทา + ไม่มีเงา */
+.btn-receive:disabled,
+.btn-receive[disabled]{
+  background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%); /* slate */
+  color: rgba(255,255,255,0.85);
+
+  box-shadow: none;
+  filter: grayscale(0.25) brightness(0.98);
+
+  cursor: not-allowed;
+  opacity: 0.75;
+
+  transform: none;          /* กันเด้ง */
+  pointer-events: none;     /* กัน hover/active */
+}
+
+/* กัน hover ตอน disabled (บาง browser ยังติด hover style) */
+.btn-receive:disabled:hover{
+  transform: none;
+  box-shadow: none;
+  filter: grayscale(0.25) brightness(0.98);
+}
+
+
+
+.box-badge {
+  font-size: 0.82rem;          /* เล็กลงจาก 0.9 */
+  padding: 5px 12px;          /* บางลงนิด */
+  box-shadow: 0 2px 6px rgba(0,0,0,.15); /* เงาเบาลง */
+  letter-spacing: .4px;
+}
+
+/* PC */
+@media (min-width: 992px) {
+  .box-badge {
+    font-size: 0.9rem;        /* จากเดิม 1rem */
+    padding: 6px 14px;
+  }
+}
+

@@ -114,6 +114,12 @@ export class ReceiveComponent implements OnInit, AfterViewInit {
   isLoadingSaved = false;
   savedRows: BoxReceiveTempRow[] = [];
 
+
+// ========  Receive =========
+
+  isReceiveing = false;
+  isClearingAll = false;
+
   constructor(private http: HttpClient) {}
 
   /* =======================
@@ -214,6 +220,14 @@ export class ReceiveComponent implements OnInit, AfterViewInit {
       el.focus();
       el.select();
     }, 0);
+  }
+
+  
+  loopFocusToFirst(ev: any) {
+    if (!this.header || this.isEditingHeader) return;
+
+    if (ev?.key === 'Tab') ev.preventDefault();
+    this.focusScanFirst();
   }
 
   private focusScanFirst() {
@@ -429,10 +443,182 @@ export class ReceiveComponent implements OnInit, AfterViewInit {
       error: (err) => {
         console.error(err);
         this.isSavingBox = false;
-        Swal.fire({ title: 'Error', text: err?.error?.message || err?.message || 'Confirm Lot ไม่สำเร็จ', icon: 'error' });
+        Swal.fire({ title: 'Error', text: err?.error?.message || err?.message || 'Confirm Lot ไม่สำเร็จ', icon: 'error' })
+        .then(() => {
+          this.onClearBoxForm();
+          setTimeout(() => this.focusScanFirst(), 100);
+        });
+       
       },
     });
   }
+
+
+
+
+
+
+
+  onClickReceive() {
+    if (!this.header || this.isEditingHeader) {
+      return this.toast('warning', 'กรุณาบันทึก Header ให้เสร็จก่อน');
+    }
+  
+    if ((this.savedRows?.length ?? 0) < (this.header.qtyBox ?? 0)) {
+      return this.toastFull(
+        'warning',
+        `จำนวน BOX ยังไม่ครบ (${this.savedRows.length}/${this.header.qtyBox})`
+      );
+    }
+  
+    if (this.isReceiveing) return;
+
+    const summaryHtml = this.buildItemSummaryHtml();
+
+    Swal.fire({
+      title: 'ยืนยันการ Receive?',
+      html: `
+        <div style="text-align:left">
+           ${summaryHtml}
+           <div style="margin-top:10px"><b>Total:</b> ${this.savedRows.length} รายการ</div>
+        </div>
+      `,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Issue',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#16a34a',
+      cancelButtonColor: '#6b7280',
+    }).then((r) => {
+      if (!r.isConfirmed) return;
+  
+      this.isReceiveing = true;
+  
+      Swal.fire({
+        title: 'Receiving...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+  
+      const payload = {
+        userId: this.userId,
+        headTempId: this.header!.id,
+      };
+  
+      this.http
+        .post<any>(config.apiServer + '/api/receive/createHeaderBox', payload) // ใช้ path ตาม backend คุณ
+        .subscribe({
+          next: (_res) => {
+            Swal.close();
+            this.isReceiveing = false;
+            this.toastFull('success', 'Receive สำเร็จ');
+  
+            // ✅ อัปเดต UI ทันที (ไม่รีเฟรชหน้า)
+            // 1) เคลียร์ state ปัจจุบันก่อน เพื่อให้หน้าเปลี่ยนทันที
+            this.header = null;
+            this.savedRows = [];
+            this.boxForm = this.createEmptyBoxForm();
+            this.isEditingHeader = true;
+            this.form = this.createEmptyForm();
+  
+            // 2) ดึงข้อมูลใหม่จากหลังบ้าน (ถ้ามี header temp ใหม่ / หรือกลับมาเป็นหน้าสร้างใหม่)
+            this.fetchHeader();
+  
+            // 3) โฟกัสกลับไปที่ช่องแรก
+            setTimeout(() => this.focusScanFirst(), 150);
+          },
+          error: (err) => {
+            console.error(err);
+            this.isReceiveing = false;
+  
+            Swal.fire({
+              title: 'Error',
+              text: err?.error?.message || err?.message || 'Receive fail',
+              icon: 'error',
+            });
+          },
+        });
+    });
+  }
+
+
+  // ✅ SweetAlert2: แก้ QTY อย่างเดียว
+  onEditRow(r: BoxReceiveTempRow) {
+    if (!r?.id) return;
+
+    Swal.fire({
+      title: 'Edit QTY',
+      html: `
+        <div style="text-align:left">
+          <div class="mb-1"><b>Item:</b> ${r.itemNo} - ${r.itemName}</div>
+          <div class="mb-2"><b>WOS / LOT:</b> ${r.wosNo} / ${r.lotNo}</div>
+
+          <div style="margin-top:10px">
+            <label style="display:block; font-weight:600; margin-bottom:6px">Quantity (QTY)</label>
+            <input id="swal-qty" type="number" min="1" class="swal2-input" value="${Number(
+              r.qty ?? 0
+            )}" />
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Update',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#2563eb',
+      cancelButtonColor: '#6b7280',
+      focusConfirm: false,
+      didOpen: () => {
+        const el = document.getElementById('swal-qty') as HTMLInputElement | null;
+        if (el) {
+          el.focus();
+          el.select();
+        }
+      },
+      preConfirm: () => {
+        const el = document.getElementById('swal-qty') as HTMLInputElement | null;
+        const qtyNum = Number(el?.value);
+
+        if (!Number.isFinite(qtyNum) || qtyNum <= 0) {
+          Swal.showValidationMessage('กรุณากรอก QTY ให้ถูกต้อง');
+          return;
+        }
+        return qtyNum;
+      },
+    }).then((result) => {
+      if (!result.isConfirmed) return;
+
+      const qtyNum = Number(result.value);
+
+      Swal.fire({
+        title: 'Updating...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+
+      this.http
+        .put(config.apiServer + '/api/receive/updateBoxTemp', {
+          boxTempId: r.id,
+          qty: qtyNum,
+        })
+        .subscribe({
+          next: () => {
+            Swal.close();
+            this.toastFull('success', 'Update QTY สำเร็จ');
+            this.fetchBoxTempByHeadId();
+            setTimeout(() => this.focusScanFirst(), 150);
+          },
+          error: (err) => {
+            console.error(err);
+            Swal.fire({
+              title: 'Error',
+              text: err?.error?.message || err?.message || 'Update fail',
+              icon: 'error',
+            });
+          },
+        });
+    });
+  }
+
 
   onDeleteRow(r: BoxReceiveTempRow) {
     if (!r?.id) return;
@@ -467,6 +653,113 @@ export class ReceiveComponent implements OnInit, AfterViewInit {
       });
     });
   }
+
+
+  private buildItemSummaryHtml(): string {
+    if (!this.savedRows || this.savedRows.length === 0) return '';
+  
+    const map = new Map<string, number>();
+  
+    this.savedRows.forEach(r => {
+      const name = (r.itemName || '').trim() || 'UNKNOWN';
+      map.set(name, (map.get(name) || 0) + 1);
+    });
+  
+    let html = `<div style="margin-top:6px">`;
+  
+    map.forEach((count, name) => {
+      html += `
+        <div style="display:flex;justify-content:space-between;gap:12px">
+          <span><b>${name}</b></span>
+          <span>${count} BOX</span>
+        </div>
+      `;
+    });
+  
+    html += `</div>`;
+  
+    return html;
+  }
+
+
+
+
+
+
+  onDeleteAllBoxScan() {
+    if (!this.header || this.isEditingHeader) {
+      return this.toast('warning', 'กรุณาบันทึก Header ให้เสร็จก่อน');
+    }
+  
+    if ((this.savedRows?.length ?? 0) === 0) {
+      return this.toastFull('info', 'ยังไม่มีรายการให้ลบ');
+    }
+  
+    if (this.isClearingAll) return;
+    const summaryHtml = this.buildItemSummaryHtml();
+
+
+    Swal.fire({
+      title: 'Clear BOX ทั้งหมด?',
+      html: `
+        <div style="text-align:left">
+        <div><b>Summary:</b></div>
+        ${summaryHtml}
+         <div style="margin-top:10px"><b>Total:</b> ${this.savedRows.length} รายการ</div>
+        </div>
+      `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Clear',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+    }).then((r) => {
+      if (!r.isConfirmed) return;
+  
+      this.isClearingAll = true;
+  
+      Swal.fire({
+        title: 'Clearing...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+  
+      const payload = { headerTempId: this.header!.id };
+  
+      this.http
+        .post<any>(config.apiServer + '/api/receive/deleteBoxTempAll', payload)
+        .subscribe({
+          next: (_res) => {
+            Swal.close();
+            this.isClearingAll = false;
+  
+            this.toastFull('success', 'Clear สำเร็จ');
+  
+            // ✅ อัปเดต UI ทันที
+            this.savedRows = [];
+            this.boxForm = this.createEmptyBoxForm();
+  
+            // ✅ ดึง list ใหม่ (กันกรณี server ยังมี record อื่น)
+            this.fetchBoxTempByHeadId();
+  
+            setTimeout(() => this.focusScanFirst(), 150);
+          },
+          error: (err) => {
+            console.error(err);
+            this.isClearingAll = false;
+  
+            Swal.fire({
+              title: 'Error',
+              text: err?.error?.message || err?.message || 'Clear fail',
+              icon: 'error',
+            });
+          },
+        });
+    });
+  }
+
+
 
   /* =======================
      Toast

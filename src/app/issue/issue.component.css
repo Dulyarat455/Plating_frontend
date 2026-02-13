@@ -698,6 +698,43 @@ input.form-control::placeholder{
 
 
 
+/* ===== Delete Header Button ===== */
+.btn-delete-header{
+  border: 1px solid rgba(239,68,68,0.35);
+  background: linear-gradient(135deg, rgba(239,68,68,0.12), rgba(239,68,68,0.18));
+  color: #991b1b;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all .15s ease;
+}
+
+/* hover */
+.btn-delete-header:hover{
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, rgba(239,68,68,0.18), rgba(239,68,68,0.26));
+  box-shadow: 0 6px 14px rgba(239,68,68,.25);
+}
+
+/* active */
+.btn-delete-header:active{
+  transform: translateY(0);
+}
+
+/* icon */
+.btn-delete-header i{
+  color:#dc2626;
+}
+
+
+
+
+
 
 /* =========================
    Desktop toast: almost reach sidebar

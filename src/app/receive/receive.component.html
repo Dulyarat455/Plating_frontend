@@ -158,6 +158,10 @@
     </div>
 
     <div class="header-summary-actions">
+      <button type="button" class="btn-delete-header" (click)="true">
+        <i class="fas fa-trash-alt"></i>
+        Delete Header
+      </button>
       <button type="button" class="btn-soft" (click)="onClickEditHeader()">
         <i class="fas fa-pen me-1"></i>
         Edit Header
@@ -183,66 +187,100 @@
       </ul>
     </div>
 
+
+
+
+      <!-- ===== Temp Stack (รอรับข้อมูล / ยังไม่ Confirm) ===== -->
+      <div class="box-full-wrap" *ngIf="isBoxFull">
+        <div class="box-full-banner">
+          <i class="fas fa-check-circle" ></i>
+          <span>Box ครบแล้ว</span>
+        </div>
+      </div>
+
+
+
     <!-- =======================
          Temp Stack
     ======================== -->
-    <div class="stack-card">
+    <div class="stack-card" *ngIf="!isBoxFull">
       <div class="stack-header">
         <div class="stack-title">
-          <i class="fas fa-hourglass-half"></i>
-          <span>รายการรอ Confirm (Temp Stack)</span>
+          <i class="fas fa-qrcode" style="color:#1bdb9e"></i>
+          <span>Scan QR Form WOS</span>
         </div>
       </div>
 
       <div class="stack-grid">
         <div class="stack-item">
           <div class="stack-k">Item No.</div>
-          <input #scanItemNo class="form-control" type="text" [(ngModel)]="boxForm.itemNo" name="scanItemNo"
-                 (keydown)="onScanEnter('itemNo', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+          <input #scanItemNo class="form-control" type="text"
+          [(ngModel)]="boxForm.itemNo" name="scanItemNo"
+          (keydown.enter)="onScanEnter('itemNo', $event)"
+          [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
         </div>
 
         <div class="stack-item">
           <div class="stack-k">Item Name</div>
-          <input #scanItemName class="form-control" type="text" [(ngModel)]="boxForm.itemName" name="scanItemName"
-                 (keydown)="onScanEnter('itemName', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+          <input #scanItemName class="form-control" type="text"
+          [(ngModel)]="boxForm.itemName" name="scanItemName"
+          (keydown.enter)="onScanEnter('itemName', $event)"
+          [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+        
         </div>
 
         <div class="stack-item">
           <div class="stack-k">Item WOS No.</div>
-          <input #scanWosNo class="form-control" type="text" [(ngModel)]="boxForm.wosNo" name="scanWosNo"
-                 (keydown)="onScanEnter('wosNo', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+          <input #scanWosNo class="form-control" type="text"
+          [(ngModel)]="boxForm.wosNo" name="scanWosNo"
+          (keydown.enter)="onScanEnter('wosNo', $event)"
+          [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
         </div>
 
         <div class="stack-item">
           <div class="stack-k">DWG</div>
-          <input #scanDwg class="form-control" type="text" [(ngModel)]="boxForm.dwg" name="scanDwg"
-                 (keydown)="onScanEnter('dwg', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+          <input #scanDwg class="form-control" type="text"
+          [(ngModel)]="boxForm.dwg" name="scanDwg"
+          (keydown.enter)="onScanEnter('dwg', $event)"
+          [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
         </div>
 
         <div class="stack-item">
           <div class="stack-k">Die No.</div>
-          <input #scanDieNo class="form-control" type="text" [(ngModel)]="boxForm.dieNo" name="scanDieNo"
-                 (keydown)="onScanEnter('dieNo', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+          <input #scanDieNo class="form-control" type="text"
+          [(ngModel)]="boxForm.dieNo" name="scanDieNo"
+          (keydown.enter)="onScanEnter('dieNo', $event)"
+          [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
         </div>
 
         <div class="stack-item">
           <div class="stack-k">Lot No.</div>
-          <input #scanLotNo class="form-control" type="text" [(ngModel)]="boxForm.lotNo" name="scanLotNo"
-                 (keydown)="onScanEnter('lotNo', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+          <input #scanLotNo class="form-control" type="text"
+          [(ngModel)]="boxForm.lotNo" name="scanLotNo"
+          (keydown.enter)="onScanEnter('lotNo', $event)"
+          [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
         </div>
 
         <div class="stack-item">
           <div class="stack-k">Quantity</div>
-          <input #scanQty class="form-control" type="number" [(ngModel)]="boxForm.qty" name="scanQty"
-                 (keydown)="onScanEnter('qty', $event)" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
+          <input
+          #scanQty
+          class="form-control"
+          type="number"
+          [(ngModel)]="boxForm.qty"
+          name="scanQty"
+          (keydown.enter)="onScanEnter('qty', $event)"
+          (keydown.tab)="loopFocusToFirst($event)"
+          [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox"
+          />
         </div>
       </div>
 
       <div class="stack-actions">
-        <button type="button" class="btn-soft" (click)="onConfirmLot()" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox">
+        <!-- <button type="button" class="btn-soft" (click)="onConfirmLot()" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox">
           <i class="fas fa-check-circle me-1"></i>
           Confirm Lot
-        </button>
+        </button> -->
         <button type="button" class="btn-soft danger" (click)="onClearBoxForm()" [disabled]="!header || isEditingHeader || isSavingBox">
           <i class="fas fa-trash-alt me-1"></i>
           Clear
@@ -257,16 +295,41 @@
       <div class="saved-header">
         <div class="saved-title">
           <i class="fas fa-clipboard-check"></i>
-          <span>รายการที่บันทึก Temp แล้ว (IQC)</span>
+          <span>รายการที่ Scan เข้ามาแล้ว</span>
+          <span
+          class="ms-2 badge rounded-pill bg-secondary box-badge"
+          *ngIf="header && !isEditingHeader"
+          title="จำนวนรายการที่บันทึกแล้ว"
+        >
+          BOX: {{ savedRows.length || 0 }}
+        </span>
+        
         </div>
 
         <div class="saved-right">
-          <div class="saved-badge">
-            <i class="fas fa-database"></i>
-            Temp Saved {{ savedRows.length }}
-          </div>
-
-          <button type="button" class="btn-receive" disabled>
+          <button
+          type="button"
+          class="btn-soft danger"
+          (click)="onDeleteAllBoxScan()"
+          [disabled]="!header || isEditingHeader || isLoadingSaved || isClearingAll || (savedRows.length === 0)"
+        >
+        <i class="fas fa-trash-alt me-1"></i>
+          Clear
+        </button>
+        
+          <button type="button" 
+          class="btn-receive" 
+          (click)="onClickReceive()"
+          [disabled]="
+          isReceiveing ||
+          !header ||
+          isEditingHeader ||
+          isLoadingSaved ||
+          (savedRows.length < header!.qtyBox) ||
+          (savedRows.length > header!.qtyBox) 
+        "
+          
+          >
             <i class="fas fa-check-double me-1"></i>
             Receive
           </button>
@@ -284,7 +347,8 @@
               <th>DIE NO</th>
               <th>LOT NO</th>
               <th class="text-end">QTY</th>
-              <th class="text-end">Action</th>
+              <th class="text-center">Edit</th>
+              <th class="text-end">Delete</th>
             </tr>
           </thead>
 
@@ -297,8 +361,19 @@
               <td>{{ r.dieNo }}</td>
               <td>{{ r.lotNo }}</td>
               <td class="text-end fw-600">{{ r.qty }}</td>
+              <td class="text-center">
+                <button
+                  class="btn-row edit"
+                  (click)="onEditRow(r)"
+                  title="Edit"
+                >
+                  <i class="fas fa-pen"></i>
+                </button>
+              </td>
               <td class="text-end">
-                <button type="button" class="btn-row delete" (click)="onDeleteRow(r)">
+                <button type="button" 
+                class="btn-row delete" 
+                (click)="onDeleteRow(r)">
                   <i class="fas fa-trash"></i>
                 </button>
               </td>
