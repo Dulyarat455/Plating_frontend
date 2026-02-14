@@ -761,6 +761,95 @@ export class ReceiveComponent implements OnInit, AfterViewInit {
 
 
 
+
+
+  onDeleteHeaderTemp() {
+    if (!this.header) return;
+  
+    // กันกดซ้ำ (ใช้ isClearingAll หรือสร้าง flag ใหม่ก็ได้)
+    if (this.isClearingAll) return;
+  
+    const summaryHtml = this.buildItemSummaryHtml();
+  
+    Swal.fire({
+      title: 'Delete Header?',
+      html: `
+        <div style="text-align:left">
+          <div><b>Item No ID:</b> ${this.header.itemNo}</div>
+          <div><b>Item Name ID:</b> ${this.header.itemName}</div>
+
+          <div style="margin-top:6px"><b>Summary:</b></div>
+          ${summaryHtml || `<div style="color:#6b7280;margin-top:6px">No temp box</div>`}
+          <div style="margin-top:10px">
+            <b>Total:</b> ${this.savedRows?.length ?? 0} รายการ
+          </div>
+          <div style="margin-top:10px;color:#b91c1c">
+            * การลบจะล้าง Temp ทั้งหมดของ Header นี้
+          </div>
+        </div>
+      `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+      focusCancel: true,
+    }).then((r) => {
+      if (!r.isConfirmed) return;
+  
+      this.isClearingAll = true;
+  
+      Swal.fire({
+        title: 'Deleting...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+  
+      const payload = { headerTempId: this.header!.id };
+  
+      this.http
+        .post<any>(config.apiServer + '/api/receive/deleteHeaderBoxTemp', payload)
+        .subscribe({
+          next: (_res) => {
+            Swal.close();
+            this.isClearingAll = false;
+  
+            this.toastFull('success', 'Delete Header Temp สำเร็จ');
+  
+            // ✅ reset UI state
+            this.header = null;
+            this.savedRows = [];
+            this.boxForm = this.createEmptyBoxForm();
+            this.isEditingHeader = true;
+            this.form = this.createEmptyForm();
+  
+            // ✅ ดึงใหม่ (จะได้เป็นหน้า create header)
+            this.fetchHeader();
+          },
+          error: (err) => {
+            console.error(err);
+            this.isClearingAll = false;
+  
+            Swal.fire({
+              title: 'Error',
+              text:
+                err?.error?.message ||
+                err?.error?.error ||
+                err?.message ||
+                'Delete Header Temp fail',
+              icon: 'error',
+            }).then(() => {
+              // เผื่ออยากกลับไปให้สแกนต่อ
+              setTimeout(() => this.focusScanFirst(), 150);
+            });
+          },
+        });
+    });
+  }
+
+
+
   /* =======================
      Toast
   ======================= */

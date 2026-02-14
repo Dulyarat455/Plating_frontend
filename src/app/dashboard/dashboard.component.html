@@ -63,7 +63,7 @@
       </div>
     
       <div class="table-wrap tx-wrap">
-        <table class="tx-table tx-lot">
+        <table class="tx-table tx-lot ">
           <thead>
             <tr>
               <th class="col-exp"></th>
@@ -71,13 +71,23 @@
               <th style="width: 120px;">VENDOR</th>
     
               <th style="width: 220px;">LOT ISSUE NO</th>
+              <th style="width: 220px;">CONTROL LOT</th>
+
               <th style="width: 110px;" class="text-center">BOX</th>
               <th style="width: 120px;">TOTAL QTY</th>
               <th style="width: 150px;">STATUS</th>
+              <th style="width:90px" class="text-center">DETAIL</th>
+
             </tr>
           </thead>
     
           <tbody>
+            <tr *ngIf="isLoadingIssue">
+              <td colspan="7" style="text-align:center; padding:14px; color:#6b7c93">
+                Loading issue lots...
+              </td>
+            </tr>
+            
             <ng-container *ngFor="let lot of issueLots">
               <!-- Lot row -->
               <tr class="lot-row">
@@ -100,6 +110,7 @@
                 <td>{{ lot.vendor }}</td>
     
                 <td class="mono">{{ lot.lotIssueNo }}</td>
+                <td class="mono">{{ lot.controlLot }}</td>
     
                 <td class="text-center">
                   <span class="box-pill"><i class="fas fa-box"></i> {{ lot.boxCount }}</span>
@@ -113,6 +124,21 @@
                     {{ lot.status }}
                   </span>
                 </td>
+
+                <td class="text-center">
+                  <button
+                    class="btn-detail-soft"
+                    type="button"
+                    (click)="showIssueDetail(lot)"
+                    aria-label="Detail"
+                  >
+                  <i class="fas fa-bars"></i>
+
+                  </button>
+                </td>
+                
+                
+                
               </tr>
     
               <!-- Expanded: Boxes inside lot -->
@@ -137,7 +163,8 @@
                             <th>DWG</th>
                             <th>DIE</th>
                             <th>LOT</th>
-                            <th class="text-end">QTY</th>
+                            <th>QTY</th>
+                            <th class="text-end">Status</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -148,11 +175,22 @@
                             <td class="mono">{{ b.dwg }}</td>
                             <td class="mono">{{ b.die }}</td>
                             <td class="mono">{{ b.lotNo }}</td>
-                            <td class="text-end strong">{{ b.qty }}</td>
+                            <td class="mono">{{ b.qty }}</td>
+                            <td class="text-end">
+                              <span class="box-tag"
+                                    [ngClass]="b.boxStatus === 'complete' ? 'complete' : 'wait'">
+                                <i class="far"
+                                   [ngClass]="b.boxStatus === 'complete' ? 'fas fa-check' : 'fa-hourglass'">
+                                </i>
+                                {{ b.boxStatus === 'complete' ? 'Complete' : 'Wait' }}
+                              </span>
+                            </td>
+                            
+                                                    
                           </tr>
     
                           <tr *ngIf="!lot.boxes?.length">
-                            <td colspan="7" class="empty-row">No box in this lot</td>
+                            <td colspan="8" class="empty-row">No box in this lot</td>
                           </tr>
                         </tbody>
                       </table>
@@ -183,9 +221,12 @@
               <th style="width: 120px;">VENDOR</th>
     
               <th style="width: 220px;">LOT RECEIVE NO</th>
+              <th style="width: 220px;">CONTROL LOT</th>
+              
               <th style="width: 110px;" class="text-center">BOX</th>
               <th style="width: 120px;">TOTAL QTY</th>
               <th style="width: 150px;">STATUS</th>
+              <th style="width:90px" class="text-center">DETAIL</th>
             </tr>
           </thead>
     
@@ -212,7 +253,8 @@
                 <td>{{ lot.vendor }}</td>
     
                 <td class="mono">{{ lot.lotReceiveNo }}</td>
-    
+                <td class="mono">{{ lot.controlLot }}</td>
+
                 <td class="text-center">
                   <span class="box-pill box-pill-green"><i class="fas fa-box"></i> {{ lot.boxCount }}</span>
                 </td>
@@ -225,6 +267,21 @@
                     {{ lot.status }}
                   </span>
                 </td>
+
+                <td class="text-center">
+                  <button
+                    class="btn-detail-soft"
+                    type="button"
+                    (click)="showReceiveDetail(lot)"
+                    aria-label="Detail"
+                  >
+                  <i class="fas fa-bars"></i>
+
+                  </button>
+                </td>
+
+
+
               </tr>
     
               <!-- Expanded: Boxes inside lot -->
@@ -249,9 +306,11 @@
                             <th>DWG</th>
                             <th>DIE</th>
                             <th>LOT</th>
-                            <th class="text-end">QTY</th>
+                            <th>QTY</th>
+                            <th class="text-end">Status</th>
                           </tr>
                         </thead>
+                      
                         <tbody>
                           <tr *ngFor="let b of lot.boxes">
                             <td class="mono">{{ b.itemNo }}</td>
@@ -260,14 +319,27 @@
                             <td class="mono">{{ b.dwg }}</td>
                             <td class="mono">{{ b.die }}</td>
                             <td class="mono">{{ b.lotNo }}</td>
-                            <td class="text-end strong">{{ b.qty }}</td>
+                            <td class="mono">{{ b.qty }}</td>
+                      
+                            <td class="text-end">
+                              <span class="box-tag"
+                                    [ngClass]="b.boxStatus === 'complete' ? 'complete' : 'wait'">
+                                <i
+                                  [ngClass]="b.boxStatus === 'complete'
+                                    ? 'fas fa-check-circle'
+                                    : 'far fa-clock'">
+                                </i>
+                                {{ b.boxStatus === 'complete' ? 'Complete' : 'Wait' }}
+                              </span>
+                            </td>
                           </tr>
-    
+                      
                           <tr *ngIf="!lot.boxes?.length">
                             <td colspan="7" class="empty-row">No box in this lot</td>
                           </tr>
                         </tbody>
                       </table>
+                      
                     </div>
                   </div>
                 </td>

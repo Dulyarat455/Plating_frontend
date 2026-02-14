@@ -634,3 +634,138 @@
   background: linear-gradient(180deg, #3498db 0%, #1fbad6 100%);
 }
 
+
+
+
+
+
+
+/* Box status tag (different from lot pill) */
+.box-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+
+  padding: 2px 8px;
+  border-radius: 8px;          /* ไม่กลมเป็น pill */
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .2px;
+
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  color:#334155;
+}
+
+/* left accent bar */
+.box-tag::before{
+  content:"";
+  width: 6px;
+  height: 10px;
+  border-radius: 3px;
+  background: #94a3b8;         /* default */
+}
+
+/* WAIT */
+.box-tag.wait{
+  background:#fffaf0;
+  border-color:#fde68a;
+  color:#92400e;
+}
+.box-tag.wait::before{ background:#f59e0b; }
+
+/* COMPLETE */
+.box-tag.complete{
+  background:#f0fdf4;
+  border-color:#bbf7d0;
+  color:#166534;
+}
+.box-tag.complete::before{ background:#22c55e; }
+
+/* icon small */
+.box-tag i{
+  font-size:.70rem;
+  opacity:.75;
+}
+
+
+
+
+/* Detail icon button (match UI) */
+.btn-detail-soft {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+
+  color: #64748b;
+  font-size: 14px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.btn-detail-soft:hover {
+  background: #f1f5f9;
+  color: #334155;
+  transform: translateY(-1px);
+}
+
+.btn-detail-soft:active {
+  transform: none;
+}
+
+
+
+
+
+
+
+/* =========================
+   Fixed 10 rows + Scroll
+========================= */
+.tx-fixed-10 .tx-head {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.tx-fixed-10 .tx-body {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.tx-fixed-10 .tx-body-scroll{
+  max-height: calc(10 * 54px); /* ✅ 10 แถว */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ให้แถวสูงเท่ากัน (ช่วยคำนวน 10 แถวแม่น) */
+.tx-fixed-10 .tx-body tbody td{
+  height: 54px;              /* ✅ ปรับได้ตามที่ชอบ */
+  vertical-align: middle;
+}
+
+/* ทำให้หัวตารางตรงกับ body */
+.tx-fixed-10 .tx-head thead th,
+.tx-fixed-10 .tx-body tbody td{
+  box-sizing: border-box;
+}
+
+/* scrollbar สวยนิด */
+.tx-fixed-10 .tx-body-scroll::-webkit-scrollbar{
+  width: 10px;
+}
+.tx-fixed-10 .tx-body-scroll::-webkit-scrollbar-thumb{
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+.tx-fixed-10 .tx-body-scroll::-webkit-scrollbar-thumb:hover{
+  background: #cbd5e1;
+}
