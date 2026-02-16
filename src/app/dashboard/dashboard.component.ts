@@ -22,6 +22,7 @@ type LotIssueRow = {
   dateTime: string;
   ShipmentTime: string;
   vendor: string;
+  shift: string;
   lotIssueNo: string;
   boxCount: number;
   totalQty: number;
@@ -138,6 +139,15 @@ type ApiReceiveRow = {
 type ApiReceiveListResp = { results: ApiReceiveRow[] };
 
 
+type VendorSummaryRow = {
+  vendor: string;
+  totalIssue: number;     // sum(issue.boxCount) by vendor
+  totalReceive: number;   // sum(receive.boxCount) by vendor
+  balance: number;        // issue - receive
+  receiveRate: number;    // receive / issue * 100
+  accent: string;         // สีประจำ vendor
+};
+
 
 @Component({
   selector: 'app-dashboard',
@@ -158,6 +168,12 @@ export class DashboardComponent {
   isLoadingReceive = false;
   receiveLots: LotReceiveRow[] = [];
   
+
+  vendorSummary: VendorSummaryRow[] = [];
+
+  private vendorAccentMap = new Map<string, string>();
+  private vendorPalette = ['#3b82f6', '#22c55e','#f59e0b', '#14b8a6', '#ef4444', '#0ea5e9', '#84cc16'];
+
 
 
 
@@ -180,38 +196,7 @@ export class DashboardComponent {
     return this.expandedLot[type] === key;
   }
 
-  // ✅ ข้อมูลที่หน้า dashboard.html เรียกใช้
-  // ตอนนี้ใส่ mock ไปก่อน (พอคุณมี API ค่อย replace)
-  // issueLots: LotIssueRow[] = [
-  //   {
-  //     dateTime: '01/26/2026 14:30',
-  //     vendor: 'ZIP',
-  //     lotIssueNo: 'ISS-LOT-0001',
-  //     boxCount: 2,
-  //     totalQty: 6000,
-  //     status: 'Wait',
-  //     boxes: [
-  //       { itemNo:'10000206936', itemName:'YOKE#1', wos:'JB615021K002', dwg:'A19-321027-3E', die:'D8', lotNo:'L26119AB4', qty:4000 },
-  //       { itemNo:'10000206936', itemName:'YOKE#1', wos:'JB615021K002', dwg:'A19-321027-3E', die:'D8', lotNo:'L26119AB5', qty:2000 },
-  //     ],
-  //   },
-  // ];
-
-  // receiveLots: LotReceiveRow[] = [
-  //   {
-  //     dateTime: '01/26/2026 14:15',
-  //     vendor: 'ZIP',
-  //     lotReceiveNo: 'RCV-LOT-0099',
-  //     boxCount: 1,
-  //     totalQty: 2000,
-  //     status: 'Complete',
-  //     boxes: [
-  //       { itemNo:'10000206936', itemName:'YOKE#1', wos:'JB615021K002', dwg:'A19-321027-3E', die:'D8', lotNo:'L26119AB4', qty:2000, boxStatus: "wait" },
-  //     ],
-  //   },
-  // ];
-
-
+  
 
 
   private toDateTimeStr(iso: string): string {
@@ -264,7 +249,7 @@ export class DashboardComponent {
             })),
           }));
           
-  
+          this.recomputeVendorSummary();
           this.isLoadingIssue = false;
         },
         error: (err) => {
@@ -275,8 +260,6 @@ export class DashboardComponent {
       });
   }
   
-
-
 
 
 
@@ -317,7 +300,8 @@ export class DashboardComponent {
               boxStatus: b.BoxState
             })),
           }));
-  
+
+          this.recomputeVendorSummary();
           this.isLoadingReceive = false;
         },
         error: (err) => {
@@ -374,6 +358,58 @@ export class DashboardComponent {
 
 
 
+
+trackByVendor = (_: number, x: VendorSummaryRow) => x.vendor;
+
+private normVendor(v?: string | null): string {
+  return (v || 'UNKNOWN').trim().toUpperCase();
+}
+
+private getAccent(vendor: string): string {
+  const key = this.normVendor(vendor);
+  if (this.vendorAccentMap.has(key)) return this.vendorAccentMap.get(key)!;
+
+  const color = this.vendorPalette[this.vendorAccentMap.size % this.vendorPalette.length];
+  this.vendorAccentMap.set(key, color);
+  return color;
+}
+
+/** สรุป vendor จาก issueLots + receiveLots */
+private recomputeVendorSummary() {
+  const issueMap = new Map<string, number>();
+  const recvMap  = new Map<string, number>();
+
+  for (const it of (this.issueLots || [])) {
+    const v = this.normVendor(it.vendor);
+    const n = Number(it.boxCount || 0);
+    issueMap.set(v, (issueMap.get(v) || 0) + n);
+  }
+
+  for (const it of (this.receiveLots || [])) {
+    const v = this.normVendor(it.vendor);
+    const n = Number(it.boxCount || 0);
+    recvMap.set(v, (recvMap.get(v) || 0) + n);
+  }
+
+  // requirement บอกเอาตาม vendor จาก issue เป็นหลัก
+  const vendors = Array.from(issueMap.keys()).sort((a, b) => a.localeCompare(b));
+
+  this.vendorSummary = vendors.map((v) => {
+    const totalIssue = issueMap.get(v) || 0;
+    const totalReceive = recvMap.get(v) || 0;
+    const balance = totalIssue - totalReceive;
+    const receiveRate = totalIssue > 0 ? (totalReceive / totalIssue) * 100 : 0;
+
+    return {
+      vendor: v,
+      totalIssue,
+      totalReceive,
+      balance,
+      receiveRate,
+      accent: this.getAccent(v),
+    };
+  });
+}
 
 
 

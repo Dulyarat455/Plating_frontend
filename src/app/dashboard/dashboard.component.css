@@ -339,10 +339,11 @@
     bottom:14px;
     width:4px;
     border-radius: 4px;
+    background: var(--accent, #3b82f6); /* ✅ ใช้สีจาก inline style */
   }
   
-  .vendor-zip::before{ background:#5fa8ff; }
-  .vendor-metek::before{ background:#48c78e; }
+  
+ 
   
   /* title */
   .vendor-title{
@@ -768,4 +769,110 @@
 }
 .tx-fixed-10 .tx-body-scroll::-webkit-scrollbar-thumb:hover{
   background: #cbd5e1;
+}
+
+
+
+
+
+/* =========================
+   Fixed 10 rows (Desktop only)
+========================= */
+
+/* ✅ เปิดโหมด split เฉพาะจอ >= 992px */
+@media (min-width: 992px){
+
+  .tx-fixed-10 .tx-head,
+  .tx-fixed-10 .tx-body{
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .tx-fixed-10 .tx-body-scroll{
+    max-height: calc(10 * 54px);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .tx-fixed-10 .tx-body tbody td{
+    height: 54px;
+    vertical-align: middle;
+  }
+}
+
+/* ✅ มือถือ/แท็บเล็ต: ปิดโหมด split แล้วใช้ horizontal scroll แบบเดิม */
+@media (max-width: 991.98px){
+
+  /* ยกเลิกการบังคับ fixed layout ที่ทำให้เพี้ยน */
+  .tx-fixed-10 .tx-head,
+  .tx-fixed-10 .tx-body{
+    table-layout: auto !important;
+    width: auto !important;
+  }
+
+  /* ยกเลิกกรอบ scroll แนวตั้ง (ไม่ fix 10 แถวในมือถือ) */
+  .tx-fixed-10 .tx-body-scroll{
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* ให้ตารางเลื่อนได้แนวนอน */
+  .tx-wrap{
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* บังคับตารางให้กว้างพอ ไม่ให้คอลัมน์บีบ */
+  .tx-table{
+    min-width: 920px; /* ปรับตามจำนวนคอลัมน์ */
+  }
+}
+
+
+
+
+
+
+
+/* =========================
+   Fix 10 rows + Scroll (All devices)
+   - vertical scroll = 10 rows
+   - horizontal scroll = auto
+   - header sticky
+========================= */
+
+.tx-scroll-10{
+  /* scroll ได้ทั้งแกน X/Y */
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  /* คุมความสูง = 10 แถว (ปรับได้) */
+  --row-h: 54px;    /* ความสูงแถว */
+  --head-h: 46px;   /* ความสูงหัวตารางโดยประมาณ */
+
+  max-height: calc(var(--head-h) + (10 * var(--row-h)));
+}
+
+/* ทำหัวตาราง sticky */
+.tx-scroll-10 thead th{
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #fbfcfe; /* ต้องมีพื้นหลัง ไม่งั้นจะโปร่ง */
+}
+
+/* บังคับให้คอลัมน์ไม่บีบในจอแคบ */
+.tx-scroll-10 .tx-table{
+  min-width: 920px; /* ปรับตามจำนวนคอลัมน์ */
+}
+
+/* ให้ “แถวปกติ” สูงเท่ากัน เพื่อคุม 10 แถวแม่น */
+.tx-scroll-10 tbody tr.lot-row > td{
+  height: var(--row-h);
+  vertical-align: middle;
+}
+
+/* ❗ อย่าบังคับความสูงกับแถว detail ที่ expand */
+.tx-scroll-10 tbody tr.lot-detail > td{
+  height: auto !important;
 }

@@ -1,59 +1,49 @@
 <div class="dash-page">
 
-    <!-- Vendor Summary (TOP) -->
-<section class="vendor-summary">
-    <div class="vendor-card vendor-zip">
-      <div class="vendor-title">Vendor ZIP</div>
-  
-      <div class="vendor-metrics">
-        <div class="metric-row">
-          <div class="metric-label">Total Issue</div>
-          <div class="metric-value value-blue">850</div>
-        </div>
-  
-        <div class="metric-row">
-          <div class="metric-label">Total Receive</div>
-          <div class="metric-value value-blue">720</div>
-        </div>
-  
-        <div class="metric-row">
-          <div class="metric-label">Balance</div>
-          <div class="metric-value value-red">130</div>
-        </div>
-  
-        <div class="metric-row">
-          <div class="metric-label">Receive Rate</div>
-          <div class="metric-value value-blue">85%</div>
+   <!-- Vendor Summary (TOP) -->
+<section class="vendor-summary" *ngIf="vendorSummary.length; else noVendor">
+  <div
+    class="vendor-card"
+    *ngFor="let v of vendorSummary; trackBy: trackByVendor"
+    [style.--accent]="v.accent"
+  >
+    <div class="vendor-title">Vendor {{ v.vendor }}</div>
+
+    <div class="vendor-metrics">
+      <div class="metric-row">
+        <div class="metric-label">Total Issue</div>
+        <div class="metric-value" [style.color]="v.accent">{{ v.totalIssue }}</div>
+      </div>
+
+      <div class="metric-row">
+        <div class="metric-label">Total Receive</div>
+        <div class="metric-value" [style.color]="v.accent">{{ v.totalReceive }}</div>
+      </div>
+
+      <div class="metric-row">
+        <div class="metric-label">Balance</div>
+        <div
+          class="metric-value"
+          [style.color]="v.balance < 0 ? '#ef4444' : (v.balance === 0 ? '#64748b' : '#f59e0b')"
+        >
+          {{ v.balance }}
         </div>
       </div>
-    </div>
-  
-    <div class="vendor-card vendor-metek">
-      <div class="vendor-title">Vendor METEK</div>
-  
-      <div class="vendor-metrics">
-        <div class="metric-row">
-          <div class="metric-label">Total Issue</div>
-          <div class="metric-value value-green">780</div>
-        </div>
-  
-        <div class="metric-row">
-          <div class="metric-label">Total Receive</div>
-          <div class="metric-value value-green">650</div>
-        </div>
-  
-        <div class="metric-row">
-          <div class="metric-label">Balance</div>
-          <div class="metric-value value-orange">130</div>
-        </div>
-  
-        <div class="metric-row">
-          <div class="metric-label">Receive Rate</div>
-          <div class="metric-value value-green">83%</div>
-        </div>
+
+      <div class="metric-row">
+        <div class="metric-label">Receive Rate</div>
+        <div class="metric-value" [style.color]="v.accent">{{ v.receiveRate | number:'1.0-0' }}%</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<ng-template #noVendor>
+  <div style="padding:12px 2px; color:#64748b; font-weight:700;">
+    No vendor summary
+  </div>
+</ng-template>
+
   
 
     <!-- TRANSACTION HISTORY -->
@@ -62,145 +52,146 @@
         <h3 class="card-title">Transaction Issue (By Lot)</h3>
       </div>
     
-      <div class="table-wrap tx-wrap">
-        <table class="tx-table tx-lot ">
-          <thead>
-            <tr>
-              <th class="col-exp"></th>
-              <th style="width: 170px;">DATE/TIME</th>
-              <th style="width: 120px;">VENDOR</th>
-    
-              <th style="width: 220px;">LOT ISSUE NO</th>
-              <th style="width: 220px;">CONTROL LOT</th>
-
-              <th style="width: 110px;" class="text-center">BOX</th>
-              <th style="width: 120px;">TOTAL QTY</th>
-              <th style="width: 150px;">STATUS</th>
-              <th style="width:90px" class="text-center">DETAIL</th>
-
-            </tr>
-          </thead>
-    
-          <tbody>
-            <tr *ngIf="isLoadingIssue">
-              <td colspan="7" style="text-align:center; padding:14px; color:#6b7c93">
-                Loading issue lots...
-              </td>
-            </tr>
-            
-            <ng-container *ngFor="let lot of issueLots">
-              <!-- Lot row -->
-              <tr class="lot-row">
-                <td class="col-exp">
-                  <button
-                    class="btn-expand"
-                    type="button"
-                    (click)="toggleLot('issue', lot.lotIssueNo)"
-                    [attr.aria-expanded]="isExpanded('issue', lot.lotIssueNo)"
-                    aria-label="Expand"
-                  >
-                    <i
-                      class="fas"
-                      [ngClass]="isExpanded('issue', lot.lotIssueNo) ? 'fa-chevron-up' : 'fa-chevron-down'"
-                    ></i>
-                  </button>
-                </td>
-    
-                <td>{{ lot.dateTime }}</td>
-                <td>{{ lot.vendor }}</td>
-    
-                <td class="mono">{{ lot.lotIssueNo }}</td>
-                <td class="mono">{{ lot.controlLot }}</td>
-    
-                <td class="text-center">
-                  <span class="box-pill"><i class="fas fa-box"></i> {{ lot.boxCount }}</span>
-                </td>
-    
-                <td class="mono">{{ lot.totalQty }}</td>
-    
-                <td>
-                  <span class="status-pill" [ngClass]="lot.status === 'Wait' ? 'wait' : 'done'">
-                    <i class="far" [ngClass]="lot.status === 'Wait' ? 'fa-clock' : 'fa-check-circle'"></i>
-                    {{ lot.status }}
-                  </span>
-                </td>
-
-                <td class="text-center">
-                  <button
-                    class="btn-detail-soft"
-                    type="button"
-                    (click)="showIssueDetail(lot)"
-                    aria-label="Detail"
-                  >
-                  <i class="fas fa-bars"></i>
-
-                  </button>
-                </td>
-                
-                
-                
+      <div class="table-wrap tx-wrap tx-scroll-10">
+       
+          <table class="tx-table tx-lot">
+              <!-- header (ไม่เลื่อน) -->
+            <thead>
+              <tr>
+                <th class="col-exp"></th>
+                <th style="width: 170px;">DATE/TIME</th>
+                <th style="width: 120px;">VENDOR</th>
+                <th style="width: 220px;">LOT ISSUE NO</th>
+                <th style="width: 220px;">CONTROL LOT</th>
+                <th style="width: 110px;" class="text-center">BOX</th>
+                <th style="width: 120px;">TOTAL QTY</th>
+                <th style="width: 150px;">STATUS</th>
+                <th style="width:90px" class="text-center">DETAIL</th>
               </tr>
-    
-              <!-- Expanded: Boxes inside lot -->
-              <tr class="lot-detail" *ngIf="isExpanded('issue', lot.lotIssueNo)">
-                <td colspan="7">
-                  <div class="lot-detail-card">
-                    <div class="lot-detail-head">
-                      <div class="lot-detail-title">
-                        <i class="fas fa-boxes"></i>
-                        Box list in Lot Issue: <span class="mono">{{ lot.lotIssueNo }}</span>
+            </thead>
+
+              <!-- body (เลื่อน) -->
+            <tbody>
+              <tr *ngIf="isLoadingIssue">
+                <td colspan="7" style="text-align:center; padding:14px; color:#6b7c93">
+                  Loading issue lots...
+                </td>
+              </tr>
+              
+              <ng-container *ngFor="let lot of issueLots">
+                <!-- Lot row -->
+                <tr class="lot-row">
+                  <td class="col-exp">
+                    <button
+                      class="btn-expand"
+                      type="button"
+                      (click)="toggleLot('issue', lot.lotIssueNo)"
+                      [attr.aria-expanded]="isExpanded('issue', lot.lotIssueNo)"
+                      aria-label="Expand"
+                    >
+                      <i
+                        class="fas"
+                        [ngClass]="isExpanded('issue', lot.lotIssueNo) ? 'fa-chevron-up' : 'fa-chevron-down'"
+                      ></i>
+                    </button>
+                  </td>
+      
+                  <td>{{ lot.dateTime }}</td>
+                  <td>{{ lot.vendor }}</td>
+      
+                  <td class="mono">{{ lot.lotIssueNo }}</td>
+                  <td class="mono">{{ lot.controlLot }}</td>
+      
+                  <td class="text-center">
+                    <span class="box-pill"><i class="fas fa-box"></i> {{ lot.boxCount }}</span>
+                  </td>
+      
+                  <td class="mono">{{ lot.totalQty }}</td>
+      
+                  <td>
+                    <span class="status-pill" [ngClass]="lot.status === 'Wait' ? 'wait' : 'done'">
+                      <i class="far" [ngClass]="lot.status === 'Wait' ? 'fa-clock' : 'fa-check-circle'"></i>
+                      {{ lot.status }}
+                    </span>
+                  </td>
+
+                  <td class="text-center">
+                    <button
+                      class="btn-detail-soft"
+                      type="button"
+                      (click)="showIssueDetail(lot)"
+                      aria-label="Detail"
+                    >
+                    <i class="fas fa-bars"></i>
+
+                    </button>
+                  </td>
+                  
+                  
+                  
+                </tr>
+      
+                <!-- Expanded: Boxes inside lot -->
+                <tr class="lot-detail" *ngIf="isExpanded('issue', lot.lotIssueNo)">
+                  <td colspan="7">
+                    <div class="lot-detail-card">
+                      <div class="lot-detail-head">
+                        <div class="lot-detail-title">
+                          <i class="fas fa-boxes"></i>
+                          Box list in Lot Issue: <span class="mono">{{ lot.lotIssueNo }}</span>
+                        </div>
+                        <div class="lot-detail-hint">* รายการกล่องทั้งหมดใน Lot นี้</div>
                       </div>
-                      <div class="lot-detail-hint">* รายการกล่องทั้งหมดใน Lot นี้</div>
+      
+                      <div class="lot-box-wrap">
+                        <table class="box-table">
+                          <thead>
+                            <tr>
+                              <th>Item No.</th>
+                              <th>Item Name</th>
+                              <th>WOS</th>
+                              <th>DWG</th>
+                              <th>DIE</th>
+                              <th>LOT</th>
+                              <th>QTY</th>
+                              <th class="text-end">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let b of lot.boxes">
+                              <td class="mono">{{ b.itemNo }}</td>
+                              <td class="strong">{{ b.itemName }}</td>
+                              <td class="mono">{{ b.wos }}</td>
+                              <td class="mono">{{ b.dwg }}</td>
+                              <td class="mono">{{ b.die }}</td>
+                              <td class="mono">{{ b.lotNo }}</td>
+                              <td class="mono">{{ b.qty }}</td>
+                              <td class="text-end">
+                                <span class="box-tag"
+                                      [ngClass]="b.boxStatus === 'complete' ? 'complete' : 'wait'">
+                                  <i class="far"
+                                    [ngClass]="b.boxStatus === 'complete' ? 'fas fa-check' : 'fa-hourglass'">
+                                  </i>
+                                  {{ b.boxStatus === 'complete' ? 'Complete' : 'Wait' }}
+                                </span>
+                              </td>
+                              
+                                                      
+                            </tr>
+      
+                            <tr *ngIf="!lot.boxes?.length">
+                              <td colspan="8" class="empty-row">No box in this lot</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
-    
-                    <div class="lot-box-wrap">
-                      <table class="box-table">
-                        <thead>
-                          <tr>
-                            <th>Item No.</th>
-                            <th>Item Name</th>
-                            <th>WOS</th>
-                            <th>DWG</th>
-                            <th>DIE</th>
-                            <th>LOT</th>
-                            <th>QTY</th>
-                            <th class="text-end">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let b of lot.boxes">
-                            <td class="mono">{{ b.itemNo }}</td>
-                            <td class="strong">{{ b.itemName }}</td>
-                            <td class="mono">{{ b.wos }}</td>
-                            <td class="mono">{{ b.dwg }}</td>
-                            <td class="mono">{{ b.die }}</td>
-                            <td class="mono">{{ b.lotNo }}</td>
-                            <td class="mono">{{ b.qty }}</td>
-                            <td class="text-end">
-                              <span class="box-tag"
-                                    [ngClass]="b.boxStatus === 'complete' ? 'complete' : 'wait'">
-                                <i class="far"
-                                   [ngClass]="b.boxStatus === 'complete' ? 'fas fa-check' : 'fa-hourglass'">
-                                </i>
-                                {{ b.boxStatus === 'complete' ? 'Complete' : 'Wait' }}
-                              </span>
-                            </td>
-                            
-                                                    
-                          </tr>
-    
-                          <tr *ngIf="!lot.boxes?.length">
-                            <td colspan="8" class="empty-row">No box in this lot</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </ng-container>
-          </tbody>
-        </table>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+      
       </div>
     </section>
 
@@ -212,25 +203,31 @@
         <h3 class="card-title">Transaction Receive (By Lot)</h3>
       </div>
     
-      <div class="table-wrap tx-wrap">
-        <table class="tx-table tx-lot tx-lot-receive">
+      <div class="table-wrap tx-wrap tx-scroll-10">
+
+        <table class="tx-table tx-lot ">
+            <!-- HEAD (ไม่เลื่อน) -->
           <thead>
             <tr>
               <th class="col-exp"></th>
               <th style="width: 170px;">DATE/TIME</th>
               <th style="width: 120px;">VENDOR</th>
-    
               <th style="width: 220px;">LOT RECEIVE NO</th>
               <th style="width: 220px;">CONTROL LOT</th>
-              
               <th style="width: 110px;" class="text-center">BOX</th>
               <th style="width: 120px;">TOTAL QTY</th>
               <th style="width: 150px;">STATUS</th>
               <th style="width:90px" class="text-center">DETAIL</th>
             </tr>
           </thead>
-    
+
+            <!-- BODY (เลื่อน) -->
           <tbody>
+            <tr *ngIf="isLoadingReceive">
+              <td colspan="7" style="text-align:center; padding:14px; color:#6b7c93">
+                Loading receive lots...
+              </td>
+            </tr>
             <ng-container *ngFor="let lot of receiveLots">
               <!-- Lot row -->
               <tr class="lot-row">
@@ -347,7 +344,7 @@
             </ng-container>
           </tbody>
         </table>
-      </div>
+    </div>
     </section>
     
   <!-- (ต่อด้วย) Issue Pending + Receive Pending ของเดิม -->
