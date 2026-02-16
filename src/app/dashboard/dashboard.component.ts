@@ -20,13 +20,13 @@ type BoxRow = {
 };
 
 type LotIssueRow = {
-  dateTime: string;          // เอาไว้โชว์
-  ShipmentTime: string;
-  dateIso: string;           // ✅ เอาไว้ filter เทียบจริงกับ sentDate/sentDateByUser
+  dateTime: string;          // display
+  ShipmentTime: string;      // display
+  dateIso: string;           // ✅ filter เทียบจริง
 
   vendor: string;
-  shift: string;             // ✅ ต้องมีเพื่อ filter
-  groupName: string;         // มีอยู่แล้ว
+  shift: string;
+  groupName: string;
 
   lotIssueNo: string;
   boxCount: number;
@@ -44,10 +44,10 @@ type LotIssueRow = {
 type LotReceiveRow = {
   dateTime: string;
   ShipmentTime: string;
-  dateIso: string;           // ✅ filter เทียบจริงกับ receiveDate
+  dateIso: string;           // ✅ filter เทียบจริง
 
   vendor: string;
-  shift: string;             // ✅
+  shift: string;
   groupName: string;
 
   lotReceiveNo: string;
@@ -131,17 +131,17 @@ type VendorSummaryRow = {
   totalIssue: number;
   totalReceive: number;
   balance: number;
-  receiveRate: number;
-  overReceive?: number;
+  receiveRate: number;   // capped by matched receive
+  overReceive?: number;  // receive เกิน issue
   accent: string;
 };
 
 type FilterState = {
-  dateFrom: string;      // yyyy-MM-dd
-  dateTo: string;        // yyyy-MM-dd
-  shifts: string[];      // multi
-  groups: string[];      // multi
-  vendors: string[];     // multi (มีผลเฉพาะตาราง)
+  dateFrom: string;   // yyyy-MM-dd
+  dateTo: string;     // yyyy-MM-dd
+  shift: string;      // dropdown single (All | value)
+  group: string;      // dropdown single (All | value)
+  vendor: string;     // dropdown single (All | value)  // tables only
 };
 
 @Component({
@@ -157,22 +157,22 @@ export class DashboardComponent {
   isLoadingIssue = false;
   isLoadingReceive = false;
 
-  // ✅ เก็บข้อมูลดิบทั้งหมด
+  // ✅ raw (ทั้งหมด)
   private issueLotsAll: LotIssueRow[] = [];
   private receiveLotsAll: LotReceiveRow[] = [];
 
-  // ✅ ข้อมูลที่ใช้แสดงผล (หลัง filter)
+  // ✅ view (หลัง filter)
   issueLots: LotIssueRow[] = [];
   receiveLots: LotReceiveRow[] = [];
 
   vendorSummary: VendorSummaryRow[] = [];
 
-  // ✅ options สำหรับ dropdown (dynamic)
-  vendorOptions: string[] = [];
-  shiftOptions: string[] = [];
-  groupOptions: string[] = ['General', 'Stator', 'Lamination']; // ถ้าจะ dynamic ก็ทำได้
+  // ✅ dropdown options (dynamic)
+  shiftOptions: string[] = ['All'];
+  groupOptions: string[] = ['All'];
+  vendorOptions: string[] = ['All']; // tables only
 
-  // ✅ filter state
+  // ✅ filter state (single-select)
   filters: FilterState = this.buildDefaultFilters();
 
   private vendorAccentMap = new Map<string, string>();
@@ -208,10 +208,15 @@ export class DashboardComponent {
     return {
       dateFrom: toYMD(ytd),   // ✅ เมื่อวาน
       dateTo: toYMD(today),   // ✅ วันนี้
-      shifts: [],
-      groups: [],
-      vendors: [],
+      shift: 'All',
+      group: 'All',
+      vendor: 'All',          // tables only
     };
+  }
+
+  resetFilters() {
+    this.filters = this.buildDefaultFilters();
+    this.applyFilters();
   }
 
   private toDateTimeStr(iso: string): string {
@@ -230,12 +235,10 @@ export class DashboardComponent {
   }
 
   private ymdToStart(d: string): Date {
-    const x = new Date(`${d}T00:00:00`);
-    return x;
+    return new Date(`${d}T00:00:00`);
   }
   private ymdToEnd(d: string): Date {
-    const x = new Date(`${d}T23:59:59.999`);
-    return x;
+    return new Date(`${d}T23:59:59.999`);
   }
 
   /* ---------------- API ---------------- */
@@ -249,15 +252,15 @@ export class DashboardComponent {
           const rows = res?.results || [];
 
           this.issueLotsAll = rows.map((x) => {
-            const dateIso = x.sentDate || x.sentDateByUser; // ✅ ใช้ตัวนี้ filter
+            const dateIso = x.sentDate || x.sentDateByUser;
             return {
               dateIso,
               dateTime: this.toDateTimeStr(dateIso),
               ShipmentTime: this.toDateTimeStr(x.sentDateByUser),
 
               vendor: x.vender,
-              shift: x.shift,                 // ✅
-              groupName: x.groupName,         // ✅
+              shift: x.shift,
+              groupName: x.groupName,
 
               lotIssueNo: x.issueLotNo,
               boxCount: x.boxCount ?? (x.boxes?.length ?? 0),
@@ -284,12 +287,13 @@ export class DashboardComponent {
           });
 
           this.refreshFilterOptions();
-          this.applyFilters(); // ✅ สำคัญ: update ทั้ง summary + table
+          this.applyFilters();
           this.isLoadingIssue = false;
         },
         error: (err) => {
           console.error(err);
           this.issueLotsAll = [];
+          this.refreshFilterOptions();
           this.applyFilters();
           this.isLoadingIssue = false;
         }
@@ -305,14 +309,14 @@ export class DashboardComponent {
           const rows = res?.results || [];
 
           this.receiveLotsAll = rows.map((x) => {
-            const dateIso = x.receiveDate; // ✅ ใช้ตัวนี้ filter
+            const dateIso = x.receiveDate;
             return {
               dateIso,
               dateTime: this.toDateTimeStr(dateIso),
               ShipmentTime: this.toDateTimeStr(x.receiveDateByUser),
 
               vendor: x.vender,
-              shift: x.shift,                 // ✅
+              shift: x.shift,
               groupName: x.groupName,
 
               lotReceiveNo: x.receiveLotNo,
@@ -346,6 +350,7 @@ export class DashboardComponent {
         error: (err) => {
           console.error(err);
           this.receiveLotsAll = [];
+          this.refreshFilterOptions();
           this.applyFilters();
           this.isLoadingReceive = false;
         }
@@ -361,16 +366,16 @@ export class DashboardComponent {
     const start = this.ymdToStart(f.dateFrom);
     const end = this.ymdToEnd(f.dateTo);
 
-    const shiftSet = new Set((f.shifts || []).map(this.norm));
-    const groupSet = new Set((f.groups || []).map(this.norm));
-    const vendorSet = new Set((f.vendors || []).map(this.norm));
+    const shiftPick = this.norm(f.shift);
+    const groupPick = this.norm(f.group);
+    const vendorPick = this.norm(f.vendor);
 
     const passCommon = (row: { dateIso: string; shift: string; groupName: string }) => {
       const dt = new Date(row.dateIso);
       if (dt < start || dt > end) return false;
 
-      if (shiftSet.size && !shiftSet.has(this.norm(row.shift))) return false;
-      if (groupSet.size && !groupSet.has(this.norm(row.groupName))) return false;
+      if (shiftPick !== 'ALL' && this.norm(row.shift) !== shiftPick) return false;
+      if (groupPick !== 'ALL' && this.norm(row.groupName) !== groupPick) return false;
 
       return true;
     };
@@ -381,8 +386,8 @@ export class DashboardComponent {
 
     // ✅ 2) vendor filter เฉพาะ table
     const passVendor = (row: { vendor: string }) => {
-      if (!vendorSet.size) return true;
-      return vendorSet.has(this.norm(row.vendor));
+      if (vendorPick === 'ALL') return true;
+      return this.norm(row.vendor) === vendorPick;
     };
 
     this.issueLots = issueBase.filter(passVendor);
@@ -392,11 +397,6 @@ export class DashboardComponent {
     this.recomputeVendorSummary(issueBase, recvBase);
   }
 
-  clearFilters() {
-    this.filters = this.buildDefaultFilters();
-    this.applyFilters();
-  }
-
   /** build options แบบ dynamic จากข้อมูลจริง */
   private refreshFilterOptions() {
     const vSet = new Set<string>();
@@ -404,21 +404,24 @@ export class DashboardComponent {
     const gSet = new Set<string>();
 
     for (const r of this.issueLotsAll) {
-      vSet.add(this.norm(r.vendor));
-      sSet.add(this.norm(r.shift));
-      gSet.add(this.norm(r.groupName));
+      if (r.vendor) vSet.add(this.norm(r.vendor));
+      if (r.shift) sSet.add(this.norm(r.shift));
+      if (r.groupName) gSet.add(this.norm(r.groupName));
     }
     for (const r of this.receiveLotsAll) {
-      vSet.add(this.norm(r.vendor));
-      sSet.add(this.norm(r.shift));
-      gSet.add(this.norm(r.groupName));
+      if (r.vendor) vSet.add(this.norm(r.vendor));
+      if (r.shift) sSet.add(this.norm(r.shift));
+      if (r.groupName) gSet.add(this.norm(r.groupName));
     }
 
-    this.vendorOptions = Array.from(vSet).sort();
-    this.shiftOptions = Array.from(sSet).sort();
+    this.vendorOptions = ['All', ...Array.from(vSet).sort()];
+    this.shiftOptions = ['All', ...Array.from(sSet).sort()];
+    this.groupOptions = ['All', ...Array.from(gSet).sort()];
 
-    // ถ้าอยากให้ group dynamic จริง ๆ ใช้บรรทัดนี้แทน list fix
-    this.groupOptions = Array.from(gSet).sort();
+    // ถ้าเลือกค่าเดิมแล้วหายไป ให้ fallback เป็น All
+    if (!this.shiftOptions.includes(this.filters.shift)) this.filters.shift = 'All';
+    if (!this.groupOptions.includes(this.filters.group)) this.filters.group = 'All';
+    if (!this.vendorOptions.includes(this.filters.vendor)) this.filters.vendor = 'All';
   }
 
   /* ---------------- Vendor Summary ---------------- */
@@ -459,7 +462,6 @@ export class DashboardComponent {
       const matchedReceive = Math.min(totalReceive, totalIssue);
       const receiveRate = totalIssue > 0 ? (matchedReceive / totalIssue) * 100 : 0;
       const overReceive = Math.max(totalReceive - totalIssue, 0);
-  
 
       return {
         vendor: v,

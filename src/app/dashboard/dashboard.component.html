@@ -1,51 +1,63 @@
 <div class="dash-page">
 
 
-  <!-- FILTER BAR -->
+ <!-- ===================== FILTERS (COMMON) ===================== -->
 <section class="dash-card filter-card">
-  <div class="filter-title">
-    <i class="fas fa-filter"></i> Filters
+  <div class="filter-head">
+    <div class="filter-title">
+      <i class="fas fa-filter"></i> Filters
+    </div>
+
+    <button class="btn-reset" type="button" (click)="resetFilters()">
+      Reset
+    </button>
   </div>
 
   <div class="filter-grid">
-    <div class="f-item">
-      <label>Date from</label>
-      <input type="date" class="f-control" [(ngModel)]="filters.dateFrom" (change)="applyFilters()" />
+    <!-- Date from -->
+    <div class="filter-item">
+      <label class="filter-label">Date from</label>
+      <input
+        type="date"
+        class="filter-input"
+        [(ngModel)]="filters.dateFrom"
+        (ngModelChange)="applyFilters()"
+      />
     </div>
 
-    <div class="f-item">
-      <label>Date to</label>
-      <input type="date" class="f-control" [(ngModel)]="filters.dateTo" (change)="applyFilters()" />
+    <!-- Date to -->
+    <div class="filter-item">
+      <label class="filter-label">Date to</label>
+      <input
+        type="date"
+        class="filter-input"
+        [(ngModel)]="filters.dateTo"
+        (ngModelChange)="applyFilters()"
+      />
     </div>
 
-    <div class="f-item">
-      <label>Shift (multi)</label>
-      <select class="f-control" multiple [(ngModel)]="filters.shifts" (change)="applyFilters()">
-        <option *ngFor="let s of shiftOptions" [ngValue]="s">{{ s }}</option>
+    <!-- Shift dropdown (All + dynamic options) -->
+    <div class="filter-item">
+      <label class="filter-label">Shift</label>
+      <select
+        class="filter-input"
+        [(ngModel)]="filters.shift"
+        (ngModelChange)="applyFilters()"
+      >
+        <option *ngFor="let s of shiftOptions" [value]="s">{{ s }}</option>
       </select>
-      <div class="f-hint">* ไม่เลือก = ทั้งหมด</div>
     </div>
 
-    <div class="f-item">
-      <label>Group (multi)</label>
-      <select class="f-control" multiple [(ngModel)]="filters.groups" (change)="applyFilters()">
-        <option *ngFor="let g of groupOptions" [ngValue]="g">{{ g }}</option>
+    <!-- Group dropdown (All + dynamic options) -->
+    <div class="filter-item">
+      <label class="filter-label">Group</label>
+      <select
+        class="filter-input"
+        [(ngModel)]="filters.group"
+        (ngModelChange)="applyFilters()"
+      >
+        <option *ngFor="let g of groupOptions" [value]="g">{{ g }}</option>
       </select>
-      <div class="f-hint">* ไม่เลือก = ทั้งหมด</div>
-    </div>
-
-    <div class="f-item">
-      <label>Vendor (multi) <span class="badge-soft">tables only</span></label>
-      <select class="f-control" multiple [(ngModel)]="filters.vendors" (change)="applyFilters()">
-        <option *ngFor="let v of vendorOptions" [ngValue]="v">{{ v }}</option>
-      </select>
-      <div class="f-hint">* มีผลเฉพาะ Transaction tables</div>
-    </div>
-
-    <div class="f-actions">
-      <button class="btn btn-soft" type="button" (click)="clearFilters()">
-        <i class="fas fa-rotate-left"></i> Reset
-      </button>
     </div>
   </div>
 </section>
@@ -103,6 +115,35 @@
 </ng-template>
 
   
+
+  <!-- ===================== VENDOR FILTER (TABLES ONLY) ===================== -->
+<section class="dash-card vendor-only-card">
+  <div class="vendor-only-row">
+    <div class="vendor-only-left">
+      <div class="vendor-only-title">
+        <i class="fas fa-industry"></i> Vendor filter (tables only)
+      </div>
+      <div class="vendor-only-hint">
+        * มีผลเฉพาะ Transaction Issue / Receive
+      </div>
+    </div>
+
+    <div class="vendor-only-right">
+      <label class="filter-label" style="margin:0 10px 0 0;">Vendor</label>
+      <select
+        class="filter-input"
+        style="min-width:220px;"
+        [(ngModel)]="filters.vendor"
+        (ngModelChange)="applyFilters()"
+      >
+        <option *ngFor="let v of vendorOptions" [value]="v">{{ v }}</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+
+
 
     <!-- TRANSACTION HISTORY -->
     <section class="dash-card">
