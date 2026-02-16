@@ -1,5 +1,57 @@
 <div class="dash-page">
 
+
+  <!-- FILTER BAR -->
+<section class="dash-card filter-card">
+  <div class="filter-title">
+    <i class="fas fa-filter"></i> Filters
+  </div>
+
+  <div class="filter-grid">
+    <div class="f-item">
+      <label>Date from</label>
+      <input type="date" class="f-control" [(ngModel)]="filters.dateFrom" (change)="applyFilters()" />
+    </div>
+
+    <div class="f-item">
+      <label>Date to</label>
+      <input type="date" class="f-control" [(ngModel)]="filters.dateTo" (change)="applyFilters()" />
+    </div>
+
+    <div class="f-item">
+      <label>Shift (multi)</label>
+      <select class="f-control" multiple [(ngModel)]="filters.shifts" (change)="applyFilters()">
+        <option *ngFor="let s of shiftOptions" [ngValue]="s">{{ s }}</option>
+      </select>
+      <div class="f-hint">* ไม่เลือก = ทั้งหมด</div>
+    </div>
+
+    <div class="f-item">
+      <label>Group (multi)</label>
+      <select class="f-control" multiple [(ngModel)]="filters.groups" (change)="applyFilters()">
+        <option *ngFor="let g of groupOptions" [ngValue]="g">{{ g }}</option>
+      </select>
+      <div class="f-hint">* ไม่เลือก = ทั้งหมด</div>
+    </div>
+
+    <div class="f-item">
+      <label>Vendor (multi) <span class="badge-soft">tables only</span></label>
+      <select class="f-control" multiple [(ngModel)]="filters.vendors" (change)="applyFilters()">
+        <option *ngFor="let v of vendorOptions" [ngValue]="v">{{ v }}</option>
+      </select>
+      <div class="f-hint">* มีผลเฉพาะ Transaction tables</div>
+    </div>
+
+    <div class="f-actions">
+      <button class="btn btn-soft" type="button" (click)="clearFilters()">
+        <i class="fas fa-rotate-left"></i> Reset
+      </button>
+    </div>
+  </div>
+</section>
+
+
+
    <!-- Vendor Summary (TOP) -->
 <section class="vendor-summary" *ngIf="vendorSummary.length; else noVendor">
   <div
@@ -34,6 +86,12 @@
         <div class="metric-label">Receive Rate</div>
         <div class="metric-value" [style.color]="v.accent">{{ v.receiveRate | number:'1.0-0' }}%</div>
       </div>
+
+      <div class="metric-row" *ngIf="v.overReceive && v.overReceive > 0">
+        <div class="metric-label">Over Receive</div>
+        <div class="metric-value" style="color:#ef4444">+{{ v.overReceive }}</div>
+      </div>
+      
     </div>
   </div>
 </section>

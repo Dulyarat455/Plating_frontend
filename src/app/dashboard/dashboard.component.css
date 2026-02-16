@@ -831,9 +831,6 @@
 
 
 
-
-
-
 /* =========================
    Fix 10 rows + Scroll (All devices)
    - vertical scroll = 10 rows
@@ -875,4 +872,56 @@
 /* ❗ อย่าบังคับความสูงกับแถว detail ที่ expand */
 .tx-scroll-10 tbody tr.lot-detail > td{
   height: auto !important;
+}
+
+
+
+
+
+
+
+
+.filter-card { padding: 14px; }
+.filter-title { font-weight: 800; color: #0f172a; margin-bottom: 10px; display:flex; gap:8px; align-items:center; }
+
+.filter-grid{
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+
+.f-item label{ font-size: 12px; font-weight: 800; color:#334155; margin-bottom:4px; display:block; }
+.f-control{
+  width:100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: #fff;
+  outline: none;
+}
+.f-control:focus{ border-color:#60a5fa; box-shadow: 0 0 0 3px rgba(96,165,250,.25); }
+.f-hint{ font-size: 11px; color:#64748b; margin-top:4px; }
+
+.badge-soft{
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color:#3730a3;
+  margin-left:6px;
+}
+
+.f-actions{ display:flex; justify-content:flex-end; }
+.btn-soft{
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-weight: 800;
+}
+
+/* responsive */
+@media (max-width: 992px){
+  .filter-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
