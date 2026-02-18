@@ -1,1 +1,51 @@
-<p>group works!</p>
+<div style="overflow-x:hidden;">
+    <div class="mt-3">
+        <div class="card-header">Groups Page</div>
+        <div class="card-body mt-3">
+          <button
+            class="btn btn-primary me-2"
+            (click)="openAddGroupSwal()"
+          >
+            <i class="fa fa-user-plus me-2"></i>Add Groups
+          </button>
+         
+
+          <div class="form-inline mt-3">
+            <div class="input-group">
+              <input
+              type="text"
+              class="form-control"
+              placeholder="ค้นหา group name"
+              [(ngModel)]="searchText"
+              (input)="onSearch()"
+            />
+            
+              <div class="input-group-append">
+                <button class="btn btn-primary">
+                  <i class="fas fa-search fa-fw"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <table class="table table-bordered table-striped mt-3">
+            <thead>
+              <tr>
+                <th>Index</th>
+                <th>Group name</th>
+                <!-- <th width="50px">แก้ไข</th>
+                <th width="50px">ลบ</th> -->
+              </tr>
+            </thead>
+            <tbody>
+                @for (item of filteredGroups; track  $index; let i = $index) {
+                    <tr>
+                        <td>{{i+1}}</td>
+                      <td>{{item.name}}</td>
+                    </tr>
+                    }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+     

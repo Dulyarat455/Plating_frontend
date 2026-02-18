@@ -1072,3 +1072,62 @@ input[type="date"].filter-input{
     min-width: 0 !important;
   }
 }
+
+
+
+
+
+
+
+
+
+/* ===================== BOX TABLE FIX 10 ROWS ===================== */
+
+/* container ที่ทำให้ scroll เฉพาะ box-table */
+.lot-box-wrap.box-scroll-10{
+  /* ปรับความสูง “ประมาณ 10 แถว” */
+  --box-row-h: 44px;              /* ความสูงต่อแถว (ปรับได้) */
+  --box-head-h: 44px;             /* ความสูงหัวตาราง */
+  max-height: calc(var(--box-head-h) + (var(--box-row-h) * 10));
+  overflow: auto;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+}
+
+/* เพื่อให้หัวตาราง stick ได้ ต้องใช้ table layout ที่เหมาะสม */
+.lot-box-wrap.box-scroll-10 .box-table{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* sticky header */
+.lot-box-wrap.box-scroll-10 .box-table thead th{
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f8fafc;            /* สีพื้นหัวตาราง */
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* แนะนำกำหนดความสูงแถวให้คงที่ จะคุม 10 แถวได้แม่น */
+.lot-box-wrap.box-scroll-10 .box-table tbody td,
+.lot-box-wrap.box-scroll-10 .box-table thead th{
+  height: 44px;                   /* ให้ตรงกับ --box-row-h/--box-head-h */
+  vertical-align: middle;
+}
+
+/* scroll bar ให้ดูนิ่มขึ้น (optional) */
+.lot-box-wrap.box-scroll-10::-webkit-scrollbar{
+  width: 10px;
+  height: 10px;
+}
+.lot-box-wrap.box-scroll-10::-webkit-scrollbar-thumb{
+  background: #cbd5e1;
+  border-radius: 999px;
+  border: 3px solid #fff;
+}
+.lot-box-wrap.box-scroll-10::-webkit-scrollbar-track{
+  background: #fff;
+}
