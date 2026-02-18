@@ -1,0 +1,182 @@
+/* ----------------------------
+   On-Process container (visual)
+---------------------------- */
+.op-wrap{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+  
+    min-height:44px;
+    padding:10px 12px;
+    border-radius:16px;
+    background:#0f766e;          /* teal base */
+  }
+  
+  /* state */
+  .op-none{
+    background:#0f766e;
+    opacity:.7;
+  }
+  .op-one{
+    background:#0f766e;
+  }
+  .op-both{
+    background:#0f766e;
+  }
+  
+  /* pill */
+  .op-pill{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  
+    min-width:92px;
+    height:28px;
+    padding:0 14px;
+    border-radius:999px;
+    font-weight:800;
+    font-size:13px;
+    letter-spacing:.2px;
+  }
+  
+  /* Receive / Issue */
+  .op-recv{
+    background:#60a5fa;  /* blue */
+    color:#0b2a4a;
+  }
+  .op-issue{
+    background:#6ee7b7;  /* green */
+    color:#064e3b;
+  }
+  
+  /* empty */
+  .op-empty{
+    color:#e2e8f0;
+    font-weight:700;
+    font-size:13px;
+  }
+  
+  /* ----------------------------
+     Make On-Process clickable
+  ---------------------------- */
+  .op-click{
+    width:100%;
+    padding:0;
+    border:none;
+    background:transparent;
+    text-align:left;
+  }
+  
+  .op-click:disabled{
+    cursor:not-allowed;
+    opacity:.9;
+  }
+  
+  .op-click:not(:disabled){
+    cursor:pointer;
+  }
+  
+  .op-click:not(:disabled) .op-wrap{
+    transition: transform .08s ease, filter .08s ease;
+  }
+  
+  .op-click:not(:disabled):active .op-wrap{
+    transform: scale(0.99);
+    filter: brightness(0.98);
+  }
+  
+  /* Mobile */
+  @media (max-width: 576px){
+    .op-wrap{
+      justify-content:flex-start;
+    }
+    .op-pill{
+      min-width:auto;
+      padding:0 12px;
+    }
+  }
+  
+
+
+
+
+  /* ===== Page Header ===== */
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+  
+    padding:14px 16px;
+    margin-bottom:14px;
+  
+    background:#fff;
+    border-radius:14px;
+    border:1px solid rgba(2,6,23,.08);
+    box-shadow:0 6px 16px rgba(2,6,23,.06);
+  }
+  
+  .page-header-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  
+  /* icon box */
+  .page-header-icon{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  
+    background:rgba(37,99,235,.12);
+    color:#2563eb;
+    font-size:18px;
+  }
+  
+  /* title */
+  
+  .page-title{
+    font-weight:900;
+    font-size:18px;
+    color:#0f172a;
+    line-height:1.1;
+  }
+  
+  .page-subtitle{
+    font-size:12px;
+    color:#64748b;
+  }
+  
+  /* count badge */
+  
+  .page-count{
+    margin-left:8px;
+    padding:4px 10px;
+    border-radius:999px;
+  
+    background:#0f766e;
+    color:white;
+  
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.2px;
+  }
+  
+  /* mobile */
+  
+  @media(max-width:576px){
+    .page-header{
+      flex-direction:column;
+      align-items:flex-start;
+    }
+  
+    .page-header-left{
+      width:100%;
+    }
+  }
+  

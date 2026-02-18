@@ -2,63 +2,128 @@
     <div class="mt-3">
         <div class="card-header">PartMaster Page</div>
         <div class="card-body mt-3">
-          <button
-            class="btn btn-primary me-2"
-           (click)="openAddPartMasterSwal()"
-          >
-            <i class="fa fa-user-plus me-2"></i>Add PartMaster
-          </button>
-
-          <button
-            class="btn btn-success me-2"
-            (click)="openImportExcelSwal()"
-        >
-            <i class="fa fa-upload me-2"></i>Add by Excel file
-         </button>
-        <button class="btn btn-success">
-            <i class="fa fa-download me-2"></i>Export to Excel
-        </button>
-         
-
-          <div class="form-inline mt-3">
-            <div class="input-group">
-              <input
-              type="text"
-              class="form-control"
-              placeholder="ค้นหา section name"
-             
-            
-            />
-            
-              <div class="input-group-append">
-                <button class="btn btn-primary">
-                  <i class="fas fa-search fa-fw"></i>
+            <div class="mt-3 d-flex flex-wrap gap-2">
+                <button
+                  class="btn btn-primary me-2"
+                (click)="openAddPartMasterSwal()"
+                >
+                  <i class="fa fa-user-plus me-2"></i>Add PartMaster
                 </button>
-              </div>
+
+                <button
+                  class="btn btn-success me-2"
+                  (click)="openImportExcelSwal()"
+              >
+                  <i class="fa fa-upload me-2"></i>Add by Excel file
+              </button>
+              <button class="btn btn-success"  
+              (click)="exportExcel()"
+              >
+                  <i class="fa fa-download me-2"></i>Export to Excel
+              </button>
+          </div>
+
+
+          <div class="row g-2 mt-3">
+            <div class="col-md-4">
+              <input
+                class="form-control"
+                placeholder="Filter ItemNo"
+                [(ngModel)]="filterItemNo"
+                (input)="applyFilters()"
+              />
+            </div>
+          
+            <div class="col-md-4">
+              <input
+                class="form-control"
+                placeholder="Filter ItemName"
+                [(ngModel)]="filterItemName"
+                (input)="applyFilters()"
+              />
+            </div>
+          
+            <div class="col-md-4">
+              <select class="form-control"
+                [(ngModel)]="filterGroupId"
+                (change)="applyFilters()"
+              >
+                <option value="all">All Group</option>
+                @for (g of groups; track g.id) {
+                  <option [value]="g.id">{{ g.name }}</option>
+                }
+              </select>
+            </div>
+          
+            <div class="col-12 d-flex justify-content-end mt-4">
+              <button class="btn btn-outline-secondary btn-sm" (click)="resetFilters()">
+                Reset Filter
+              </button>
             </div>
           </div>
-          <table class="table table-bordered table-striped mt-3">
-            <thead>
-              <tr>
-                <th>Index</th>
-                <th>ItemNo</th>
-                <th>ItemName</th>
-                <th>Group</th>
+          
+
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="text-muted">
+              ทั้งหมด: <b>{{ partMastersAll.length }}</b> แถว
+              <span *ngIf="partMastersView.length !== partMastersAll.length">
+                | แสดงผล: <b>{{ partMastersView.length }}</b> แถว
+              </span>
+            </div>
+          
+            <div class="text-muted" *ngIf="isLoading">
+              Loading...
+            </div>
+          </div>
+          
+
+          <div style="overflow:auto; max-height:65vh; -webkit-overflow-scrolling: touch;">
+            <table class="table table-bordered table-striped mt-3" style="margin:0;">
               
-              </tr>
-            </thead>
-            <tbody>
-                @for (item of partMasters; track  $index; let i = $index) {
-                    <tr>
-                        <td>{{i+1}}</td>
-                        <td>{{item.itemNo}}</td>
-                        <td>{{item.itemName}}</td>
-                        <td>{{item.groupName}}</td>
-                       
-                    </tr>
-                    }
-            </tbody>
-          </table>
+              <thead style="
+                position: sticky;
+                top: 0;
+                background: white;
+                z-index: 2;
+              ">
+                <tr>
+                  <th style="min-width:60px;">Index</th>
+                  <th style="min-width:140px;">ItemNo</th>
+                  <th style="min-width:220px;">ItemName</th>
+                  <th style="min-width:140px;">Group</th>
+                  <th width="50px">แก้ไข</th>
+                  <th width="50px">ลบ</th>
+                </tr>
+              </thead>
+          
+              <tbody>
+                @for (item of partMastersView; track item.id; let i = $index) {
+                  <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.itemNo }}</td>
+                    <td>{{ item.itemName }}</td>
+                    <td>{{ item.groupName }}</td>
+              
+                    <td class="text-center">
+                      <button class="btn btn-primary btn-sm" (click)="openEditPartMasterSwal(item)">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                    </td>
+              
+                    <td class="text-center">
+                      <button class="btn btn-danger btn-sm" (click)="confirmDeletePartMaster(item)">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+              
+          
+            </table>
+          </div>
+          
+          
         </div>
       </div>
     </div>

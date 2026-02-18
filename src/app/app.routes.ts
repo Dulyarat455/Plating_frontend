@@ -7,6 +7,7 @@ import { ReceiveComponent } from './receive/receive.component';
 import { GroupComponent } from './group/group.component';
 import { SectionComponent } from './section/section.component';
 import { PartMasterComponent } from './part-master/part-master.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
 
 
 export const routes: Routes = [
@@ -42,6 +43,11 @@ export const routes: Routes = [
     path: 'partmaster',
     component: PartMasterComponent,
   },
+  {
+    path: 'signup',
+    component: SignUpComponent,
+  },
+
   {
     path: '404',
     component: NotFoundComponent,

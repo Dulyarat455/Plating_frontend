@@ -1,0 +1,175 @@
+<div style="overflow-x:hidden;">
+    <div class="mt-3">
+        <div class="page-header">
+            <div class="page-header-left">
+              <div class="page-header-icon">
+                <i class="fa fa-users"></i>
+              </div>
+          
+              <div class="page-header-text">
+                <div class="page-title">Add Member</div>
+                <div class="page-subtitle">
+                  Manage users, group / section และสถานะ On-Process
+                </div>
+              </div>
+        
+            </div>
+          
+            <button
+              class="btn btn-outline-secondary btn-sm"
+              (click)="fetchMembers()"
+              [disabled]="isLoading"
+            >
+              <i class="fa fa-refresh me-1"></i>
+              Refresh
+            </button>
+          </div>
+          
+      <div class="card-body mt-3">
+  
+        <!-- buttons -->
+        <div class="mt-3 d-flex flex-wrap gap-2">
+          <button class="btn btn-primary" (click)="true">
+            <i class="fa fa-user-plus me-2"></i>Add Member
+          </button>
+  
+          <button class="btn btn-success" (click)="true">
+            <i class="fa fa-upload me-2"></i>Add by Excel file
+          </button>
+  
+          <button class="btn btn-success" (click)="true">
+            <i class="fa fa-download me-2"></i>Export to Excel
+          </button>
+        </div>
+  
+        <!-- filters -->
+        <div class="row g-2 mt-3">
+          <div class="col-md-4">
+            <input
+              class="form-control"
+              placeholder="Filter EmpNo"
+              [(ngModel)]="filterEmpNo"
+              (input)="applyFilters()"
+            />
+          </div>
+  
+          <div class="col-md-4">
+            <input
+              class="form-control"
+              placeholder="Filter Name"
+              [(ngModel)]="filterName"
+              (input)="applyFilters()"
+            />
+          </div>
+  
+          <div class="col-md-4">
+            <select
+              class="form-control"
+              [(ngModel)]="filterGroup"
+              (change)="applyFilters()"
+            >
+              <option value="all">All Group</option>
+              @for (g of groups; track $index) {
+                <option [value]="g">{{ g }}</option>
+              }
+            </select>
+          </div>
+  
+          <div class="col-12 d-flex justify-content-end mt-2">
+            <button class="btn btn-outline-secondary btn-sm" (click)="resetFilters()">
+              Reset Filter
+            </button>
+          </div>
+        </div>
+  
+        <!-- table -->
+        <div style="overflow:auto; max-height:65vh; -webkit-overflow-scrolling: touch;">
+          <table class="table table-bordered table-striped mt-3" style="margin:0;">
+            <thead style="position: sticky; top: 0; background: white; z-index: 2;">
+              <tr>
+                <th style="min-width:90px;">EmpNo</th>
+                <th style="min-width:220px;">Name</th>
+                <th style="min-width:90px;">Role</th>
+                <th style="min-width:140px;">Group</th>
+                <th style="min-width:140px;">Section</th>
+                <th style="min-width:240px;">On-Process</th>
+                <th width="70px">Detail</th>
+                <th width="70px">แก้ไข</th>
+                <th width="70px">ลบ</th>
+              </tr>
+            </thead>
+  
+            <tbody>
+              @for (m of membersView; track $index) {
+                <tr>
+                  <td>{{ m.empNo }}</td>
+                  <td>{{ m.name }}</td>
+                  <td>{{ m.role }}</td>
+                  <td>{{ m.groupName || '-' }}</td>
+                  <td>{{ m.sectionName || '-' }}</td>
+  
+                  <!-- ✅ On-Process (กดได้ทั้งช่อง) -->
+                  <td>
+                    <button
+                      type="button"
+                      class="op-click"
+                      (click)="openOnProcess(m)"
+                      [disabled]="!hasAnyPending(m)"
+                      [title]="hasAnyPending(m) ? 'Click to view On-Process' : 'No pending'"
+                    >
+                      <div class="op-wrap"
+                        [class.op-both]="hasIssue(m) && hasReceive(m)"
+                        [class.op-one]="(hasIssue(m) && !hasReceive(m)) || (!hasIssue(m) && hasReceive(m))"
+                        [class.op-none]="!hasIssue(m) && !hasReceive(m)">
+  
+                        <ng-container *ngIf="hasReceive(m)">
+                          <span class="op-pill op-recv">Receive</span>
+                        </ng-container>
+  
+                        <ng-container *ngIf="hasIssue(m)">
+                          <span class="op-pill op-issue">Issue</span>
+                        </ng-container>
+  
+                        <ng-container *ngIf="!hasIssue(m) && !hasReceive(m)">
+                          <span class="op-empty">No pending</span>
+                        </ng-container>
+                      </div>
+                    </button>
+                  </td>
+  
+                  <!-- ✅ Detail -> password + rfid -->
+                  <td class="text-center">
+                    <button class="btn btn-outline-primary btn-sm" (click)="openCredentialDetail(m)">
+                      <i class="fa fa-eye"></i>
+                    </button>
+                  </td>
+  
+                  <td class="text-center">
+                    <button class="btn btn-primary btn-sm" (click)="openEdit(m)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                  </td>
+  
+                  <td class="text-center">
+                    <button class="btn btn-danger btn-sm" (click)="confirmDelete(m)">
+                      <i class="fa fa-times"></i>
+                    </button>
+                  </td>
+                </tr>
+              }
+  
+              @if (!membersView.length) {
+                <tr>
+                  <td colspan="9" class="text-center text-muted py-4">
+                    No data
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  

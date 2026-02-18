@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -26,7 +27,7 @@ type groupRow = {
 @Component({
   selector: 'app-part-master',
   standalone: true,
-  imports: [FormsModule, RouterModule],
+  imports: [FormsModule, RouterModule, CommonModule],
   templateUrl: './part-master.component.html',
   styleUrl: './part-master.component.css'
 })
@@ -40,6 +41,17 @@ export class PartMasterComponent {
   isLoading = false;
   
 
+  // ฟิลเตอร์ (เลือกใช้กี่อันก็ได้)
+  filterItemNo = '';
+  filterItemName = '';
+  filterGroupId: number | 'all' = 'all';
+
+  // เก็บข้อมูลต้นฉบับ + ข้อมูลที่ถูกกรอง
+  partMastersAll: partMasterRow[] = [];
+  partMastersView: partMasterRow[] = [];
+
+
+
 
 
   ngOnInit() {
@@ -52,24 +64,24 @@ export class PartMasterComponent {
   fetchData() {
     this.http.get(config.apiServer + '/api/partMaster/list').subscribe({
       next: (res: any) => {
-      this.partMasters = (res.results || []).map((r: any) => ({
+        this.partMastersAll = (res.results || []).map((r: any) => ({
           id: r.id,
           itemNo: r.itemNo,
           itemName: r.itemName,
           groupId: r.groupId,
           groupName: r.groupName,
           createdAt: r.createdAt,
-        }))
+        }));
+  
+        // ✅ apply filter หลังโหลด
+        this.applyFilters();
       },
       error: (err) => {
-        Swal.fire({
-          title: 'Error',
-          text: err.message,
-          icon: 'error',
-        });
+        Swal.fire({ title: 'Error', text: err.message, icon: 'error' });
       },
     });
   }
+  
 
 
   fetchGroup(){
@@ -93,6 +105,81 @@ export class PartMasterComponent {
 
 
 
+  applyFilters() {
+    const itemNoQ = (this.filterItemNo || '').trim().toLowerCase();
+    const itemNameQ = (this.filterItemName || '').trim().toLowerCase();
+    const groupIdQ = this.filterGroupId;
+  
+    this.partMastersView = (this.partMastersAll || []).filter(x => {
+      // ✅ ใช้เงื่อนไขเฉพาะอันที่ user กรอก (dynamic)
+      if (itemNoQ && !String(x.itemNo || '').toLowerCase().includes(itemNoQ)) return false;
+      if (itemNameQ && !String(x.itemName || '').toLowerCase().includes(itemNameQ)) return false;
+      if (groupIdQ !== 'all' && Number(x.groupId) !== Number(groupIdQ)) return false;
+      return true;
+    });
+  }
+  
+
+
+  resetFilters() {
+    this.filterItemNo = '';
+    this.filterItemName = '';
+    this.filterGroupId = 'all';
+    this.applyFilters();
+  }
+
+
+
+
+  exportExcel() {
+    const payload = {
+      filters: {
+        itemNo: (this.filterItemNo || '').trim() || null,
+        itemName: (this.filterItemName || '').trim() || null,
+        groupId: this.filterGroupId === 'all' ? null : Number(this.filterGroupId),
+      }
+    };
+  
+    this.isLoading = true;
+  
+    this.http.post(
+      config.apiServer + '/api/partMaster/exportExcel',
+      payload,
+      { responseType: 'blob' } // ✅ ได้ไฟล์กลับมา
+    ).subscribe({
+      next: (blob) => {
+        this.isLoading = false;
+  
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+  
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth()+1).padStart(2,'0');
+        const day = String(d.getDate()).padStart(2,'0');
+  
+        a.download = `PartMaster_${y}${m}${day}.xlsx`;
+        a.click();
+  
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        Swal.fire({
+          title: 'Export failed',
+          text: err?.error?.message || err?.message || 'เกิดข้อผิดพลาด',
+          icon: 'error',
+        });
+      }
+    });
+  }
+  
+
+
+
+
+
 
   openAddPartMasterSwal() {
     if (!this.groups?.length) this.fetchGroup();
@@ -104,12 +191,12 @@ export class PartMasterComponent {
     const labelStyle = `font-weight:800; font-size:13px; color:#334155; margin-bottom:6px; display:block;`;
     const inputStyle = `
       width:100%;
-      height:42px;
+      height:46px;
       padding:10px 12px;
       border:1px solid #cbd5e1;
       border-radius:10px;
       outline:none;
-      font-size:14px;
+      font-size:15px;
       box-sizing:border-box;
       background:#fff;
     `;
@@ -118,13 +205,13 @@ export class PartMasterComponent {
       background:#f8fafc;
       border:1px solid rgba(2,6,23,.08);
       border-radius:14px;
-      padding:14px;
+      padding:18px;
     `;
   
     Swal.fire({
       title: 'Add PartMaster',
-      width: 640,                // ✅ ไม่แคบ ไม่เกิด scroll
-      padding: '18px',
+      width: 760,                // ✅ ไม่แคบ ไม่เกิด scroll
+      padding: '24px',
       backdrop: true,
       html: `
         <div style="text-align:left; font-family:'Kanit','Segoe UI',sans-serif;">
@@ -352,11 +439,176 @@ export class PartMasterComponent {
       });
     });
   }
-  
-  
-  
 
 
+
+
+
+  openEditPartMasterSwal(item: partMasterRow) {
+    if (!this.groups?.length) this.fetchGroup();
+  
+    const optionsHtml = (this.groups || [])
+      .map(g => `<option value="${g.id}" ${Number(g.id) === Number(item.groupId) ? 'selected' : ''}>${g.name}</option>`)
+      .join('');
+  
+    const labelStyle = `font-weight:800; font-size:13px; color:#334155; margin-bottom:6px; display:block;`;
+    const inputStyle = `
+      width:100%;
+      height:46px;
+      padding:10px 12px;
+      border:1px solid #cbd5e1;
+      border-radius:10px;
+      outline:none;
+      font-size:15px;
+      box-sizing:border-box;
+      background:#fff;
+    `;
+    const hintStyle = `font-size:12px; color:#64748b; margin-top:6px;`;
+    const cardStyle = `
+      background:#f8fafc;
+      border:1px solid rgba(2,6,23,.08);
+      border-radius:14px;
+      padding:18px;
+    `;
+  
+    Swal.fire({
+      title: 'Edit PartMaster',
+      width: 760,
+      padding: '24px',
+      html: `
+        <div style="text-align:left; font-family:'Kanit','Segoe UI',sans-serif;">
+          <div style="${cardStyle}">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+              <div style="
+                width:34px; height:34px; border-radius:10px;
+                display:flex; align-items:center; justify-content:center;
+                background:rgba(37,99,235,.12); color:#2563eb; font-weight:900;
+              ">✎</div>
+              <div>
+                <div style="font-weight:900; font-size:14px; color:#0f172a;">Update PartMaster</div>
+                <div style="font-size:12px; color:#64748b;">แก้ไขแล้วกด Save</div>
+              </div>
+            </div>
+  
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+              <div>
+                <label style="${labelStyle}">Item No <span style="color:#ef4444;">*</span></label>
+                <input id="swalItemNo" style="${inputStyle}" value="${(item.itemNo || '').replace(/"/g, '&quot;')}" />
+                <div style="${hintStyle}">อย่าเว้นวรรคหน้า/หลัง</div>
+              </div>
+  
+              <div>
+                <label style="${labelStyle}">Group <span style="color:#ef4444;">*</span></label>
+                <select id="swalGroupId" style="${inputStyle}">
+                  <option value="" disabled>-- เลือก Group --</option>
+                  ${optionsHtml}
+                </select>
+                <div style="${hintStyle}">เปลี่ยน group ได้</div>
+              </div>
+            </div>
+  
+            <div style="margin-top:12px;">
+              <label style="${labelStyle}">Item Name <span style="color:#ef4444;">*</span></label>
+              <input id="swalItemName" style="${inputStyle}" value="${(item.itemName || '').replace(/"/g, '&quot;')}" />
+            </div>
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Save',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#2563eb',
+      cancelButtonColor: '#64748b',
+      preConfirm: () => {
+        const itemNoEl = document.getElementById('swalItemNo') as HTMLInputElement | null;
+        const itemNameEl = document.getElementById('swalItemName') as HTMLInputElement | null;
+        const groupEl = document.getElementById('swalGroupId') as HTMLSelectElement | null;
+  
+        const itemNo = (itemNoEl?.value || '').trim();
+        const itemName = (itemNameEl?.value || '').trim();
+        const groupId = (groupEl?.value || '').trim();
+  
+        if (!itemNo) { Swal.showValidationMessage('โปรดกรอก Item No'); return; }
+        if (!itemName) { Swal.showValidationMessage('โปรดกรอก Item Name'); return; }
+        if (!groupId) { Swal.showValidationMessage('โปรดเลือก Group'); return; }
+  
+        return { id: item.id, itemNo, itemName, groupId: Number(groupId) };
+      }
+    }).then((r) => {
+      if (!r.isConfirmed) return;
+  
+      const payload = r.value as { id:number; itemNo:string; itemName:string; groupId:number };
+  
+      this.isLoading = true;
+      this.http.put(config.apiServer + '/api/partMaster/edit', payload).subscribe({
+        next: (res: any) => {
+          this.isLoading = false;
+  
+          Swal.fire({ icon:'success', title:'Saved', timer: 1000, showConfirmButton:false });
+  
+          // ✅ รีโหลด/หรือ update แบบ local ก็ได้
+          this.fetchData();
+        },
+        error: (err) => {
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'แก้ไขไม่สำเร็จ',
+            text: err?.error?.message || err?.message || 'เกิดข้อผิดพลาด',
+          });
+        }
+      });
+    });
+  }
+
+
+
+
+  confirmDeletePartMaster(item: partMasterRow) {
+    Swal.fire({
+      title: 'Delete PartMaster?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#64748b',
+      html: `
+        <div style="text-align:left; font-family:'Kanit','Segoe UI',sans-serif;">
+          <div><b>ItemNo:</b> ${item.itemNo}</div>
+          <div><b>ItemName:</b> ${item.itemName}</div>
+          <div><b>Group:</b> ${item.groupName || '-'}</div>
+        </div>
+      `
+    }).then((r) => {
+      if (!r.isConfirmed) return;
+  
+      this.isLoading = true;
+  
+      // ✅ route เป็น POST → ส่ง body ตรงๆ
+      this.http.post(config.apiServer + '/api/partMaster/delete', { id: item.id })
+        .subscribe({
+          next: () => {
+            this.isLoading = false;
+            Swal.fire({ icon: 'success', title: 'Deleted', timer: 900, showConfirmButton: false });
+            this.fetchData();
+          },
+          error: (err) => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'ลบไม่สำเร็จ',
+              text: err?.error?.message || err?.message || 'เกิดข้อผิดพลาด',
+            });
+          }
+        });
+    });
+  }
+  
+  
+  
+  
+  
 
 
 }
