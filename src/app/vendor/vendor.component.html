@@ -3,27 +3,27 @@
       <div class="page-header">
         <div class="page-header-left">
           <div class="page-header-icon">
-            <i class="fa fa-th-large"></i>
+            <i class="fa fa-sitemap"></i>
+
 
           </div>
       
           <div class="page-header-text">
-            <div class="page-title">Add Section</div>
+            <div class="page-title">Add Vendor</div>
             <div class="page-subtitle">
-              Manage Section
+              Manage vendor name
             </div>
           </div>
     
         </div>
       
-        
       </div>
         <div class="card-body mt-3">
           <button
             class="btn btn-primary me-2"
-            (click)="openAddGroupSwal()"
+            (click)="openAddVenderSwal()"
           >
-            <i class="fa fa-user-plus me-2"></i>Add Section
+            <i class="fa fa-user-plus me-2"></i>Add Vendors
           </button>
          
 
@@ -32,10 +32,9 @@
               <input
               type="text"
               class="form-control"
-              placeholder="ค้นหา section name"
+              placeholder="ค้นหา vendor name"
               [(ngModel)]="searchText"
               (input)="onSearch()"
-            
             />
             
               <div class="input-group-append">
@@ -49,24 +48,24 @@
             <thead>
               <tr>
                 <th>Index</th>
-                <th>SectionName</th>
+                <th>VendorName</th>
                 <th width="50px">แก้ไข</th>
                 <th width="50px">ลบ</th>
               </tr>
             </thead>
             <tbody>
-                @for (item of filteredSections; track  $index; let i = $index) {
+                @for (item of filteredVenders; track  $index; let i = $index) {
                     <tr>
                         <td>{{i+1}}</td>
                       <td>{{item.name}}</td>
                       <td class="text-center">
-                        <button class="btn btn-primary btn-sm" (click)="confirmEditSection(item)">
+                        <button class="btn btn-primary btn-sm" (click)="confirmEditVendor(item)">
                           <i class="fa fa-edit"></i>
                         </button>
                       </td>
-                
+
                       <td class="text-center">
-                        <button class="btn btn-danger btn-sm" (click)="confirmDeleteSection(item)">
+                        <button class="btn btn-danger btn-sm" (click)="confirmDeleteVendor(item)">
                           <i class="fa fa-times"></i>
                         </button>
                       </td>

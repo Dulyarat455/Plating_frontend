@@ -1,0 +1,122 @@
+<div class="report-page">
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-header-icon">
+          <i class="fa fa-chart-bar"></i>
+        </div>
+  
+        <div class="page-header-text">
+          <div class="page-title">Report</div>
+          <div class="page-subtitle">Issue / Receive transaction overview</div>
+        </div>
+      </div>
+  
+      <!-- (optional) actions on right -->
+      <div class="page-header-actions">
+        <!-- ถ้าจะมีปุ่ม refresh/export ในอนาคต วางตรงนี้ได้ -->
+        <!-- <button class="btn btn-outline-secondary btn-sm">
+          <i class="fa fa-refresh me-1"></i> Refresh
+        </button> -->
+      </div>
+    </div>
+  
+    <!-- Search / Filter Card -->
+    <div class="filter-card">
+      <div class="filter-left">
+        <label class="filter-label">Vendor name</label>
+  
+        <div class="filter-search">
+          <i class="fa fa-search filter-search-icon"></i>
+          <input
+            type="text"
+            class="form-control filter-input"
+            placeholder="ค้นหา vendor name"
+          />
+          <button class="btn btn-primary filter-btn">
+            Search
+          </button>
+        </div>
+  
+        <div class="filter-hint">
+          * ใช้ค้นหา vendor เพื่อกรองรายการในตาราง
+        </div>
+      </div>
+  
+      <!-- (optional) summary -->
+      <div class="filter-right">
+        <div class="mini-stat">
+          <div class="mini-stat-label">Total</div>
+          <div class="mini-stat-value">0</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-label">Issue</div>
+          <div class="mini-stat-value">0</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-label">Receive</div>
+          <div class="mini-stat-value">0</div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Table -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div class="table-title">
+          <span class="table-title-text">Transactions</span>
+          <span class="table-badge">Live</span>
+        </div>
+  
+        <div class="table-tools">
+          <!-- เผื่ออนาคต: export / reset -->
+          <!-- <button class="btn btn-success btn-sm"><i class="fa fa-download me-1"></i> Export</button> -->
+        </div>
+      </div>
+  
+      <div class="table-wrap">
+        <table class="table table-bordered table-striped report-table">
+          <thead>
+            <tr>
+              <th>ItemNo</th>
+              <th>ItemName</th>
+              <th>WosNo</th>
+              <th>DWG</th>
+              <th>DIENo</th>
+              <th>LotNO</th>
+              <th class="text-end">QTY</th>
+              <th>Control</th>
+              <th>IssueNo</th>
+              <th>Date Issue</th>
+              <th>Time</th>
+              <th>ReceiveNo</th>
+              <th>Date Receive</th>
+              <th>Time</th>
+              <th class="text-center">แก้ไข</th>
+              <th class="text-center">ลบ</th>
+            </tr>
+          </thead>
+  
+          <tbody>
+            <!-- ตัวอย่าง empty state -->
+            <tr>
+              <td colspan="16" class="empty-row">
+                No data
+              </td>
+            </tr>
+  
+            <!-- เวลาเอาข้อมูลจริงมาให้ @for ได้เลย -->
+            <!--
+            @for (r of rows; track $index) {
+              <tr>
+                ...
+              </tr>
+            }
+            -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+  </div>

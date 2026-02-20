@@ -1,6 +1,23 @@
 <div style="overflow-x:hidden;">
     <div class="mt-3">
-        <div class="card-header">Groups Page</div>
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-header-icon">
+            <i class="fa fa-sitemap"></i>
+
+
+          </div>
+      
+          <div class="page-header-text">
+            <div class="page-title">Add Group</div>
+            <div class="page-subtitle">
+              Manage groups
+            </div>
+          </div>
+    
+        </div>
+      
+      </div>
         <div class="card-body mt-3">
           <button
             class="btn btn-primary me-2"
@@ -31,9 +48,8 @@
             <thead>
               <tr>
                 <th>Index</th>
-                <th>Group name</th>
-                <!-- <th width="50px">แก้ไข</th>
-                <th width="50px">ลบ</th> -->
+                <th>GroupName</th>
+                <th width="50px">แก้ไข</th>
               </tr>
             </thead>
             <tbody>
@@ -41,6 +57,11 @@
                     <tr>
                         <td>{{i+1}}</td>
                       <td>{{item.name}}</td>
+                      <td class="text-center">
+                        <button class="btn btn-primary btn-sm" (click)="true">
+                          <i class="fa fa-edit"></i>
+                        </button>
+                      </td>
                     </tr>
                     }
             </tbody>

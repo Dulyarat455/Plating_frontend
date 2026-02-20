@@ -8,6 +8,9 @@ import { GroupComponent } from './group/group.component';
 import { SectionComponent } from './section/section.component';
 import { PartMasterComponent } from './part-master/part-master.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
+import { VendorComponent } from './vendor/vendor.component';
+import { ControlLotComponent } from './control-lot/control-lot.component';
+import { ReportComponent } from './report/report.component';
 
 
 export const routes: Routes = [
@@ -46,6 +49,19 @@ export const routes: Routes = [
   {
     path: 'signup',
     component: SignUpComponent,
+  },
+  {
+    path: 'vendor',
+    component: VendorComponent,
+  },
+  {
+    path: 'control-lot',
+    component: ControlLotComponent,
+  },
+
+  {
+    path: 'report',
+    component: ReportComponent,
   },
 
   {

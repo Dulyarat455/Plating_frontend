@@ -387,45 +387,88 @@ export class PartMasterComponent {
       this.http.post(config.apiServer + '/api/partMaster/importExcel', fd).subscribe({
         next: (res: any) => {
           this.isLoading = false;
-  
+        
           const sum = res?.summary || {};
           const dup = res?.duplicates || [];
           const invalid = res?.invalidRows || [];
-  
-          const showDup = dup.slice(0, 10)
+        
+          // ✅ show ALL (ไม่ slice)
+          const showDup = dup
             .map((x: any) => `<li>${x.itemNo} | ${x.itemName}</li>`)
             .join('');
-  
-          const showInvalid = invalid.slice(0, 10)
-            .map((x: any) => `<li>Row ${x.row}: ${x.itemNo || '-'} | ${x.itemName || '-'} | ${x.group || '-'} <i>(${x.reason})</i></li>`)
+        
+          const showInvalid = invalid
+            .map((x: any) =>
+              `<li style="margin-bottom:6px;">
+                <b>Row ${x.row}:</b> ${x.itemNo || '-'} | ${x.itemName || '-'} | ${x.group || '-'}
+                <div style="color:#b91c1c; font-size:12px; margin-top:2px;">${x.reason || ''}</div>
+              </li>`
+            )
             .join('');
-  
+        
+          // ✅ scroll box style (inline)
+          const scrollBox = (maxH = 260) => `
+            max-height:${maxH}px;
+            overflow:auto;
+            -webkit-overflow-scrolling:touch;
+            border:1px solid #e2e8f0;
+            border-radius:10px;
+            padding:10px 12px;
+            background:#fff;
+          `;
+        
           Swal.fire({
             title: 'Import Result',
             icon: 'success',
+            width: 860,
             html: `
               <div style="text-align:left; font-family:'Kanit','Segoe UI',sans-serif;">
-                <div><b>Inserted:</b> ${sum.inserted ?? 0}</div>
-                <div><b>Skipped duplicate:</b> ${sum.skippedDuplicate ?? 0}</div>
-                <div><b>Invalid rows:</b> ${sum.invalid ?? 0}</div>
-  
+        
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:12px;">
+                  <div style="border:1px solid #e2e8f0; border-radius:12px; padding:10px; background:#f8fafc;">
+                    <div style="font-size:12px; color:#64748b;">Inserted</div>
+                    <div style="font-size:18px; font-weight:900; color:#166534;">${sum.inserted ?? 0}</div>
+                  </div>
+                  <div style="border:1px solid #e2e8f0; border-radius:12px; padding:10px; background:#f8fafc;">
+                    <div style="font-size:12px; color:#64748b;">Skipped duplicate</div>
+                    <div style="font-size:18px; font-weight:900; color:#1d4ed8;">${sum.skippedDuplicate ?? 0}</div>
+                  </div>
+                  <div style="border:1px solid #e2e8f0; border-radius:12px; padding:10px; background:#f8fafc;">
+                    <div style="font-size:12px; color:#64748b;">Invalid rows</div>
+                    <div style="font-size:18px; font-weight:900; color:#b91c1c;">${sum.invalid ?? 0}</div>
+                  </div>
+                </div>
+        
                 ${dup.length ? `
                   <hr/>
-                  <div style="font-weight:700; margin-bottom:6px;">Duplicate (10 รายการแรก)</div>
-                  <ul style="padding-left:18px; margin:0;">${showDup}</ul>
-                  ${dup.length > 10 ? `<div style="margin-top:6px; color:#6b7280;">...และอีก ${dup.length - 10} รายการ</div>` : ''}
+                  <div style="font-weight:900; margin-bottom:6px;">Duplicate (ทั้งหมด ${dup.length} รายการ)</div>
+                  <div style="${scrollBox(240)}">
+                    <ul style="padding-left:18px; margin:0; line-height:1.7;">
+                      ${showDup}
+                    </ul>
+                  </div>
                 ` : ''}
-  
+        
                 ${invalid.length ? `
                   <hr/>
-                  <div style="font-weight:700; margin-bottom:6px;">Invalid rows (10 รายการแรก)</div>
-                  <ul style="padding-left:18px; margin:0; color:#b91c1c;">${showInvalid}</ul>
-                  ${invalid.length > 10 ? `<div style="margin-top:6px; color:#6b7280;">...และอีก ${invalid.length - 10} รายการ</div>` : ''}
+                  <div style="font-weight:900; margin-bottom:6px;">Invalid rows (ทั้งหมด ${invalid.length} รายการ)</div>
+                  <div style="${scrollBox(280)}">
+                    <ul style="padding-left:18px; margin:0; line-height:1.7; color:#b91c1c;">
+                      ${showInvalid}
+                    </ul>
+                  </div>
                 ` : ''}
+        
+                ${(!dup.length && !invalid.length) ? `
+                  <div style="margin-top:8px; color:#64748b;">ไม่มี Duplicate และ Invalid</div>
+                ` : ''}
+        
               </div>
-            `
+            `,
+            confirmButtonText: 'Close',
+            confirmButtonColor: '#2563eb',
           });
-  
+        
           this.fetchData();
         },
         error: (err) => {

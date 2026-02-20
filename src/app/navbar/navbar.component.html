@@ -54,7 +54,7 @@
           <i class="fas fa-box-open"></i>
           <span>Receive Part</span>
         </a>
-        <a [routerLink]="['/scan']" routerLinkActive="active" class="nav-tab">
+        <a [routerLink]="['/report']" routerLinkActive="active" class="nav-tab">
           <i class="fas fa-qrcode"></i>
           <span>Report</span>
         </a>
@@ -112,9 +112,9 @@
       <i class="fas fa-box-open"></i>
       <span>Receive</span>
     </a>
-    <a [routerLink]="['/scan']" routerLinkActive="active" class="mobile-nav-item">
+    <a [routerLink]="['/report']" routerLinkActive="active" class="mobile-nav-item">
       <i class="fas fa-qrcode"></i>
-      <span>Scan</span>
+      <span>Report</span>
     </a>
     }
     @if (!token || token.trim().length === 0) {
