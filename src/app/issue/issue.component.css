@@ -803,3 +803,74 @@ input.form-control::placeholder{
   box-shadow: none;
   filter: grayscale(0.25) brightness(0.98);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 1) กล่องที่เลื่อนทั้งแนวตั้ง/แนวนอนได้ */
+.table-wrap {
+  width: 100%;
+  overflow: auto;                 /* ✅ เลื่อนขึ้นลง + ซ้ายขวา */
+  -webkit-overflow-scrolling: touch; /* ✅ ลื่นบน iOS */
+  border-radius: 14px;
+}
+
+/* 2) “ฟิก 10 แถว” ด้วย max-height (ปรับตัวเลข row ได้) */
+.table-scroll-10{
+  /* ถ้าอยากละเอียด: ปรับให้ใกล้ความสูงแถวจริงของคุณ */
+  --head-h: 52px;
+  --row-h: 56px;
+  max-height: calc(var(--head-h) + (10 * var(--row-h))); /* ✅ ประมาณ 10 rows */
+}
+
+/* 3) ตาราง */
+.saved-table{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 980px;               /* ✅ ให้มีพื้นที่พอ → มือถือจะเลื่อนซ้ายขวา */
+}
+
+/* 4) Sticky header */
+.saved-table thead th{
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #f6fbff;            /* ✅ ต้องมีพื้นหลัง ไม่งั้นจะโปร่ง */
+  box-shadow: 0 1px 0 rgba(0,0,0,.06);
+}
+
+/* 5) ให้ความสูงแถวค่อนข้างคงที่ (ช่วยให้ 10 แถวเป๊ะขึ้น) */
+.saved-table th, .saved-table td{
+  padding: 14px 14px;
+  vertical-align: middle;
+  white-space: nowrap;            /* ✅ กันข้อความดันแถวสูง */
+}
+
+/* ถ้าอยากให้ Item Name ตัดบรรทัดได้แทนการ nowrap ให้ทำเฉพาะคอลัมน์นั้น */
+.saved-table td:nth-child(2){
+  white-space: normal;            /* ✅ item name ตัดบรรทัดได้ */
+  min-width: 220px;
+}
+
+/* 6) (ทางเลือก) ให้คอลัมน์ action แคบลงบนมือถือ */
+@media (max-width: 576px){
+  .table-scroll-10{
+    --head-h: 48px;
+    --row-h: 52px;
+  }
+  .saved-table{
+    min-width: 920px;             /* ยังให้เลื่อนซ้ายขวาได้ */
+  }
+}
+

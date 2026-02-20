@@ -805,3 +805,119 @@
   }
 }
 
+
+
+
+
+
+
+/* =========================
+   BASE (ทุกอุปกรณ์)
+   ========================= */
+   .table-wrap{
+    width: 100%;
+    border-radius: 14px;
+    overflow: auto;                      /* ✅ scroll ทั้ง x + y (ตัวเดียว) */
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+  
+    /* ✅ แสดง ~10 แถว + หัวตาราง (ปรับได้) */
+    --head-h: 52px;
+    --row-h: 56px;
+    max-height: calc(var(--head-h) + (10 * var(--row-h)));
+  }
+  
+  /* ตารางปกติ (เพื่อให้หัวเลื่อนตามแนวนอนแน่นอน) */
+  .saved-table{
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  /* Sticky header (ล็อคเฉพาะแนวตั้ง) */
+  .saved-table thead th{
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f6fbff;
+    box-shadow: 0 1px 0 rgba(0,0,0,.08);
+  }
+  
+  /* cell */
+  .saved-table th,
+  .saved-table td{
+    padding: 14px 14px;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+  }
+  
+  /* =========================
+     MOBILE (เลื่อนซ้าย/ขวาได้)
+     ========================= */
+  @media (max-width: 991.98px){
+    /* ให้ตารางกว้างกว่าจอ → เกิด scroll-x
+       ✅ หัวจะเลื่อนตาม เพราะอยู่ใน scroll container เดียวกัน */
+    .saved-table{
+      min-width: 980px;     /* ปรับได้ตามจริง */
+      table-layout: fixed;  /* คุมคอลัมน์ไม่ให้ทับกัน */
+    }
+  
+    /* กันข้อมูลยาว ๆ ทับกัน */
+    .saved-table th,
+    .saved-table td{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  
+    /* กำหนดความกว้างคอลัมน์ (ปรับได้) */
+    .saved-table th:nth-child(1), .saved-table td:nth-child(1){ width: 140px; } /* Item No */
+    .saved-table th:nth-child(2), .saved-table td:nth-child(2){ width: 220px; } /* Item Name */
+    .saved-table th:nth-child(3), .saved-table td:nth-child(3){ width: 170px; } /* WOS NO */
+    .saved-table th:nth-child(4), .saved-table td:nth-child(4){ width: 210px; } /* DWG */
+    .saved-table th:nth-child(5), .saved-table td:nth-child(5){ width: 100px; } /* DIE NO */
+    .saved-table th:nth-child(6), .saved-table td:nth-child(6){ width: 150px; } /* LOT NO */
+    .saved-table th:nth-child(7), .saved-table td:nth-child(7){ width: 90px; }  /* QTY */
+    .saved-table th:nth-child(8), .saved-table td:nth-child(8){ width: 80px; }  /* Edit */
+    .saved-table th:nth-child(9), .saved-table td:nth-child(9){ width: 90px; }  /* Delete */
+  }
+  
+  /* =========================
+     DESKTOP (ไม่ต้องเลื่อนซ้าย/ขวา + โชว์เต็ม)
+     ========================= */
+  @media (min-width: 992px){
+    .table-wrap{
+      overflow-x: visible;   /* ✅ PC ไม่ต้อง scroll-x */
+    }
+  
+    .saved-table{
+      table-layout: auto;
+    }
+  
+    /* โชว์เต็มโดยให้ตัดบรรทัด */
+    .saved-table th,
+    .saved-table td{
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      word-break: break-word;
+    }
+  }
+  
+  /* =========================
+     SMALL MOBILE (จอเล็ก)
+     ========================= */
+  @media (max-width: 576px){
+    .table-wrap{
+      --head-h: 48px;
+      --row-h: 52px;
+      max-height: calc(var(--head-h) + (10 * var(--row-h)));
+    }
+    .saved-table th,
+    .saved-table td{
+      padding: 12px 12px;
+    }
+    .saved-table{
+      min-width: 920px;
+    }
+  }

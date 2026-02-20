@@ -142,6 +142,7 @@ type FilterState = {
   shift: string;      // dropdown single (All | value)
   group: string;      // dropdown single (All | value)
   vendor: string;     // dropdown single (All | value)  // tables only
+  status: string;   // ✅ tables only (All | Wait | Complete)
 };
 
 @Component({
@@ -171,6 +172,7 @@ export class DashboardComponent {
   shiftOptions: string[] = ['All'];
   groupOptions: string[] = ['All'];
   vendorOptions: string[] = ['All']; // tables only
+  statusOptions: string[] = ['All', 'Wait', 'Complete']; // ✅ tables only
 
   // ✅ filter state (single-select)
   filters: FilterState = this.buildDefaultFilters();
@@ -211,6 +213,7 @@ export class DashboardComponent {
       shift: 'All',
       group: 'All',
       vendor: 'All',          // tables only
+      status: 'All', // ✅
     };
   }
 
@@ -369,6 +372,7 @@ export class DashboardComponent {
     const shiftPick = this.norm(f.shift);
     const groupPick = this.norm(f.group);
     const vendorPick = this.norm(f.vendor);
+    const statusPick = this.norm(f.status); // ✅
 
     const passCommon = (row: { dateIso: string; shift: string; groupName: string }) => {
       const dt = new Date(row.dateIso);
@@ -390,8 +394,14 @@ export class DashboardComponent {
       return this.norm(row.vendor) === vendorPick;
     };
 
-    this.issueLots = issueBase.filter(passVendor);
-    this.receiveLots = recvBase.filter(passVendor);
+    // ✅ 3) status filter เฉพาะ table
+    const passStatus = (row: { status: 'Wait' | 'Complete' }) => {
+      if (statusPick === 'ALL') return true;
+      return this.norm(row.status) === statusPick;
+    };
+
+    this.issueLots = issueBase.filter(passVendor).filter(passStatus);
+    this.receiveLots = recvBase.filter(passVendor).filter(passStatus);
 
     // ✅ 3) vendor summary ใช้ base เท่านั้น (ไม่โดน vendor filter)
     this.recomputeVendorSummary(issueBase, recvBase);
@@ -422,6 +432,7 @@ export class DashboardComponent {
     if (!this.shiftOptions.includes(this.filters.shift)) this.filters.shift = 'All';
     if (!this.groupOptions.includes(this.filters.group)) this.filters.group = 'All';
     if (!this.vendorOptions.includes(this.filters.vendor)) this.filters.vendor = 'All';
+    if (!this.statusOptions.includes(this.filters.status)) this.filters.status = 'All'; // ✅
   }
 
   /* ---------------- Vendor Summary ---------------- */

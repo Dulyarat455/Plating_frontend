@@ -138,6 +138,18 @@
       >
         <option *ngFor="let v of vendorOptions" [value]="v">{{ v }}</option>
       </select>
+
+       <!-- ✅ Status -->
+       <label class="filter-label" style="margin:0 10px 0 0;">Status</label>
+       <select
+         class="filter-input"
+         style="min-width:160px;"
+         [(ngModel)]="filters.status"
+         (ngModelChange)="applyFilters()"
+       >
+         <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+       </select>
+       
     </div>
   </div>
 </section>
