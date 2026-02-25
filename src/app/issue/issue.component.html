@@ -233,13 +233,10 @@
       </div>
 
       <ul class="instruction-list">
-        <li>หลังจาก scan QR ให้ทำเส้นเดียวกันหัวกดดี scan จนครบทุกใบที่ scan</li>
-        <li>ถ้าต้องมีการยกเลิกการ Scan QR ที่แสดงกล่องชัดเจน จะไม่สามารถ Scan QR ได้</li>
-        <li>หาก Scan QR ซ้ำ ให้มี Pop up เตือนแจ้ง เพื่อให้เห็นกะทำงานก่อน Scan ซ้ำ</li>
-        <li>
-          ไม่สามารถ Scan QR แสดงลงทำการรับทั้งก่อนออนไลน์ได้ ทั้ง Send และ Receive จะทำได้ต่อเมื่อมีการ
-          Receive complete แล้วเท่านั้น
-        </li>
+        <li>ในการ เริ่มต้น scan ทุกครั้งต้องเริ่มต้นสร้าง Header ก่อนเสมอ</li>
+        <li>Cursor ต้องมาเริ่มต้นที่ช่อง ItemNo ก่อน Scan</li>
+        <li>เปลี่ยนภาษาเป็น Eng ทุกครั้งก่อนเริ่ม Scan</li>
+        <li>เมื่อ Scan สำเร็จ รายการจะถูกเพิ่มเข้ามาที่ รายการที่สแกนแล้วอัตโนมัติ</li>
       </ul>
     </div>
 
@@ -269,7 +266,7 @@
             #scanItemNo
             class="form-control"
             type="text"
-            placeholder=""
+            placeholder="Start scan this tag"
             [(ngModel)]="boxForm.itemNo"
             name="box_itemNo"
             [disabled]="!header || isEditingHeader || isSavingBox"
@@ -365,11 +362,12 @@
       
 
       <div class="stack-note">
-        * Temp Stack = รายการที่ scan เข้าแล้ว แต่ยังไม่กด Confirm Lot
+        <p> * ในการเริ่ม ต้น Scan ทุกครั้ง Cursor ต้องอยู่ที่ช่อง Item No </p>
+        <p> * เปลี่ยนภาษาเป็น Eng ก่อนเริ่ม Scan </p>
       </div>
 
       <div class="stack-actions">
-        <!-- <button
+        <button
           type="button"
           class="btn-soft"
           (click)="onConfirmLot()"
@@ -377,7 +375,7 @@
         >
           <i class="fas fa-check-circle me-1"></i>
           Confirm Lot
-        </button> -->
+        </button>
 
         <button
           type="button"
@@ -399,7 +397,7 @@
       <div class="saved-header">
         <div class="saved-title">
           <i class="fas fa-clipboard-check"></i>
-          <span>รายการที่สแกนแล้ว</span>
+          <span>รายการที่ Scan แล้ว</span>
             <span
             class="ms-2 badge rounded-pill bg-secondary"
             *ngIf="header && !isEditingHeader"

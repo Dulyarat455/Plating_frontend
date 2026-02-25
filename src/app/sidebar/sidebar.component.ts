@@ -27,6 +27,11 @@ export class SidebarComponent {
   name: string = '';
   level: string = '';
   empNo: string = '';
+  groupName: string = '';
+  sectionName: string = '';
+  role: string = '';
+
+
 
   ngOnInit() {
     this.authService.refreshComponents$.subscribe(() => {
@@ -34,7 +39,9 @@ export class SidebarComponent {
     });
     this.name = localStorage.getItem('plating_name')!;
     this.empNo = localStorage.getItem('plating_empNo')!;
-
+    this.groupName = localStorage.getItem('plating_groupName')!;
+    this.sectionName = localStorage.getItem('plating_sectionName')!;
+    this.role = localStorage.getItem('plating_role')!;
 
     if (!this.name) {
       // เปลี่ยนเส้นทางไปที่หน้า LoginPage ก่อน
@@ -77,11 +84,7 @@ export class SidebarComponent {
     }
   }
 
-  getLevelFromToken() {
-    this.authService.getUserLevel().subscribe((res: any) => {
-      this.level = res.level;
-    });
-  }
+ 
   loadUserData() {
     this.name = localStorage.getItem('plating_name') || '';
     this.empNo = localStorage.getItem('plating_empNo') || '';
@@ -98,6 +101,5 @@ export class SidebarComponent {
       return;
     }
 
-    this.getLevelFromToken();
   }
 }

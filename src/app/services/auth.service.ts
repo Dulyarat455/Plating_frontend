@@ -47,6 +47,8 @@ export class AuthService {
     localStorage.setItem('plating_groupName', userData.groupName);
     localStorage.setItem('plating_sectionId', userData.sectionId);
     localStorage.setItem('plating_sectionName', userData.sectionName);
+    localStorage.setItem('plating_role', userData.role);
+
 
 
     this.authStatus.next(true);
@@ -62,6 +64,8 @@ export class AuthService {
     localStorage.removeItem('plating_groupName');
     localStorage.removeItem('plating_sectionId');
     localStorage.removeItem('plating_sectionName');
+    localStorage.removeItem('plating_role');
+
     this.authStatus.next(false);
     window.location.href = '/PlatingPress';
     // this.refreshComponents.next(true); // แจ้ง components ให้ refresh

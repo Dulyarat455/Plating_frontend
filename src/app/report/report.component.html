@@ -1,123 +1,285 @@
 <div class="report-page">
 
-    <!-- Header -->
-    <div class="page-header">
-      <div class="page-header-left">
-        <div class="page-header-icon">
-          <i class="fa fa-chart-bar"></i>
-        </div>
-  
-        <div class="page-header-text">
-          <div class="page-title">Report</div>
-          <div class="page-subtitle">Issue / Receive transaction overview</div>
-        </div>
+  <!-- Header -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-header-icon">
+        <i class="fa fa-chart-bar"></i>
       </div>
-  
-      <!-- (optional) actions on right -->
-      <div class="page-header-actions">
-        <!-- ถ้าจะมีปุ่ม refresh/export ในอนาคต วางตรงนี้ได้ -->
-        <!-- <button class="btn btn-outline-secondary btn-sm">
-          <i class="fa fa-refresh me-1"></i> Refresh
-        </button> -->
+
+      <div class="page-header-text">
+        <div class="page-title">Report</div>
+        <div class="page-subtitle">Issue / Receive transaction overview</div>
       </div>
     </div>
-  
-    <!-- Search / Filter Card -->
-    <div class="filter-card">
-      <div class="filter-left">
-        <label class="filter-label">Vendor name</label>
-  
-        <div class="filter-search">
-          <i class="fa fa-search filter-search-icon"></i>
-          <input
-            type="text"
-            class="form-control filter-input"
-            placeholder="ค้นหา vendor name"
-          />
-          <button class="btn btn-primary filter-btn">
-            Search
-          </button>
-        </div>
-  
-        <div class="filter-hint">
-          * ใช้ค้นหา vendor เพื่อกรองรายการในตาราง
-        </div>
-      </div>
-  
-      <!-- (optional) summary -->
-      <div class="filter-right">
-        <div class="mini-stat">
-          <div class="mini-stat-label">Total</div>
-          <div class="mini-stat-value">0</div>
-        </div>
-        <div class="mini-stat">
-          <div class="mini-stat-label">Issue</div>
-          <div class="mini-stat-value">0</div>
-        </div>
-        <div class="mini-stat">
-          <div class="mini-stat-label">Receive</div>
-          <div class="mini-stat-value">0</div>
-        </div>
-      </div>
+
+    <div class="page-header-actions">
+      <button class="btn btn-outline-secondary btn-sm" (click)="fetchReport()" [disabled]="isLoading">
+        <i class="fa fa-refresh me-1"></i> Refresh
+      </button>
     </div>
-  
-    <!-- Table -->
-    <div class="table-card">
-      <div class="table-toolbar">
-        <div class="table-title">
-          <span class="table-title-text">Transactions</span>
-          <span class="table-badge">Live</span>
+  </div>
+
+  <!-- Search / Filter Card -->
+  <div class="filter-card">
+
+    <div class="filter-left">
+
+      <div class="filters-grid">
+
+
+        <!-- Date range (คู่กัน) -->
+        <div class="f date-range">
+          <label class="f-label">IssueDate Range</label>
+          <div class="date-row">
+            <input type="date" class="form-control"
+              [(ngModel)]="dateFrom"
+              (change)="applyFilter()" />
+            <span class="date-sep">→</span>
+            <input type="date" class="form-control"
+              [(ngModel)]="dateTo"
+              (change)="applyFilter()" />
+          </div>
         </div>
-  
-        <div class="table-tools">
-          <!-- เผื่ออนาคต: export / reset -->
-          <!-- <button class="btn btn-success btn-sm"><i class="fa fa-download me-1"></i> Export</button> -->
-        </div>
-      </div>
-  
-      <div class="table-wrap">
-        <table class="table table-bordered table-striped report-table">
-          <thead>
-            <tr>
-              <th>ItemNo</th>
-              <th>ItemName</th>
-              <th>WosNo</th>
-              <th>DWG</th>
-              <th>DIENo</th>
-              <th>LotNO</th>
-              <th class="text-end">QTY</th>
-              <th>Control</th>
-              <th>Vendor</th>
-              <th>IssueNo</th>
-              <th>Date Issue</th>
-              <th>Time Issue</th>
-              <th>ReceiveNo</th>
-              <th>Date Receive</th>
-              <th>Time Receive</th>
-              <th class="text-center">แก้ไข</th>
-              <th class="text-center">ลบ</th>
-            </tr>
-          </thead>
-  
-          <tbody>
-            <!-- ตัวอย่าง empty state -->
-            <tr>
-              <td colspan="16" class="empty-row">
-                No data
-              </td>
-            </tr>
-  
-            <!-- เวลาเอาข้อมูลจริงมาให้ @for ได้เลย -->
-            <!--
-            @for (r of rows; track $index) {
-              <tr>
-                ...
-              </tr>
+
+        <!-- Group -->
+        <div class="f">
+          <label class="f-label">Group</label>
+          <select class="form-select" [(ngModel)]="fGroupName" (change)="applyFilter()">
+            <option value="">All</option>
+            @for (x of groupOptions; track x) {
+              <option [value]="x">{{ x }}</option>
             }
-            -->
-          </tbody>
-        </table>
+          </select>
+        </div>
+
+        <!-- ItemNo -->
+        <div class="f">
+          <label class="f-label">ItemNo</label>
+          <select class="form-select" [(ngModel)]="fItemNo" (change)="applyFilter()">
+            <option value="">All</option>
+            @for (x of itemNoOptions; track x) {
+              <option [value]="x">{{ x }}</option>
+            }
+          </select>
+        </div>
+    
+        <!-- ItemName -->
+        <div class="f">
+          <label class="f-label">ItemName</label>
+          <select class="form-select" [(ngModel)]="fItemName" (change)="applyFilter()">
+            <option value="">All</option>
+            @for (x of itemNameOptions; track x) {
+              <option [value]="x">{{ x }}</option>
+            }
+          </select>
+        </div>
+    
+        <!-- BoxState -->
+        <div class="f">
+          <label class="f-label">BoxState</label>
+          <select class="form-select" [(ngModel)]="fBoxState" (change)="applyFilter()">
+            <option value="">All</option>
+            <option value="complete">complete</option>
+            <option value="wait">wait</option>
+          </select>
+        </div>
+    
+        <!-- Vendor -->
+        <div class="f">
+          <label class="f-label">Vendor</label>
+          <select class="form-select" [(ngModel)]="fVendor" (change)="applyFilter()">
+            <option value="">All</option>
+            @for (x of vendorOptions; track x) {
+              <option [value]="x">{{ x }}</option>
+            }
+          </select>
+        </div>
+    
+        <!-- ControlLot -->
+        <div class="f">
+          <label class="f-label">ControlLot</label>
+          <select class="form-select" [(ngModel)]="fControlLot" (change)="applyFilter()">
+            <option value="">All</option>
+            @for (x of controlLotOptions; track x) {
+              <option [value]="x">{{ x }}</option>
+            }
+          </select>
+        </div>
+    
+        
+
+        <!-- IssueNo -->
+        <div class="f">
+          <label class="f-label">IssueNo</label>
+          <select class="form-select" [(ngModel)]="fIssueNo" (change)="applyFilter()">
+            <option value="">All</option>
+            @for (x of issueNoOptions; track x) {
+              <option [value]="x">{{ x }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- ReceiveNo -->
+        <div class="f">
+          <label class="f-label">ReceiveNo</label>
+          <select class="form-select" [(ngModel)]="fReceiveNo" (change)="applyFilter()">
+            <option value="">All</option>
+            @for (x of receiveNoOptions; track x) {
+              <option [value]="x">{{ x }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    
+      <!-- Action bar -->
+      <div class="filter-actions">
+        <button class="btn btn-outline-secondary btn-reset" (click)="onResetFilter()">
+          <i class="fa fa-rotate-left me-1"></i>
+          Reset Filters
+        </button>
+      </div>
+    
+    </div>
+  
+    <div class="filter-right">
+      <div class="mini-stat">
+        <div class="mini-stat-label">Total</div>
+        <div class="mini-stat-value">{{ totalCount }}</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-label">Complete</div>
+        <div class="mini-stat-value">{{ completeCount }}</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-label">Wait</div>
+        <div class="mini-stat-value">{{ waitCount }}</div>
       </div>
     </div>
   
   </div>
+
+  <!-- Table -->
+  <div class="table-card">
+    <div class="table-toolbar">
+      <div class="table-title">
+        <span class="table-title-text">Transactions</span>
+        <span class="table-badge" [class.loading]="isLoading">
+          {{ isLoading ? 'Loading...' : 'Live' }}
+        </span>
+     
+      </div>
+      <button 
+      class="btn btn-success"
+      (click)="exportExcel()"
+      [disabled]="isExporting"
+    >
+      <i 
+        class="me-2"
+        [ngClass]="isExporting ? 'fa fa-spinner fa-spin' : 'fa fa-download'"
+      ></i>
+    
+      {{ isExporting ? 'Exporting...' : 'Export to Excel' }}
+    </button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table table-bordered table-striped report-table">
+        <thead>
+          <tr>
+            <th>ItemNo</th>
+            <th>ItemName</th>
+            <th>WosNo</th>
+            <th>DWG</th>
+            <th>DIENo</th>
+            <th>LotNO</th>
+            <th class="text-end">QTY</th>
+            <th>Control</th>
+            <th>Vendor</th>
+            <th>Group</th>
+            <th>IssueNo</th>
+            <th>Date Issue</th>
+            <th>Time Issue</th>
+
+            <th>ShipmentDate(I)</th>      
+            <th>ShipmentTime(I)</th> 
+      
+            <!-- ✅ เพิ่ม -->
+            <th>Issue By</th>
+            <th class="text-center">Shift(I)</th>
+      
+            <th>ReceiveNo</th>
+            <th>Date Receive</th>
+            <th>Time Receive</th>
+            <th>ShipmentDate(R)</th>    
+            <th>ShipmentTime(R)</th>     
+      
+            <!-- ✅ เพิ่ม -->
+            <th>Receive By</th>
+            <th class="text-center">Shift(R)</th>
+      
+            
+          </tr>
+        </thead>
+      
+        <tbody>
+          <tr *ngIf="!isLoading && filteredRows.length === 0">
+            <!-- เดิม 17 คอลัมน์ ตอนนี้เพิ่ม 4 = 21 -->
+            <td colspan="26" class="empty-row">No data</td>
+          </tr>
+      
+          @for (r of filteredRows; track r.id) {
+            <tr>
+              <td class="mono">{{ r.itemNo }}</td>
+              <td>{{ r.itemName }}</td>
+              <td class="mono">{{ r.wosNo }}</td>
+              <td class="mono">{{ r.dwg || '-' }}</td>
+              <td class="mono">{{ r.dieNo }}</td>
+              <td class="mono">{{ r.lotNo }}</td>
+              <td class="text-end mono">{{ r.qty }}</td>
+              <td>{{ r.controlLot || '-' }}</td>
+              <td>{{ r.vender || '-' }}</td>
+              <td>{{ r.groupName || '-' }}</td>
+              <td class="mono">{{ r.issueNo || '-' }}</td>
+              <td class="mono">{{ toDateText(r.issueDate) }}</td>
+              <td class="mono">{{ toTimeText(r.issueDate) }}</td>
+              <td class="mono">{{ toDateText(r.issueShipment) }}</td>
+              <td class="mono">{{ toTimeText(r.issueShipment) }}</td>
+      
+              <!-- ✅ Issue By -->
+              <td>
+                <div class="who">
+                  <div class="who-name">{{ r.issueByName || '-' }}</div>
+                  <div class="who-emp mono">{{ r.issueByEmpNo || '' }}</div>
+                </div>
+              </td>
+              <td class="text-center">
+                <span class="shift-pill">{{ r.shiftIssue || '-' }}</span>
+              </td>
+      
+              <td class="mono">{{ r.ReceiveNo || '-' }}</td>
+              <td class="mono">{{ toDateText(r.receiveDate) }}</td>
+              <td class="mono">{{ toTimeText(r.receiveDate) }}</td>
+              <td class="mono">{{ toDateText(r.receiveShipment) }}</td>
+              <td class="mono">{{ toTimeText(r.receiveShipment) }}</td>
+      
+              <!-- ✅ Receive By -->
+              <td>
+                <div class="who">
+                  <div class="who-name">{{ r.receiveByName || '-' }}</div>
+                  <div class="who-emp mono">{{ r.receiveByEmpNo || '' }}</div>
+                </div>
+              </td>
+              <td class="text-center">
+                <span class="shift-pill">{{ r.shiftReceive || '-' }}</span>
+              </td>
+      
+            
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

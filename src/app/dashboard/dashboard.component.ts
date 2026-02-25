@@ -2,9 +2,15 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { CallSocketService } from '../services/call-socket.service';
+
 
 import config from '../../config';
 import Swal from 'sweetalert2';
+
+
+
 
 /* ---------------- types ---------------- */
 
@@ -153,7 +159,12 @@ type FilterState = {
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
-  constructor(private http: HttpClient) {}
+  wsSub?: Subscription;
+
+  constructor(
+    private http: HttpClient,
+    private callSocket: CallSocketService,
+  ) {}
 
   isLoadingIssue = false;
   isLoadingReceive = false;
@@ -183,6 +194,27 @@ export class DashboardComponent {
   ngOnInit(): void {
     this.fetchIssueLots();
     this.fetchReceiveLots();
+
+    // ✅ ฟัง event จาก websocket
+    this.wsSub = this.callSocket.onJobChanged().subscribe((payload: any) => {
+      console.log('lot:changed payload =', payload);
+      const type = payload?.type as 'issue' | 'receive' | undefined;
+      console.log("type = ",type )
+
+      if(type === 'issue'){
+        this.fetchIssueLots();
+        this.fetchReceiveLots();
+      }
+
+      if(type === 'receive'){
+        this.fetchIssueLots();
+        this.fetchReceiveLots();
+      }
+
+    })
+
+
+
   }
 
   // expand state
@@ -527,4 +559,10 @@ export class DashboardComponent {
       confirmButtonColor: '#2563eb',
     });
   }
+
+  ngOnDestroy() {
+    this.wsSub?.unsubscribe();
+  }
+
+
 }

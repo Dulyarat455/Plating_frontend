@@ -271,3 +271,147 @@
       min-width: 1200px; /* มือถือให้ยัง scroll ได้ */
     }
   }
+
+
+
+
+
+
+
+
+
+  .grid-filter{
+    display:grid;
+    grid-template-columns: repeat(4, minmax(160px,1fr));
+    gap:10px;
+  }
+
+
+
+
+
+  .grid-filter button{
+    grid-column: span 2;
+  }
+
+
+
+
+  /* layout ภายใน filter-card (ซ้ายฟิลเตอร์ + ขวาสรุป) */
+.filter-card{
+  display:flex;
+  gap:16px;
+  align-items:flex-start;
+}
+
+/* ฝั่งซ้าย */
+.filter-left{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ฝั่งขวา summary */
+.filter-right{
+  display:flex;
+  gap:12px;
+  flex: 0 0 auto;
+}
+
+/* grid ของ filters */
+.filters-grid{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap:10px 12px;
+}
+
+/* ช่อง filter */
+.f{
+  min-width: 0;
+}
+
+.f-label{
+  display:block;
+  font-size:.82rem;
+  font-weight:700;
+  color:#334155;
+  margin: 0 0 6px;
+}
+
+/* date range ให้รวมเป็นช่องกว้าง */
+.date-range{
+  grid-column: span 2;
+}
+
+.date-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.date-sep{
+  color:#64748b;
+  font-weight:700;
+}
+
+/* action bar */
+.filter-actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top: 10px;
+}
+
+.btn-reset{
+  min-width: 160px;
+  white-space: nowrap;
+}
+
+/* ---------- Responsive ---------- */
+
+/* tablet: 2 คอลัมน์ */
+@media (max-width: 992px){
+  .filter-card{
+    flex-direction: column;
+  }
+  .filter-right{
+    width: 100%;
+    justify-content:flex-end;
+  }
+  .filters-grid{
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+  }
+  .date-range{
+    grid-column: span 2;
+  }
+}
+
+/* mobile: 1 คอลัมน์ + ปุ่มเต็มแถว */
+@media (max-width: 576px){
+  .filters-grid{
+    grid-template-columns: 1fr;
+  }
+  .date-range{
+    grid-column: span 1;
+  }
+  .date-row{
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .date-sep{
+    display:none;
+  }
+  .filter-actions{
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn-reset{
+    width: 100%;
+  }
+}
+
+
+
+
+
+

@@ -1131,3 +1131,29 @@ input[type="date"].filter-input{
 .lot-box-wrap.box-scroll-10::-webkit-scrollbar-track{
   background: #fff;
 }
+
+
+
+
+
+.row-issue-count-pill{
+  background:#2563eb;
+  color:white;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:600;
+  vertical-align:middle;
+}
+
+
+
+.row-receive-count-pill{
+  background:#0bc270;
+  color:white;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:600;
+  vertical-align:middle;
+}

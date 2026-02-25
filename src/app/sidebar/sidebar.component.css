@@ -347,3 +347,12 @@
 .main-sidebar::-webkit-scrollbar {
   display: none;
 }
+
+
+
+.v-divider{
+  width: 2px;
+  height: 22px;          /* ปรับสูงได้ */
+  background: #fff;
+  display: inline-block;
+}

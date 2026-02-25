@@ -181,9 +181,10 @@
       </div>
 
       <ul class="instruction-list">
-        <li>สแกนได้ทีละ 1 QR ต่อครั้ง</li>
-        <li>กด <b>Confirm Lot</b> เพื่อบันทึกลง Temp</li>
-        <li>กด <b>Receive</b> เพื่อย้ายไป Table จริง (เดี๋ยวทำต่อขั้นนี้)</li>
+        <li>ในการ เริ่มต้น scan ทุกครั้งต้องเริ่มต้นสร้าง Header ก่อนเสมอ</li>
+        <li>Cursor ต้องมาเริ่มต้นที่ช่อง ItemNo ก่อน Scan</li>
+        <li>เปลี่ยนภาษาเป็น Eng ทุกครั้งก่อนเริ่ม Scan</li>
+        <li>เมื่อ Scan สำเร็จ รายการจะถูกเพิ่มเข้ามาที่ รายการที่ Scan แล้วอัตโนมัติ</li>
       </ul>
     </div>
 
@@ -215,6 +216,7 @@
         <div class="stack-item">
           <div class="stack-k">Item No.</div>
           <input #scanItemNo class="form-control" type="text"
+          placeholder="Start scan this tag"
           [(ngModel)]="boxForm.itemNo" name="scanItemNo"
           (keydown.enter)="onScanEnter('itemNo', $event)"
           [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox" />
@@ -275,12 +277,16 @@
           />
         </div>
       </div>
+      <div class="stack-note">
+        <p> * ในการเริ่ม ต้น Scan ทุกครั้ง Cursor ต้องอยู่ที่ช่อง Item No </p>
+        <p> * เปลี่ยนภาษาเป็น Eng ก่อนเริ่ม Scan </p>
+      </div>
 
       <div class="stack-actions">
-        <!-- <button type="button" class="btn-soft" (click)="onConfirmLot()" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox">
+        <button type="button" class="btn-soft" (click)="onConfirmLot()" [disabled]="!header || isEditingHeader || isBoxFull || isSavingBox">
           <i class="fas fa-check-circle me-1"></i>
           Confirm Lot
-        </button> -->
+        </button>
         <button type="button" class="btn-soft danger" (click)="onClearBoxForm()" [disabled]="!header || isEditingHeader || isSavingBox">
           <i class="fas fa-trash-alt me-1"></i>
           Clear
@@ -295,7 +301,7 @@
       <div class="saved-header">
         <div class="saved-title">
           <i class="fas fa-clipboard-check"></i>
-          <span>รายการที่ Scan เข้ามาแล้ว</span>
+          <span>รายการที่ Scan แล้ว</span>
           <span
           class="ms-2 badge rounded-pill bg-secondary box-badge"
           *ngIf="header && !isEditingHeader"

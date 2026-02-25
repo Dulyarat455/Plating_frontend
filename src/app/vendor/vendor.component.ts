@@ -182,7 +182,7 @@ export class VendorComponent {
               </div>
             </div>
   
-            <label style="${labelStyle}">Section Name <span style="color:#ef4444;">*</span></label>
+            <label style="${labelStyle}">Vendor Name <span style="color:#ef4444;">*</span></label>
             <input id="swalVendorName" style="${inputStyle}"
               value="${String(item.name || '').replace(/"/g, '&quot;')}"
               placeholder="เช่น ZIP / METEK  "

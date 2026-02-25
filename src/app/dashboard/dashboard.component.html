@@ -161,6 +161,9 @@
     <section class="dash-card">
       <div class="issue-header">
         <h3 class="card-title">Transaction Issue (By Lot)</h3>
+        <span class="row-issue-count-pill ms-2">
+          {{ issueLots.length || 0 }}
+        </span>
       </div>
     
       <div class="table-wrap tx-wrap tx-scroll-10">
@@ -312,6 +315,9 @@
     <section class="dash-card">
       <div class="receive-header">
         <h3 class="card-title">Transaction Receive (By Lot)</h3>
+        <span class="row-receive-count-pill ms-2">
+          {{ receiveLots.length || 0 }}
+        </span>
       </div>
     
       <div class="table-wrap tx-wrap tx-scroll-10">

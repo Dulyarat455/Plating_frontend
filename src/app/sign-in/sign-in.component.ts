@@ -85,11 +85,11 @@ export class SignInComponent {
       this.isLoading = true;
 
       const payload = {
-        rfid: rfidValue,
+        rfId: rfidValue,
       };
 
       this.http
-        .post(config.apiServer + '/api/user/signin-rfid', payload)
+        .post(config.apiServer + '/api/user/signInRfId', payload)
         .subscribe({
           next: (res: any) => {
             // ตรวจสอบ unauthorized message
@@ -104,13 +104,6 @@ export class SignInComponent {
               return;
             }
 
-            // if (res.token) {
-            //   // Save user data
-            //   this.token = res.token;
-            //   localStorage.setItem('angular_token', res.token);
-            //   localStorage.setItem('angular_name', res.name);
-            //   localStorage.setItem('angular_id', res.id);
-            //   localStorage.setItem('angular_empNo', res.empNo);
             this.authService.login(res);
             // Show success message
             Swal.fire({
@@ -121,9 +114,9 @@ export class SignInComponent {
               showConfirmButton: true,
             }).then(() => {
               // location.reload();
-              this.router.navigate(['/']);
-              this.token = localStorage.getItem('angular_token')!;
-              this.empNo = localStorage.getItem('angular_empNo')!;
+              this.token = localStorage.getItem('plating_token')!;
+            this.empNo = localStorage.getItem('plating_empNo')!;
+            this.router.navigate(['/']);
             });
             // }
           },

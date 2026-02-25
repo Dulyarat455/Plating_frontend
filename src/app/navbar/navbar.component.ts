@@ -1,5 +1,7 @@
-
 import { RouterModule } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
+
+import Swal from 'sweetalert2';
 
 // navbar.component.ts
 import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
@@ -17,10 +19,29 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private timeInterval: any;
 
   token: string | undefined = '';
-  constructor(private renderer: Renderer2) {}
+  role: string | undefined = '';
+
+  constructor(
+    private router: Router,
+    private renderer: Renderer2
+  ) {}
 
   ngOnInit(): void {
     this.token = localStorage.getItem('plating_token')!;
+    this.role = localStorage.getItem('plating_role')!;
+    if (!this.token) {
+      // เปลี่ยนเส้นทางไปที่หน้า LoginPage ก่อน
+      this.router.navigate(['/']).then(() => {
+       
+        Swal.fire({
+          title: 'กรุณาเข้าสู่ระบบ',
+          text: 'คุณยังไม่ได้เข้าสู่ระบบ กรุณาเข้าสู่ระบบก่อนดำเนินการ',
+          icon: 'warning',
+          confirmButtonText: 'ตกลง',
+        });
+      });
+    }
+
     this.updateDateTime();
     // Update time every second
     this.applyAuthLayoutClass();

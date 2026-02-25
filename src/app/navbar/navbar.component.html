@@ -86,9 +86,20 @@
         </a>
         <div class="user-profile">
           <div class="user-avatar">
-            <span>AD</span>
+            @if (role === 'user') {
+              <span>US</span>
+            }
+            @else {
+              <span>AD</span>
+            }
           </div>
-          <span class="user-name d-none d-lg-inline">Admin</span>
+          @if (role === 'user') {
+            <span class="user-name d-none d-lg-inline">User</span>
+          }
+          @else {
+            <span class="user-name d-none d-lg-inline">Admin</span>
+          }
+          
         </div>
       </div>
     }
