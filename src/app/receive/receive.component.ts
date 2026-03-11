@@ -97,6 +97,16 @@ export class ReceiveComponent implements OnInit, AfterViewInit {
   controlLots: ControlLotRow[] = [];
   items: PartMasterRow[] = [];
 
+
+    // ======================
+  // Searchable dropdown: Item No.
+  // ======================  
+  itemKeyword = '';
+  filteredItems: PartMasterRow[] = [];
+  showItemDrop = false;
+
+
+
   form: HeaderForm = this.createEmptyForm();
 
   // ===== Scan inputs (เหมือน Issue) =====
@@ -209,6 +219,51 @@ export class ReceiveComponent implements OnInit, AfterViewInit {
     this.form.itemName = f?.itemName ?? '';
   }
 
+
+  
+  filterItems() {
+    const kw = (this.itemKeyword || '').trim().toLowerCase();
+  
+    this.filteredItems = !kw
+      ? [...this.items]
+      : this.items.filter(it =>
+          (it.itemNo || '').toLowerCase().includes(kw) ||
+          (it.itemName || '').toLowerCase().includes(kw)
+        );
+  }
+  
+  selectItem(it: PartMasterRow) {
+    // ✅ set ทั้ง keyword + form
+    this.itemKeyword = it.itemNo;
+    this.form.itemNo = it.itemNo;
+    this.form.itemName = it.itemName || '';
+    this.showItemDrop = false;
+  }
+  
+  // ✅ blur แล้วตรวจว่าพิมพ์ตรงกับของจริงใน list ไหม (ไม่ตรง = ล้าง)
+  onItemBlur() {
+    setTimeout(() => {
+      const kw = (this.itemKeyword || '').trim();
+  
+      const found = this.items.find(x => x.itemNo === kw);
+      if (!found) {
+        // ไม่เลือกจริง/ไม่มีใน list => clear ทันที
+        this.itemKeyword = '';
+        this.form.itemNo = '';
+        this.form.itemName = '';
+      } else {
+        // เผื่อกรณีพิมพ์ตรงเป๊ะเอง (ไม่คลิก) ก็ยัง set name ให้ถูก
+        this.form.itemNo = found.itemNo;
+        this.form.itemName = found.itemName || '';
+        this.itemKeyword = found.itemNo;
+      }
+  
+      this.showItemDrop = false;
+    }, 150);
+  }
+
+
+
   /* =======================
      Focus logic
   ======================= */
@@ -295,7 +350,16 @@ export class ReceiveComponent implements OnInit, AfterViewInit {
   fetchItems() {
     this.isLoadingItem = true;
     this.http.post(config.apiServer + '/api/partMaster/filterByGroup', { groupId: this.groupId }).subscribe({
-      next: (r: any) => { this.items = r.results || []; this.isLoadingItem = false; },
+      next: (r: any) => { 
+        this.items = r.results || []; 
+        this.filteredItems = [...this.items]; // ✅ init list
+
+        // ✅ ถ้ามีค่า itemNo อยู่แล้ว (เช่น header ถูกโหลดมา) ให้เติม keyword ให้ตรง
+        if (this.form?.itemNo) {
+          this.itemKeyword = this.form.itemNo;
+        }
+        this.isLoadingItem = false; 
+      },
       error: () => { this.isLoadingItem = false; Swal.fire('Error', 'Load Item fail', 'error'); },
     });
   }
@@ -308,6 +372,8 @@ export class ReceiveComponent implements OnInit, AfterViewInit {
 
         if (this.header) {
           this.form = this.mapHeaderToForm(this.header);
+          this.itemKeyword = this.form.itemNo || '';
+          this.filteredItems = [...this.items];
           this.isEditingHeader = false;
           this.fetchBoxTempByHeadId();
         } else {
@@ -354,6 +420,8 @@ export class ReceiveComponent implements OnInit, AfterViewInit {
   onClickEditHeader() {
     if (!this.header) return;
     this.form = this.mapHeaderToForm(this.header);
+    this.itemKeyword = this.form.itemNo || '';
+    this.filteredItems = [...this.items];
     this.isEditingHeader = true;
     this.savedRows = [];
   }
@@ -485,7 +553,7 @@ export class ReceiveComponent implements OnInit, AfterViewInit {
       `,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Issue',
+      confirmButtonText: 'Confirm',
       cancelButtonText: 'Cancel',
       confirmButtonColor: '#16a34a',
       cancelButtonColor: '#6b7280',
@@ -506,7 +574,7 @@ export class ReceiveComponent implements OnInit, AfterViewInit {
       };
   
       this.http
-        .post<any>(config.apiServer + '/api/receive/createHeaderBox', payload) // ใช้ path ตาม backend คุณ
+        .post<any>(config.apiServer + '/api/receive/createHeaderBox', payload) 
         .subscribe({
           next: (_res) => {
             Swal.close();
@@ -880,7 +948,7 @@ export class ReceiveComponent implements OnInit, AfterViewInit {
     Swal.fire({
       icon,
       title,
-      timer: 500,
+      timer: 100,
       showConfirmButton: false,
       customClass: { container: 'app-toast-container', popup: 'app-toast' },
     });

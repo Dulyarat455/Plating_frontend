@@ -132,27 +132,43 @@
           </div>
         </div>
 
-        <div class="form-field">
-          <label class="form-label">Select Item No.</label>
-          <div class="input-wrap">
-            <select
-              class="form-control"
-              [ngModel]="form.itemNo"
-              (ngModelChange)="onSelectItemNo($event)"
-              name="itemNo"
-              [disabled]="isLoadingItem || isSavingHeader"
-            >
-              <option value="" disabled>
-                {{ isLoadingItem ? 'กำลังโหลด Item...' : 'เลือก Item No.' }}
-              </option>
+       <!-- Item No (Searchable dropdown) -->
+      <div class="form-field position-relative">
+        <label class="form-label">Select Item No.</label>
 
-              <option *ngFor="let it of items" [value]="it.itemNo">
-                {{ it.itemNo }}
-              </option>
-            </select>
-            <span class="input-icon"><i class="fas fa-chevron-down"></i></span>
-          </div>
+        <div class="input-wrap">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="-- Select Item No. --"
+            [(ngModel)]="itemKeyword"
+            name="itemKeyword"
+            [disabled]="isLoadingItem || isSavingHeader"
+            (focus)="showItemDrop = true; filterItems()"
+            (input)="filterItems()"
+            (blur)="onItemBlur()"
+            autocomplete="off"
+          />
+          <span class="input-icon"><i class="fas fa-search"></i></span>
         </div>
+
+        <ul
+          class="list-group position-absolute w-100 shadow"
+          *ngIf="showItemDrop && filteredItems.length"
+          style="z-index:1000; max-height:220px; overflow:auto;"
+        >
+          <li
+            class="list-group-item list-group-item-action"
+            *ngFor="let it of filteredItems"
+            (mousedown)="selectItem(it)"
+          >
+            <div class="d-flex justify-content-between">
+              <span>{{ it.itemNo }}</span>
+              <small class="text-muted ms-2">{{ it.itemName }}</small>
+            </div>
+          </li>
+        </ul>
+      </div>
 
         <div class="form-field">
           <label class="form-label">Auto Item Name</label>

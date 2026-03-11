@@ -138,6 +138,14 @@ export class IssueComponent implements OnInit, AfterViewInit {
   vendors: VendorRow[] = [];
   controlLots: ControlLotRow[] = [];
   items: PartMasterRow[] = [];
+       
+
+    // ======================
+  // Searchable dropdown: Item No.
+  // ======================
+  itemKeyword = '';
+  filteredItems: PartMasterRow[] = [];
+  showItemDrop = false;
 
   // ✅ ช่องสแกนตัวแรกของ Temp Stack
   @ViewChild('scanItemNo') scanItemNo!: ElementRef<HTMLInputElement>;
@@ -331,6 +339,52 @@ export class IssueComponent implements OnInit, AfterViewInit {
     return this.controlLots.find((c) => c.id === id)?.name ?? '-';
   }
 
+
+
+
+  filterItems() {
+    const kw = (this.itemKeyword || '').trim().toLowerCase();
+  
+    this.filteredItems = !kw
+      ? [...this.items]
+      : this.items.filter(it =>
+          (it.itemNo || '').toLowerCase().includes(kw) ||
+          (it.itemName || '').toLowerCase().includes(kw)
+        );
+  }
+  
+  selectItem(it: PartMasterRow) {
+    // ✅ set ทั้ง keyword + form
+    this.itemKeyword = it.itemNo;
+    this.form.itemNo = it.itemNo;
+    this.form.itemName = it.itemName || '';
+    this.showItemDrop = false;
+  }
+  
+  // ✅ blur แล้วตรวจว่าพิมพ์ตรงกับของจริงใน list ไหม (ไม่ตรง = ล้าง)
+  onItemBlur() {
+    setTimeout(() => {
+      const kw = (this.itemKeyword || '').trim();
+  
+      const found = this.items.find(x => x.itemNo === kw);
+      if (!found) {
+        // ไม่เลือกจริง/ไม่มีใน list => clear ทันที
+        this.itemKeyword = '';
+        this.form.itemNo = '';
+        this.form.itemName = '';
+      } else {
+        // เผื่อกรณีพิมพ์ตรงเป๊ะเอง (ไม่คลิก) ก็ยัง set name ให้ถูก
+        this.form.itemNo = found.itemNo;
+        this.form.itemName = found.itemName || '';
+        this.itemKeyword = found.itemNo;
+      }
+  
+      this.showItemDrop = false;
+    }, 150);
+  }
+
+
+
   /* =======================
      Focus Logic
   ======================= */
@@ -501,9 +555,16 @@ export class IssueComponent implements OnInit, AfterViewInit {
         groupId: this.groupId,
       })
       .subscribe({
-        next: (r: any) => {
+        next: (r: any) => { 
           this.items = r.results || [];
+          this.filteredItems = [...this.items]; // ✅ init list
+
+          if (this.form?.itemNo) {
+            this.itemKeyword = this.form.itemNo;
+          }
+
           this.isLoadingItem = false;
+
         },
         error: (_e) => {
           this.isLoadingItem = false;
@@ -511,6 +572,9 @@ export class IssueComponent implements OnInit, AfterViewInit {
         },
       });
   }
+
+
+
 
   fetchHeader() {
     this.isLoadingHeader = true;
@@ -527,6 +591,8 @@ export class IssueComponent implements OnInit, AfterViewInit {
 
           if (this.header) {
             this.form = this.mapHeaderToForm(this.header);
+            this.itemKeyword = this.form.itemNo || '';
+            this.filteredItems = [...this.items];
             this.isEditingHeader = false;
             this.fetchBoxTempByHeadId();
           } else {
@@ -551,6 +617,8 @@ export class IssueComponent implements OnInit, AfterViewInit {
   onClickEditHeader() {
     if (!this.header) return;
     this.form = this.mapHeaderToForm(this.header);
+    this.itemKeyword = this.form.itemNo || '';
+    this.filteredItems = [...this.items];
     this.isEditingHeader = true;
     this.savedRows = [];
   }
@@ -756,7 +824,7 @@ export class IssueComponent implements OnInit, AfterViewInit {
       `,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Issue',
+      confirmButtonText: 'Confirm',
       cancelButtonText: 'Cancel',
       confirmButtonColor: '#16a34a',
       cancelButtonColor: '#6b7280',
@@ -1044,7 +1112,7 @@ export class IssueComponent implements OnInit, AfterViewInit {
     Swal.fire({
       icon,
       title,
-      timer: 500,
+      timer: 100,
       showConfirmButton: false,
   
       customClass: {
