@@ -28,19 +28,33 @@
       <div class="filters-grid">
 
 
-        <!-- Date range (คู่กัน) -->
-        <div class="f date-range">
-          <label class="f-label">IssueDate Range</label>
-          <div class="date-row">
-            <input type="date" class="form-control"
-              [(ngModel)]="dateFrom"
-              (change)="applyFilter()" />
-            <span class="date-sep">→</span>
-            <input type="date" class="form-control"
-              [(ngModel)]="dateTo"
-              (change)="applyFilter()" />
+          <!-- ✅ ShipmentDate(I) range -->
+          <div class="f date-range">
+            <label class="f-label">ShipmentDate Range</label>
+            <div class="date-row">
+              <input type="date" class="form-control"
+                [(ngModel)]="issueShipDateFrom"
+                (change)="applyFilter()" />
+              <span class="date-sep">→</span>
+              <input type="date" class="form-control"
+                [(ngModel)]="issueShipDateTo"
+                (change)="applyFilter()" />
+            </div>
           </div>
-        </div>
+  
+          <!-- ✅ ShipmentDate(R) range -->
+          <div class="f date-range">
+            <label class="f-label">ReceiveDate Range</label>
+            <div class="date-row">
+              <input type="date" class="form-control"
+                [(ngModel)]="receiveShipDateFrom"
+                (change)="applyFilter()" />
+              <span class="date-sep">→</span>
+              <input type="date" class="form-control"
+                [(ngModel)]="receiveShipDateTo"
+                (change)="applyFilter()" />
+            </div>
+          </div>
 
         <!-- Group -->
         <div class="f">
