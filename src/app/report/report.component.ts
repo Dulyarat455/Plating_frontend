@@ -181,25 +181,25 @@ export class ReportComponent implements OnInit {
     if (this.fReceiveNo) out = out.filter(x => x.ReceiveNo === this.fReceiveNo);
     if (this.fGroupName) out = out.filter(x => x.groupName === this.fGroupName);
 
-    // ✅ ShipmentDate(I) Range
+      // ✅ ShipmentDate(I) Range
     if (this.issueShipDateFrom) {
-      const from = new Date(this.issueShipDateFrom).getTime();
+      const from = this.ymdToStartLocal(this.issueShipDateFrom);
       out = out.filter(x => x.issueShipment && new Date(x.issueShipment).getTime() >= from);
     }
 
     if (this.issueShipDateTo) {
-      const to = new Date(this.issueShipDateTo).getTime() + 86400000;
+      const to = this.ymdToEndLocal(this.issueShipDateTo);
       out = out.filter(x => x.issueShipment && new Date(x.issueShipment).getTime() <= to);
     }
 
     // ✅ ShipmentDate(R) Range
     if (this.receiveShipDateFrom) {
-      const from = new Date(this.receiveShipDateFrom).getTime();
+      const from = this.ymdToStartLocal(this.receiveShipDateFrom);
       out = out.filter(x => x.receiveShipment && new Date(x.receiveShipment).getTime() >= from);
     }
 
     if (this.receiveShipDateTo) {
-      const to = new Date(this.receiveShipDateTo).getTime() + 86400000;
+      const to = this.ymdToEndLocal(this.receiveShipDateTo);
       out = out.filter(x => x.receiveShipment && new Date(x.receiveShipment).getTime() <= to);
     }
 
