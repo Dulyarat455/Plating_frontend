@@ -25,6 +25,7 @@ type ReportRow = {
 
   vender: string | null;
   controlLot: string | null;
+  controlLotR: string | null;
 
   issueByEmpNo: string | null;
   issueByName: string | null;

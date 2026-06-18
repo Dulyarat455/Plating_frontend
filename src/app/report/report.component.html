@@ -223,6 +223,7 @@
             <th class="text-center">Shift(I)</th>
       
             <th>ReceiveNo</th>
+            <th>ControlLot(R)</th>
             <th>Date Receive</th>
             <th>Time Receive</th>
             <th>ShipmentDate(R)</th>    
@@ -272,6 +273,7 @@
               </td>
       
               <td class="mono">{{ r.ReceiveNo || '-' }}</td>
+              <td class="mono">{{ r.controlLotR || '-' }}</td>
               <td class="mono">{{ toDateText(r.receiveDate) }}</td>
               <td class="mono">{{ toTimeText(r.receiveDate) }}</td>
               <td class="mono">{{ toDateText(r.receiveShipment) }}</td>
