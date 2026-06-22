@@ -183,18 +183,30 @@
         </span>
      
       </div>
-      <button 
-      class="btn btn-success"
-      (click)="exportExcel()"
-      [disabled]="isExporting"
-    >
-      <i 
-        class="me-2"
-        [ngClass]="isExporting ? 'fa fa-spinner fa-spin' : 'fa fa-download'"
-      ></i>
-    
-      {{ isExporting ? 'Exporting...' : 'Export to Excel' }}
-    </button>
+
+      <div class="table-tools">
+          <button 
+          class="btn btn-success"
+          (click)="exportExcel()"
+          [disabled]="isExporting"
+        >
+          <i 
+            class="me-2"
+            [ngClass]="isExporting ? 'fa fa-spinner fa-spin' : 'fa fa-download'"
+          ></i>
+        
+          {{ isExporting ? 'Exporting...' : 'Export to Excel' }}
+        </button>
+
+
+            <button 
+            class="btn btn-primary"
+            (click)="testPrintPdf()"
+          >
+            <i class="fa fa-print me-2"></i>
+            Test Print
+          </button>
+     </div>
     </div>
 
     <div class="table-wrap">

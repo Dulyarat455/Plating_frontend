@@ -191,7 +191,10 @@
   
   .table-tools{
     display:flex;
+    align-items:center;
+    justify-content:flex-end;
     gap:8px;
+    margin-left:auto;
   }
   
   /* ===== Table Wrap (scroll + sticky header) ===== */

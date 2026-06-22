@@ -289,6 +289,12 @@ export class ReportComponent implements OnInit {
     });
   }
 
+
+  testPrintPdf() {
+    window.open(config.apiServer + '/api/report/printTestPdf', '_blank');
+  }
+
+
   onEdit(row: ReportRow) {
     console.log('edit', row);
     alert(`Edit box id: ${row.id}`);
