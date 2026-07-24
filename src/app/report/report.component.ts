@@ -91,6 +91,12 @@ export class ReportComponent implements OnInit {
   groupOptions: string[] = [];
 
   isExporting = false;
+  isPrinting = false;
+  isDownloading = false;
+
+  get isBusy(): boolean {
+    return this.isExporting || this.isPrinting || this.isDownloading;
+  }
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -236,6 +242,9 @@ export class ReportComponent implements OnInit {
   }
 
   exportExcel() {
+
+    if (this.isBusy) return;
+
     const filters = {
       itemNo: this.fItemNo,
       itemName: this.fItemName,
@@ -291,7 +300,168 @@ export class ReportComponent implements OnInit {
 
 
   testPrintPdf() {
-    window.open(config.apiServer + '/api/report/printTestPdf', '_blank');
+    if (this.isBusy) return;
+  
+    if (!this.issueShipDateFrom || !this.issueShipDateTo) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'กรุณาเลือก ShipmentDate',
+        text: 'ต้องเลือก ShipmentDate From และ To ก่อน Print PDF'
+      });
+      return;
+    }
+  
+    if (this.issueShipDateFrom !== this.issueShipDateTo) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'ShipmentDate ไม่ถูกต้อง',
+        text: 'ShipmentDate From และ To ต้องเป็นวันเดียวกัน'
+      });
+      return;
+    }
+  
+    if (!this.fVendor) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'กรุณาเลือก Vendor',
+        text: 'ต้องเลือก Vendor ก่อน Print PDF ไม่สามารถเลือก All ได้'
+      });
+      return;
+    }
+  
+    const filters = {
+      itemNo: this.fItemNo,
+      itemName: this.fItemName,
+      boxState: this.fBoxState,
+      groupName: this.fGroupName,
+      vendor: this.fVendor,
+      controlLot: this.fControlLot,
+      issueNo: this.fIssueNo,
+      receiveNo: this.fReceiveNo,
+  
+      issueShipDateFrom: this.issueShipDateFrom,
+      issueShipDateTo: this.issueShipDateTo,
+      receiveShipDateFrom: this.receiveShipDateFrom,
+      receiveShipDateTo: this.receiveShipDateTo,
+    };
+  
+    this.isPrinting = true;
+  
+    this.http.post(
+      config.apiServer + '/api/report/printTestPdf',
+      { filters },
+      { responseType: 'blob' }
+    ).subscribe({
+      next: blob => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+  
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+        }, 10000);
+  
+        this.isPrinting = false;
+      },
+      error: err => {
+        this.isPrinting = false;
+        Swal.fire('Error', err?.error?.message || 'Print PDF failed', 'error');
+      }
+    });
+  }
+
+
+
+
+  downloadPdf() {
+    if (this.isBusy) return;
+  
+    if (!this.issueShipDateFrom || !this.issueShipDateTo) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'กรุณาเลือก ShipmentDate',
+        text: 'ต้องเลือก ShipmentDate From และ To ก่อน Print PDF'
+      });
+      return;
+    }
+  
+    if (this.issueShipDateFrom !== this.issueShipDateTo) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'ShipmentDate ไม่ถูกต้อง',
+        text: 'ShipmentDate From และ To ต้องเป็นวันเดียวกัน'
+      });
+      return;
+    }
+  
+    if (!this.fVendor) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'กรุณาเลือก Vendor',
+        text: 'ต้องเลือก Vendor ก่อน Print PDF ไม่สามารถเลือก All ได้'
+      });
+      return;
+    }
+  
+    const filters = {
+      itemNo: this.fItemNo,
+      itemName: this.fItemName,
+      boxState: this.fBoxState,
+      groupName: this.fGroupName,
+      vendor: this.fVendor,
+      controlLot: this.fControlLot,
+      issueNo: this.fIssueNo,
+      receiveNo: this.fReceiveNo,
+      issueShipDateFrom: this.issueShipDateFrom,
+      issueShipDateTo: this.issueShipDateTo,
+      receiveShipDateFrom: this.receiveShipDateFrom,
+      receiveShipDateTo: this.receiveShipDateTo,
+    };
+  
+    this.isDownloading = true;
+  
+    this.http.post(
+      config.apiServer + '/api/report/downloadPdf',
+      { filters },
+      { responseType: 'blob' }
+    ).subscribe({
+      next: blob => {
+        const now = new Date();
+        const pad = (n: number) => String(n).padStart(2, '0');
+      
+        const timeStamp =
+          now.getFullYear() +
+          pad(now.getMonth() + 1) +
+          pad(now.getDate()) +
+          '_' +
+          pad(now.getHours()) +
+          pad(now.getMinutes()) +
+          pad(now.getSeconds());
+      
+        const safeVendor = (this.fVendor || 'Vendor')
+          .replace(/[<>:"/\\|?*]/g, '')
+          .trim();
+      
+        const filename =
+          `HomeWorkGatePass_${this.issueShipDateFrom}_${safeVendor}_${timeStamp}.pdf`;
+      
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+      
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+      
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      
+        this.isDownloading = false;
+      },
+      error: err => {
+        this.isDownloading = false;
+        Swal.fire('Error', err?.error?.message || 'Download PDF failed', 'error');
+      }
+    });
   }
 
 

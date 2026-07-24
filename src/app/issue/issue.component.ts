@@ -638,6 +638,12 @@ export class IssueComponent implements OnInit, AfterViewInit {
   onSaveHeader() {
     if (!this.form.sentDateByUser) return this.toast('warning', 'เลือกวันที่');
     if (!this.form.shift) return this.toast('warning', 'เลือก Shift');
+    if (!this.form.itemNo) return this.toast('warning', 'เลือก item No');
+    if (!this.form.itemName) return this.toast('warning', 'เลือก item Name');
+    if (this.form.venderId == null) return this.toast('warning', 'เลือก Vendor');
+    if (this.form.controlLotId == null) return this.toast('warning', 'เลือก Control Lot');
+    if (this.form.qtyBox == null) return this.toast('warning', 'ระบุจำนวน QTY');
+
 
     this.isSavingHeader = true;
 
@@ -645,7 +651,7 @@ export class IssueComponent implements OnInit, AfterViewInit {
       userId: this.userId,
       groupId: this.groupId,
       shift: this.form.shift,
-      venderId: this.form.venderId,
+      venderId: this.form.venderId, 
       controlLotId: this.form.controlLotId,
       itemNo: this.form.itemNo,
       itemName: this.form.itemName,
@@ -1046,6 +1052,11 @@ export class IssueComponent implements OnInit, AfterViewInit {
             this.boxForm = this.createEmptyBoxForm();
             this.isEditingHeader = true;
             this.form = this.createEmptyForm();
+
+            // ✅ clear searchable dropdown Item No.
+            this.itemKeyword = '';
+            this.filteredItems = [...this.items];
+            this.showItemDrop = false;
   
             // ✅ ดึงใหม่ (จะได้เป็นหน้า create header)
             this.fetchHeader();

@@ -188,7 +188,7 @@
           <button 
           class="btn btn-success"
           (click)="exportExcel()"
-          [disabled]="isExporting"
+          [disabled]="isBusy"
         >
           <i 
             class="me-2"
@@ -199,13 +199,32 @@
         </button>
 
 
-            <button 
-            class="btn btn-primary"
-            (click)="testPrintPdf()"
-          >
-            <i class="fa fa-print me-2"></i>
-            Test Print
-          </button>
+        <button 
+        class="btn btn-primary"
+        (click)="testPrintPdf()"
+        [disabled]="isBusy"
+      >
+        <i 
+          class="me-2"
+          [ngClass]="isPrinting ? 'fa fa-spinner fa-spin' : 'fa fa-print'"
+        ></i>
+        {{ isPrinting ? 'Printing...' : 'Print Gate' }}   
+      </button>
+
+
+      <button 
+        class="btn btn-dark"
+        (click)="downloadPdf()"
+        [disabled]="isBusy"
+      >
+        <i 
+          class="me-2"
+          [ngClass]="isDownloading ? 'fa fa-spinner fa-spin' : 'fa fa-download'"
+        ></i>
+        Download PDF
+      </button>
+
+
      </div>
     </div>
 
