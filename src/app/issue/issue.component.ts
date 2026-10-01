@@ -538,7 +538,10 @@ export class IssueComponent implements OnInit, AfterViewInit {
     this.isLoadingControlLot = true;
     this.http.get(config.apiServer + '/api/controlLot/list').subscribe({
       next: (r: any) => {
-        this.controlLots = r.results || [];
+        this.controlLots = (r.results || []).filter(
+          (x: any) => x.id !== 7
+        );
+      
         this.isLoadingControlLot = false;
       },
       error: (_e) => {
