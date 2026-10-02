@@ -11,6 +11,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { VendorComponent } from './vendor/vendor.component';
 import { ControlLotComponent } from './control-lot/control-lot.component';
 import { ReportComponent } from './report/report.component';
+import { MasterPalletComponent } from './master-pallet/master-pallet.component';
 
 
 export const routes: Routes = [
@@ -62,6 +63,11 @@ export const routes: Routes = [
   {
     path: 'report',
     component: ReportComponent,
+  },
+
+  {
+    path: 'master-pallet',
+    component: MasterPalletComponent,
   },
 
   {

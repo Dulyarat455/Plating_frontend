@@ -79,6 +79,15 @@
           </li>
         }
 
+        @if (role === 'admin') {
+          <li class="nav-item mb-1">
+            <a routerLink="/master-pallet" class="nav-link" routerLinkActive="active">
+              <i class="nav-icon fas fa-pallet"></i>
+              <p class="ms-2">Edit PalletMaster</p>
+            </a>
+          </li>
+        }
+
 
         @if (role === 'admin') {
         <!-- Inventory Menu -->

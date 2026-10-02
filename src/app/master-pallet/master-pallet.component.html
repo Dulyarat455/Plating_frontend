@@ -1,0 +1,1230 @@
+<div class="master-page">
+
+  <!-- =====================================================
+       LOADING OVERLAY
+  ====================================================== -->
+  @if (isLoading) {
+    <div class="loading-overlay">
+      <div class="loading-box">
+
+        <div class="loading-spinner">
+          <i class="fa fa-spinner fa-spin"></i>
+        </div>
+
+        <div class="loading-title">
+          Loading Master Pallet
+        </div>
+
+        <div class="loading-subtitle">
+          Fetching Issue and Receive data...
+        </div>
+
+      </div>
+    </div>
+  }
+
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <div class="page-header">
+
+    <div class="page-header-left">
+
+      <div class="page-header-icon">
+        <i class="fa fa-cubes"></i>
+      </div>
+
+      <div>
+        <div class="page-title">
+          Master Pallet Report
+        </div>
+
+        <div class="page-subtitle">
+          View Issue and Receive pallet history
+        </div>
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="btn btn-outline-secondary btn-sm"
+      (click)="fetchAll()"
+      [disabled]="isLoading"
+    >
+      <i
+        class="fa me-1"
+        [class.fa-refresh]="!isLoading"
+        [class.fa-spinner]="isLoading"
+        [class.fa-spin]="isLoading"
+      ></i>
+
+      {{ isLoading ? "Loading..." : "Refresh" }}
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       PANEL SELECTOR
+  ====================================================== -->
+
+  <div class="panel-card">
+
+    <!-- ISSUE -->
+    <button
+      type="button"
+      class="panel-btn issue-panel"
+      [class.active]="activePanel === 'issue'"
+      (click)="setPanel('issue')"
+    >
+
+      <div class="panel-icon">
+        <i class="fa fa-upload"></i>
+      </div>
+
+      <div class="panel-info">
+
+        <div class="panel-name">
+          Issue
+        </div>
+
+        <div class="panel-desc">
+          Pallet Issue History
+        </div>
+
+      </div>
+
+      <div class="panel-count">
+        {{ issueRows.length | number }}
+      </div>
+
+    </button>
+
+
+    <!-- RECEIVE -->
+    <button
+      type="button"
+      class="panel-btn receive-panel"
+      [class.active]="activePanel === 'receive'"
+      (click)="setPanel('receive')"
+    >
+
+      <div class="panel-icon">
+        <i class="fa fa-download"></i>
+      </div>
+
+      <div class="panel-info">
+
+        <div class="panel-name">
+          Receive
+        </div>
+
+        <div class="panel-desc">
+          Pallet Receive History
+        </div>
+
+      </div>
+
+      <div class="panel-count">
+        {{ receiveRows.length | number }}
+      </div>
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       FILTER
+  ====================================================== -->
+
+  <div class="filter-card">
+
+    <div class="filter-title">
+
+      <div>
+        <i class="fa fa-filter me-2"></i>
+        Filter
+      </div>
+
+      <div class="filter-mode">
+        {{ activePanel === "issue" ? "ISSUE" : "RECEIVE" }}
+      </div>
+
+    </div>
+
+
+    <div class="filter-grid">
+
+      <!-- LOT NO -->
+      <div class="filter-item">
+
+        <label>
+          {{ activePanel === "issue"
+            ? "Issue Lot No"
+            : "Receive Lot No"
+          }}
+        </label>
+
+        <input
+          type="text"
+          class="form-control"
+          [placeholder]="
+            activePanel === 'issue'
+              ? 'Search Issue Lot No'
+              : 'Search Receive Lot No'
+          "
+          [(ngModel)]="filterLotNo"
+          (input)="applyFilters()"
+        />
+
+      </div>
+
+
+      <!-- ITEM NO -->
+      <div class="filter-item">
+
+        <label>Item No</label>
+
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search Item No"
+          [(ngModel)]="filterItemNo"
+          (input)="applyFilters()"
+        />
+
+      </div>
+
+
+      <!-- ITEM NAME -->
+      <div class="filter-item">
+
+        <label>Item Name</label>
+
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search Item Name"
+          [(ngModel)]="filterItemName"
+          (input)="applyFilters()"
+        />
+
+      </div>
+
+
+      <!-- VENDOR FILTER -->
+      <div class="filter-item">
+
+        <label>Vendor</label>
+
+        <select
+          class="form-control"
+          [(ngModel)]="filterVendor"
+          (change)="applyFilters()"
+        >
+
+          <option value="all">
+            All Vendor
+          </option>
+
+          @for (x of vendorOptions; track x) {
+            <option [value]="x">
+              {{ x }}
+            </option>
+          }
+
+        </select>
+
+      </div>
+
+
+      <!-- CONTROL LOT FILTER -->
+      <div class="filter-item">
+
+        <label>Control Lot</label>
+
+        <select
+          class="form-control"
+          [(ngModel)]="filterControlLot"
+          (change)="applyFilters()"
+        >
+
+          <option value="all">
+            All Control Lot
+          </option>
+
+          @for (x of controlLotOptions; track x) {
+            <option [value]="x">
+              {{ x }}
+            </option>
+          }
+
+        </select>
+
+      </div>
+
+
+      <!-- GROUP -->
+      <div class="filter-item">
+
+        <label>Group</label>
+
+        <select
+          class="form-control"
+          [(ngModel)]="filterGroup"
+          (change)="applyFilters()"
+        >
+
+          <option value="all">
+            All Group
+          </option>
+
+          @for (x of groupOptions; track x) {
+            <option [value]="x">
+              {{ x }}
+            </option>
+          }
+
+        </select>
+
+      </div>
+
+
+      <!-- SHIFT -->
+      <div class="filter-item">
+
+        <label>Shift</label>
+
+        <select
+          class="form-control"
+          [(ngModel)]="filterShift"
+          (change)="applyFilters()"
+        >
+
+          <option value="all">
+            All Shift
+          </option>
+
+          @for (x of shiftOptions; track x) {
+            <option [value]="x">
+              {{ x }}
+            </option>
+          }
+
+        </select>
+
+      </div>
+
+
+      <!-- LOT STATE -->
+      <div class="filter-item">
+
+        <label>Lot State</label>
+
+        <select
+          class="form-control"
+          [(ngModel)]="filterLotState"
+          (change)="applyFilters()"
+        >
+
+          <option value="all">
+            All Lot State
+          </option>
+
+          @for (x of lotStateOptions; track x) {
+            <option [value]="x">
+              {{ x }}
+            </option>
+          }
+
+        </select>
+
+      </div>
+
+
+      <!-- STATUS -->
+      <div class="filter-item">
+
+        <label>Status</label>
+
+        <select
+          class="form-control"
+          [(ngModel)]="filterStatus"
+          (change)="applyFilters()"
+        >
+
+          <option value="all">
+            All Status
+          </option>
+
+          @for (x of statusOptions; track x) {
+            <option [value]="x">
+              {{ x }}
+            </option>
+          }
+
+        </select>
+
+      </div>
+
+
+      <!-- START DATE -->
+      <div class="filter-item">
+
+        <label>Start Date</label>
+
+        <input
+          type="date"
+          class="form-control"
+          [(ngModel)]="startDate"
+          (change)="onDateChange()"
+          [disabled]="isLoading"
+        />
+
+      </div>
+
+
+      <!-- END DATE -->
+      <div class="filter-item">
+
+        <label>End Date</label>
+
+        <input
+          type="date"
+          class="form-control"
+          [(ngModel)]="endDate"
+          (change)="onDateChange()"
+          [disabled]="isLoading"
+        />
+
+      </div>
+
+    </div>
+
+
+    <!-- FILTER ACTION -->
+    <div class="filter-actions">
+
+      <div class="filter-result">
+
+        Total:
+        <b>{{ currentTotal | number }}</b>
+
+        @if (currentViewTotal !== currentTotal) {
+          <span>
+            &nbsp; | &nbsp;
+            Result:
+            <b>{{ currentViewTotal | number }}</b>
+          </span>
+        }
+
+      </div>
+
+
+      <div class="d-flex gap-2">
+
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          (click)="fetchAll()"
+          [disabled]="isLoading"
+        >
+
+          @if (isLoading) {
+            <i class="fa fa-spinner fa-spin me-1"></i>
+            Loading...
+          } @else {
+            <i class="fa fa-search me-1"></i>
+            Search
+          }
+
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-sm"
+          (click)="resetFilters()"
+          [disabled]="isLoading"
+        >
+          <i class="fa fa-undo me-1"></i>
+          Reset Filter
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       SUMMARY
+  ====================================================== -->
+
+  <div class="summary-grid">
+
+    <!-- RECORDS -->
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        <i class="fa fa-list"></i>
+      </div>
+
+      <div>
+
+        <div class="summary-label">
+          Records
+        </div>
+
+        <div class="summary-value">
+          {{ currentViewTotal | number }}
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- TOTAL BOX -->
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        <i class="fa fa-cube"></i>
+      </div>
+
+      <div>
+
+        <div class="summary-label">
+          Total Box
+        </div>
+
+        <div class="summary-value">
+          {{ currentQtyBox | number }}
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- TOTAL QTY -->
+    <div class="summary-card">
+
+      <div class="summary-icon">
+        <i class="fa fa-calculator"></i>
+      </div>
+
+      <div>
+
+        <div class="summary-label">
+          Total Qty
+        </div>
+
+        <div class="summary-value">
+          {{ currentQtySum | number }}
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       TABLE
+  ====================================================== -->
+
+  <div class="table-card">
+
+    <!-- TABLE TOOLBAR -->
+    <div class="table-toolbar">
+
+      <div class="table-title">
+
+        <div
+          class="table-title-icon"
+          [class.issue]="activePanel === 'issue'"
+          [class.receive]="activePanel === 'receive'"
+        >
+
+          <i
+            class="fa"
+            [class.fa-upload]="activePanel === 'issue'"
+            [class.fa-download]="activePanel === 'receive'"
+          ></i>
+
+        </div>
+
+
+        <div>
+
+          <div class="table-title-text">
+            {{ activePanel === "issue"
+              ? "Issue History"
+              : "Receive History"
+            }}
+          </div>
+
+          <div class="table-title-sub">
+            {{ currentViewTotal | number }} records
+          </div>
+
+        </div>
+
+      </div>
+
+
+      @if (isLoading) {
+
+        <div class="loading-text">
+          <i class="fa fa-spinner fa-spin me-1"></i>
+          Loading...
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- =====================================================
+         TABLE CONTENT
+    ====================================================== -->
+
+    <div class="table-wrap">
+
+      <table
+        class="table table-bordered table-striped report-table"
+      >
+
+        <!-- =================================================
+             TABLE HEADER
+        ================================================== -->
+
+        <thead>
+
+          <tr>
+
+            <th class="text-center">
+              #
+            </th>
+
+            <th>
+              {{ activePanel === "issue"
+                ? "Issue Lot No"
+                : "Receive Lot No"
+              }}
+            </th>
+
+            <th>
+              {{ activePanel === "issue"
+                ? "Sent Date"
+                : "Receive Date"
+              }}
+            </th>
+
+            <th class="editable-header">
+              {{ activePanel === "issue"
+                ? "Sent Date By User"
+                : "Receive Date By User"
+              }}
+            </th>
+
+            <th>User</th>
+
+            <th>Emp No</th>
+
+            <th>Group</th>
+
+            <th>Shift</th>
+
+            <th class="editable-header">
+              Vendor
+            </th>
+
+            <th class="editable-header">
+              Control Lot
+            </th>
+
+            <th>Item No</th>
+
+            <th>Item Name</th>
+
+            <th class="text-end">
+              Qty Box
+            </th>
+
+            <th class="text-end">
+              Qty Sum
+            </th>
+
+            <th class="text-center">
+              Lot State
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <!-- =================================================
+             TABLE BODY
+        ================================================== -->
+
+        <tbody>
+
+          @for (
+            row of currentView;
+            track row.id;
+            let i = $index
+          ) {
+
+            <tr>
+
+              <!-- ===========================================
+                   #
+              ============================================ -->
+
+              <td class="text-center row-number">
+                {{ i + 1 }}
+              </td>
+
+
+              <!-- ===========================================
+                   LOT NO
+              ============================================ -->
+
+              <td class="lot-no">
+
+                @if (activePanel === 'issue') {
+
+                  {{ row.issueLotNo || "-" }}
+
+                } @else {
+
+                  {{ row.receiveLotNo || "-" }}
+
+                }
+
+              </td>
+
+
+              <!-- ===========================================
+                   SYSTEM DATE
+              ============================================ -->
+
+              <td>
+
+                @if (activePanel === 'issue') {
+
+                  {{ formatDateTime(row.sentDate) }}
+
+                } @else {
+
+                  {{ formatDateTime(row.receiveDate) }}
+
+                }
+
+              </td>
+
+
+              <!-- ===========================================
+                   USER DATE
+                   EDITABLE DATE + TIME
+              ============================================ -->
+
+              <td
+                class="editable-cell date-edit-cell"
+                (click)="startEdit($event, row, 'userDate')"
+              >
+
+                @if (isEditing(row, 'userDate')) {
+
+                  <div
+                    class="inline-editor"
+                    (click)="$event.stopPropagation()"
+                  >
+
+                    <input
+                      type="datetime-local"
+                      step="60"
+                      class="inline-input date-input"
+                      [ngModel]="getEditValue()"
+                      (ngModelChange)="onEditValueChange($event)"
+                      (blur)="onEditBlur()"
+                      [disabled]="getEditSaving()"
+                      autofocus
+                    />
+
+
+                    @if (getEditDirty()) {
+
+                      <div class="edit-actions">
+
+                        <!-- SAVE -->
+                        <button
+                          type="button"
+                          class="edit-btn save-btn"
+                          title="Save"
+                          [disabled]="getEditSaving()"
+                          (mousedown)="$event.preventDefault()"
+                          (click)="saveEdit($event, row)"
+                        >
+
+                          @if (getEditSaving()) {
+
+                            <i class="fa fa-spinner fa-spin"></i>
+
+                          } @else {
+
+                            <i class="fa fa-check"></i>
+
+                          }
+
+                        </button>
+
+
+                        <!-- CANCEL -->
+                        <button
+                          type="button"
+                          class="edit-btn cancel-btn"
+                          title="Cancel"
+                          [disabled]="getEditSaving()"
+                          (mousedown)="$event.preventDefault()"
+                          (click)="cancelEdit($event)"
+                        >
+
+                          <i class="fa fa-times"></i>
+
+                        </button>
+
+                      </div>
+
+                    }
+
+                  </div>
+
+                } @else {
+
+                  <div class="editable-display">
+
+                    <span>
+
+                      @if (activePanel === 'issue') {
+
+                        {{
+                          formatDateTime(
+                            row.sentDateByUser
+                          )
+                        }}
+
+                      } @else {
+
+                        {{
+                          formatDateTime(
+                            row.receiveDateByUser
+                          )
+                        }}
+
+                      }
+
+                    </span>
+
+                    <i
+                      class="fa fa-pencil edit-hint"
+                    ></i>
+
+                  </div>
+
+                }
+
+              </td>
+
+
+              <!-- ===========================================
+                   USER
+              ============================================ -->
+
+              <td>
+                {{ row.userName || "-" }}
+              </td>
+
+
+              <!-- ===========================================
+                   EMP NO
+              ============================================ -->
+
+              <td>
+                {{ row.empNo || "-" }}
+              </td>
+
+
+              <!-- ===========================================
+                   GROUP
+              ============================================ -->
+
+              <td>
+                {{ row.groupName || "-" }}
+              </td>
+
+
+              <!-- ===========================================
+                   SHIFT
+              ============================================ -->
+
+              <td class="text-center">
+                {{ row.shift || "-" }}
+              </td>
+
+
+              <!-- ===========================================
+                   VENDOR
+                   EDITABLE DROPDOWN
+              ============================================ -->
+
+              <td
+                class="editable-cell vendor-edit-cell"
+                (click)="startEdit($event, row, 'vender')"
+              >
+
+                @if (isEditing(row, 'vender')) {
+
+                  <div
+                    class="inline-editor"
+                    (click)="$event.stopPropagation()"
+                  >
+
+                    <select
+                      class="inline-input inline-select"
+                      [ngModel]="getEditValue()"
+                      (ngModelChange)="onEditValueChange($event)"
+                      (blur)="onEditBlur()"
+                      [disabled]="getEditSaving()"
+                      autofocus
+                    >
+
+                      @if (!getEditValue()) {
+
+                        <option
+                          value=""
+                          disabled
+                        >
+                          Select Vendor
+                        </option>
+
+                      }
+
+
+                      @for (
+                        vendor of vendorMasterOptions;
+                        track vendor.id
+                      ) {
+
+                        <option [value]="vendor.name">
+                          {{ vendor.name }}
+                        </option>
+
+                      }
+
+                    </select>
+
+
+                    @if (getEditDirty()) {
+
+                      <div class="edit-actions">
+
+                        <!-- SAVE -->
+                        <button
+                          type="button"
+                          class="edit-btn save-btn"
+                          title="Save"
+                          [disabled]="getEditSaving()"
+                          (mousedown)="$event.preventDefault()"
+                          (click)="saveEdit($event, row)"
+                        >
+
+                          @if (getEditSaving()) {
+
+                            <i class="fa fa-spinner fa-spin"></i>
+
+                          } @else {
+
+                            <i class="fa fa-check"></i>
+
+                          }
+
+                        </button>
+
+
+                        <!-- CANCEL -->
+                        <button
+                          type="button"
+                          class="edit-btn cancel-btn"
+                          title="Cancel"
+                          [disabled]="getEditSaving()"
+                          (mousedown)="$event.preventDefault()"
+                          (click)="cancelEdit($event)"
+                        >
+
+                          <i class="fa fa-times"></i>
+
+                        </button>
+
+                      </div>
+
+                    }
+
+                  </div>
+
+                } @else {
+
+                  <div class="editable-display">
+
+                    <span>
+                      {{ row.vender || "-" }}
+                    </span>
+
+                    <i
+                      class="fa fa-pencil edit-hint"
+                    ></i>
+
+                  </div>
+
+                }
+
+              </td>
+
+
+              <!-- ===========================================
+                   CONTROL LOT
+                   EDITABLE DROPDOWN
+              ============================================ -->
+
+              <td
+                class="editable-cell control-edit-cell"
+                (click)="
+                  startEdit(
+                    $event,
+                    row,
+                    'controlLot'
+                  )
+                "
+              >
+
+                @if (isEditing(row, 'controlLot')) {
+
+                  <div
+                    class="inline-editor"
+                    (click)="$event.stopPropagation()"
+                  >
+
+                    <select
+                      class="inline-input inline-select"
+                      [ngModel]="getEditValue()"
+                      (ngModelChange)="onEditValueChange($event)"
+                      (blur)="onEditBlur()"
+                      [disabled]="getEditSaving()"
+                      autofocus
+                    >
+
+                      @if (!getEditValue()) {
+
+                        <option
+                          value=""
+                          disabled
+                        >
+                          Select Control Lot
+                        </option>
+
+                      }
+
+
+                      @for (
+                        controlLot of controlLotMasterOptions;
+                        track controlLot.id
+                      ) {
+
+                        <option
+                          [value]="controlLot.name"
+                        >
+                          {{ controlLot.name }}
+                        </option>
+
+                      }
+
+                    </select>
+
+
+                    @if (getEditDirty()) {
+
+                      <div class="edit-actions">
+
+                        <!-- SAVE -->
+                        <button
+                          type="button"
+                          class="edit-btn save-btn"
+                          title="Save"
+                          [disabled]="getEditSaving()"
+                          (mousedown)="$event.preventDefault()"
+                          (click)="saveEdit($event, row)"
+                        >
+
+                          @if (getEditSaving()) {
+
+                            <i class="fa fa-spinner fa-spin"></i>
+
+                          } @else {
+
+                            <i class="fa fa-check"></i>
+
+                          }
+
+                        </button>
+
+
+                        <!-- CANCEL -->
+                        <button
+                          type="button"
+                          class="edit-btn cancel-btn"
+                          title="Cancel"
+                          [disabled]="getEditSaving()"
+                          (mousedown)="$event.preventDefault()"
+                          (click)="cancelEdit($event)"
+                        >
+
+                          <i class="fa fa-times"></i>
+
+                        </button>
+
+                      </div>
+
+                    }
+
+                  </div>
+
+                } @else {
+
+                  <div class="editable-display">
+
+                    <span class="control-lot">
+                      {{ row.controlLot || "-" }}
+                    </span>
+
+                    <i
+                      class="fa fa-pencil edit-hint"
+                    ></i>
+
+                  </div>
+
+                }
+
+              </td>
+
+
+              <!-- ===========================================
+                   ITEM NO
+              ============================================ -->
+
+              <td class="item-no">
+                {{ row.itemNo || "-" }}
+              </td>
+
+
+              <!-- ===========================================
+                   ITEM NAME
+              ============================================ -->
+
+              <td>
+                {{ row.itemName || "-" }}
+              </td>
+
+
+              <!-- ===========================================
+                   QTY BOX
+              ============================================ -->
+
+              <td class="text-end number-cell">
+                {{ formatNumber(row.qtyBox) }}
+              </td>
+
+
+              <!-- ===========================================
+                   QTY SUM
+              ============================================ -->
+
+              <td class="text-end number-cell">
+                {{ formatNumber(row.qtySum) }}
+              </td>
+
+
+              <!-- ===========================================
+                   LOT STATE
+              ============================================ -->
+
+              <td class="text-center">
+
+                <span
+                  class="state-badge"
+                  [class.state-complete]="
+                    (row.lotState || '').toLowerCase()
+                      === 'complete'
+                  "
+                  [class.state-wait]="
+                    (row.lotState || '').toLowerCase()
+                      !== 'complete'
+                  "
+                >
+
+                  {{ row.lotState || "-" }}
+
+                </span>
+
+              </td>
+
+            </tr>
+
+          }
+
+
+          <!-- =================================================
+               NO DATA
+          ================================================== -->
+
+          @if (!currentView.length && !isLoading) {
+
+            <tr>
+
+              <td
+                colspan="16"
+                class="empty-row"
+              >
+
+                <i
+                  class="fa fa-inbox empty-icon"
+                ></i>
+
+                <div>
+                  No data
+                </div>
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
